@@ -7,7 +7,7 @@ import numpy as np
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 120)
 
-RAW_PATH = "../data/raw/atp_matches_2024.csv"
+RAW_PATH = "../../data/raw/atp_matches_2024.csv"
 
 #%%
 #Load data
@@ -194,8 +194,8 @@ def clean_matches(df):
 #%%
 # process year (function that reads raw csv and cleans them all and save them )
 def process_year(year):
-    input_path = f"data/raw/atp_matches_{year}.csv"
-    output_path = f"data/processed/atp_matches_{year}_clean.csv"
+    input_path = f"../../data/raw/atp_matches_{year}.csv"
+    output_path = f"../../data/processed/atp_matches_{year}_clean.csv"
 
     df = pd.read_csv(input_path)
     df_clean = clean_matches(df)
@@ -211,5 +211,5 @@ if __name__ == "__main__":
     df = pd.read_csv(RAW_PATH)
     df_clean = clean_matches(df)
     data_health_check(df_clean)
-    df_clean.to_csv("../data/processed/atp_matches_2024_clean.csv", index=False)
+    df_clean.to_csv("../../data/processed/atp_matches_2024_clean.csv", index=False)
 
