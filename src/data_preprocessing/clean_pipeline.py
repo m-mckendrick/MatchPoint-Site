@@ -12,7 +12,6 @@ RAW_PATH = "../../data/raw/atp_matches_2024.csv"
 #%%
 #Load data
 df = pd.read_csv(RAW_PATH)
-df.head()
 
 #%%
 #step 1 : Header Cleaning
@@ -21,8 +20,6 @@ def normalise_headers(df):
     return df
 #%%
 #step 2 : Type Conversion
-
-df.info()
 
 #tourney date int -> datetime
 def parse_dates(df):
