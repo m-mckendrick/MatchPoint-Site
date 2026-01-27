@@ -10,10 +10,6 @@ pd.set_option("display.width", 120)
 RAW_PATH = "../../data/raw/atp_matches_2024.csv"
 
 #%%
-#Load data
-df = pd.read_csv(RAW_PATH)
-
-#%%
 #step 1 : Header Cleaning
 def normalise_headers(df):
     df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace("-", "_")
