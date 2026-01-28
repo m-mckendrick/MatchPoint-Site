@@ -118,7 +118,66 @@ def filter_atp_events(df):
     return df
 
 #%%
-#step 7 : quick cleaning test to get quick overview if anything should be flagged
+#step 7 : add tiebreak scores to data
+
+def extract_tiebreak_from_set(set_str, is_final_set, match_tiebreak_allowed):
+    #match tiebreak
+    if "(" in set_str and is_final_set and match_tiebreak_allowed:
+        tiebreak_to = 10
+
+    #normal tiebreak
+    elif "(" in set_str and match_tiebreak_allowed == False:
+        tiebreak_to = 7
+
+    #no tiebreak
+    else:
+        return "none"
+
+    #calculate tiebreak score
+    tb_loser = int(set_str.split("(")[1].split(")")[0])
+    if tb_loser > tiebreak_to-2:
+        tb_winner =tiebreak_to
+        return f"{tb_winner}-{tb_loser}"
+    else:
+        tb_winner= tb_loser + 2
+        return f"{tb_winner}-{tb_loser}"
+
+
+def extract_tiebreak_score_string(row):
+    score_str = row["score"]
+    best_of = row["best_of"]
+    tourney = row["tourney_name"].lower()
+    year = int(row["tourney_date"][:4])
+    tourney_level = row["tourney_level"]
+
+    sets = score_str.split()
+    tiebreaks = []
+
+    #is it a match tiebreak? (final set and grand slam after 2022)
+    def match_tiebreak_allowed():
+        if year >= 2022 and tourney_level == "G" :
+            return True
+        if "australian open" in tourney and 2019 <= year <= 2021:
+            return True
+        return False
+
+    for i, set_str in enumerate(sets):
+        #sets indices are 0,1,2
+        is_final_set = (i == best_of-1)
+
+        tb = extract_tiebreak_from_set(
+            set_str=set_str,
+            is_final_set=is_final_set,
+            match_tiebreak_allowed=match_tiebreak_allowed()
+        )
+
+        tiebreaks.append(tb)
+
+    return " ".join(tiebreaks)
+
+
+#%%
+#step 8 : quick cleaning test to get quick overview if anything should be flagged
 def data_health_check(df):
     print("DATA HEALTH CHECK:\n")
 
@@ -164,6 +223,7 @@ def data_health_check(df):
     print(sorted(df["tourney_name"].unique()))
     print("\nEND OF REPORT")
 
+
 #%%
 #final step clean and save
 def clean_matches(df):
@@ -180,7 +240,7 @@ def clean_matches(df):
         .pipe(validate_round)
         .pipe(validate_best_of)
         .pipe(validate_minutes)
-
+        .pipe(extract_tiebreak_score_string)
     )
     return df
 
