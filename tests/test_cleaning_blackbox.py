@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+
+from datetime import datetime
+
 from src.data_preprocessing.clean_pipeline import (
     normalise_headers,
     parse_dates,
@@ -9,7 +12,9 @@ from src.data_preprocessing.clean_pipeline import (
     clean_categories,
     validate_physical_stats,
     filter_atp_events,
-    clean_matches
+    clean_matches,
+    extract_tiebreak_score_string,
+    extract_tiebreak_score_string_row
 )
 
 
@@ -79,6 +84,79 @@ def test_filter_atp_events():
     assert len(out) == 1
     assert out["tourney_level"].iloc[0] == "A"
 
+#testing all iterations of tiebreaks scores are calculated correctly before added to csv
+def test_classic_tiebreak_simple():
+    row = {
+        "score": "7-6(3) 6-4",
+        "best_of": 3,
+        "tourney_name": "Queens",
+        "tourney_date": datetime(2018, 7, 1),
+        "tourney_level": "A"
+    }
+    out = extract_tiebreak_score_string_row(row)
+    assert out == "7-3 none"
+
+
+def test_classic_tiebreak_extended():
+    row = {
+        "score": "7-6(8) 6-4",
+        "best_of": 3,
+        "tourney_name": "Queens",
+        "tourney_date": datetime(2018, 7, 1),
+        "tourney_level": "A"
+    }
+    out = extract_tiebreak_score_string_row(row)
+    assert out == "10-8 none"
+
+
+def test_no_tiebreaks():
+    row = {
+        "score": "6-4 6-4",
+        "best_of": 3,
+        "tourney_name": "Queens",
+        "tourney_date": datetime(2018, 7, 1),
+        "tourney_level": "A"
+    }
+    out = extract_tiebreak_score_string_row(row)
+    assert out == "none none"
+
+
+def test_advantage_set():
+    row = {
+        "score": "13-11",
+        "best_of": 5,
+        "tourney_name": "Wimbledon",
+        "tourney_date": datetime(2018, 7, 1),
+        "tourney_level": "G"
+    }
+    out = extract_tiebreak_score_string_row(row)
+    assert out == "none"
+
+
+def test_match_tiebreak_post_2022():
+    row = {
+        "score": "6-4 6-4 4-6 4-6 7-6(8)",
+        "best_of": 5,
+        "tourney_name": "Australian Open",
+        "tourney_date": datetime(2023, 1, 20),
+        "tourney_level": "G"
+    }
+    out = extract_tiebreak_score_string_row(row)
+    assert out == "none none none none 10-8"
+
+
+def test_ao_2019_to_2021_match_tiebreak():
+    row = {
+        "score": "6-4 6-4 4-6 4-6 7-6(12)",
+        "best_of": 5,
+        "tourney_name": "Australian Open",
+        "tourney_date": datetime(2020, 1, 20),
+        "tourney_level": "G"
+    }
+    out = extract_tiebreak_score_string_row(row)
+    assert out == "none none none none 14-12"
+
+
 #testing full pipeline
 def test_clean_matches_full_pipeline():
     df = pd.DataFrame([{
@@ -96,6 +174,7 @@ def test_clean_matches_full_pipeline():
         "loser_ht": 190,
         "winner_age": 25,
         "loser_age": 30,
+        "score":"6-4 6-4 7-6(5)",
         "best_of": 3,
         "minutes": 120,
         "tourney_level": "A",

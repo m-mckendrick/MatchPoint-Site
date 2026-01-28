@@ -126,7 +126,7 @@ def extract_tiebreak_from_set(set_str, is_final_set, match_tiebreak_allowed):
         tiebreak_to = 10
 
     #normal tiebreak
-    elif "(" in set_str and match_tiebreak_allowed == False:
+    elif "(" in set_str:
         tiebreak_to = 7
 
     #no tiebreak
@@ -135,7 +135,7 @@ def extract_tiebreak_from_set(set_str, is_final_set, match_tiebreak_allowed):
 
     #calculate tiebreak score
     tb_loser = int(set_str.split("(")[1].split(")")[0])
-    if tb_loser > tiebreak_to-2:
+    if tb_loser < tiebreak_to-2:
         tb_winner =tiebreak_to
         return f"{tb_winner}-{tb_loser}"
     else:
@@ -143,11 +143,11 @@ def extract_tiebreak_from_set(set_str, is_final_set, match_tiebreak_allowed):
         return f"{tb_winner}-{tb_loser}"
 
 
-def extract_tiebreak_score_string(row):
+def extract_tiebreak_score_string_row(row):
     score_str = row["score"]
     best_of = row["best_of"]
     tourney = row["tourney_name"].lower()
-    year = int(row["tourney_date"][:4])
+    year = row["tourney_date"].year
     tourney_level = row["tourney_level"]
 
     sets = score_str.split()
@@ -174,6 +174,13 @@ def extract_tiebreak_score_string(row):
         tiebreaks.append(tb)
 
     return " ".join(tiebreaks)
+
+#wraps the function into a df so that it can be piped properly in the clean
+def extract_tiebreak_score_string(df):
+    #create tiebreak scores row and calculate all the scores
+    df["tiebreak_scores"] = df.apply(extract_tiebreak_score_string_row, axis=1)
+    return df
+
 
 
 #%%
