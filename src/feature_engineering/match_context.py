@@ -37,7 +37,7 @@ def encode_round(row):
 
 
 
-def match_context(df: pd.DataFrame) -> pd.DataFrame:
+def add_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
 
     #rank and more specific rank points
     df["rank_diff"] = df["loser_rank"] - df["winner_rank"]
