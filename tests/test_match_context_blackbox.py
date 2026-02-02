@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from src.feature_engineering.match_context import match_context
+from src.feature_engineering.match_context import add_match_context_features
 
 #black-box tests
 #test output of functions
@@ -27,7 +27,7 @@ def test_basic_feature_outputs():
         "loser_ht": 185
     }])
 
-    out = match_context(df)
+    out = add_match_context_features(df)
 
     #test outputs == num ect
 

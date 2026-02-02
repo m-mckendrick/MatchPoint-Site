@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from src.feature_engineering.match_context import match_context, encode_round
+from src.feature_engineering.match_context import add_match_context_features, encode_round
 
 #white-box tests
 #these test every edge case and branch (every line of code)
@@ -27,7 +27,7 @@ def test_seed_diff_both_unseeded():
         "loser_ht": 185
     }])
 
-    out = match_context(df)
+    out = add_match_context_features(df)
 
     #both are unseeded so seed diff should be na
     assert np.isnan(out["seed_diff"].iloc[0])
@@ -73,7 +73,7 @@ def test_prestige_unknown_level():
         "loser_ht": 185
     }])
 
-    out = match_context(df)
+    out = add_match_context_features(df)
 
     #prestige should be NaN
     assert np.isnan(out["tourney_prestige"].iloc[0])
@@ -104,6 +104,6 @@ def test_lefty_logic_all_combinations():
     df["winner_ht"] = 190
     df["loser_ht"] = 185
 
-    out = match_context(df)
+    out = add_match_context_features(df)
 
     assert list(out["lefty_diff"]) == [0, 1, -1, 0]
