@@ -10,10 +10,17 @@ pd.set_option("display.width", 120)
 RAW_PATH = "../../data/raw/atp_matches_2024.csv"
 
 #%%
-#step 1 : Header Cleaning
+#step 1 : Normalise Headers and Missing Values
 def normalise_headers(df):
     df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace("-", "_")
     return df
+
+def normalise_missing_values(df):
+    #with NA
+    missing_markers = ["", " ", ".", "--", "NR", "?", "n/a", "N/A"]
+    df = df.replace(missing_markers, pd.NA)
+    return df
+
 #%%
 #step 2 : Type Conversion
 
@@ -32,6 +39,7 @@ def convert_numeric(df):
 def clean_ranks_and_seeds(df):
     seed_cols = ["winner_seed", "loser_seed"]
     rank_cols = ["winner_rank", "loser_rank", "winner_rank_points", "loser_rank_points"]
+
     df[seed_cols] = df[seed_cols].astype("Int64")
     df[rank_cols] = df[rank_cols].astype("Int64")
     return df
@@ -237,6 +245,7 @@ def clean_matches(df):
     df = (
         df.pipe(normalise_headers)
         .pipe(filter_atp_events)
+        .pipe(normalise_missing_values)
         .pipe(parse_dates)
         .pipe(convert_numeric)
         .pipe(clean_ranks_and_seeds)

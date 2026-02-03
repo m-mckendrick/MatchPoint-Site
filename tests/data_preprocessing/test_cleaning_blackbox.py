@@ -158,31 +158,8 @@ def test_ao_2019_to_2021_match_tiebreak():
 
 
 #testing full pipeline
-def test_clean_matches_full_pipeline():
-    df = pd.DataFrame([{
-        "winner_seed": 1,
-        "loser_seed": 2,
-        "winner_rank": 10,
-        "loser_rank": 20,
-        "winner_rank_points": 1000,
-        "loser_rank_points": 500,
-        "winner_hand": "R",
-        "loser_hand": "L",
-        "surface": "hard",
-        "round": "qf",
-        "winner_ht": 185,
-        "loser_ht": 190,
-        "winner_age": 25,
-        "loser_age": 30,
-        "score":"6-4 6-4 7-6(5)",
-        "best_of": 3,
-        "minutes": 120,
-        "tourney_level": "A",
-        "tourney_name": "Australian Open",
-        "tourney_date": "20240101"
-    }])
-
-    out = clean_matches(df)
+def test_clean_matches_full_pipeline(raw_match_df):
+    out = clean_matches(raw_match_df)
 
     # Check that key transformations happened
     assert out["surface"].iloc[0] == "Hard"
