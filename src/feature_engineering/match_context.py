@@ -59,6 +59,12 @@ def add_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     #usefull as older master and other tournaments had 5 sets (not just slams)
     df["is_best_of_five"] = (df["best_of"] == 5).astype(int)
 
+    #retirement locater
+    if "score" in df.columns:
+        df["is_retirement"] = df["score"].str.contains("RET", case=False, na=False).astype(int)
+    else:
+        df["is_retirement"] = 0
+
     #changes match pattern dynamics
     df["winner_lefty"] = (df["winner_hand"] == "L").astype(int)
     df["loser_lefty"] = (df["loser_hand"] == "L").astype(int)
