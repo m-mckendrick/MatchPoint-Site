@@ -107,3 +107,32 @@ def test_lefty_logic_all_combinations():
     out = add_match_context_features(df)
 
     assert list(out["lefty_diff"]) == [0, 1, -1, 0]
+
+def test_retirement_detection():
+    df = pd.DataFrame([
+        {"score": "6-1 6-1 1-0 RET"},
+        {"score": "6-4,6-4"},
+    ])
+
+    df["winner_rank"] = 1
+    df["loser_rank"] = 2
+    df["winner_rank_points"] = 1000
+    df["loser_rank_points"] = 900
+    df["winner_seed"] = 1
+    df["loser_seed"] = 2
+    df["surface"] = "Hard"
+    df["round"] = "R32"
+    df["draw_size"] = 32
+    df["tourney_level"] = "A"
+    df["best_of"] = 3
+    df["tourney_date"] = "2024-01-01"
+    df["winner_age"] = 30
+    df["loser_age"] = 25
+    df["winner_ht"] = 190
+    df["loser_ht"] = 185
+    df["winner_hand"] = "L"
+    df["loser_hand"] = "R"
+
+    out = add_match_context_features(df)
+
+    assert list(out["is_retirement"]) == [1,0]

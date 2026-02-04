@@ -42,3 +42,6 @@ def test_basic_feature_outputs(cleaned_match_df):
     assert out["height_diff"].iloc[0] == df["loser_ht"].iloc[0] - df["winner_ht"].iloc[0]
 
     assert out["tourney_prestige"].iloc[0] in (1,2,3,4)
+
+    #test ret detection
+    assert out["is_retirement"].iloc[0] in (0,1)
