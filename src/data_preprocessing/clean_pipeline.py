@@ -40,6 +40,8 @@ def clean_ranks_and_seeds(df):
     seed_cols = ["winner_seed", "loser_seed"]
     rank_cols = ["winner_rank", "loser_rank", "winner_rank_points", "loser_rank_points"]
 
+    df[seed_cols + rank_cols] = df[seed_cols + rank_cols].replace("", pd.NA)
+
     df[seed_cols] = df[seed_cols].astype("Int64")
     df[rank_cols] = df[rank_cols].astype("Int64")
     return df

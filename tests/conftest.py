@@ -150,4 +150,7 @@ def cleaned_match_df(raw_match_df):
     #add tiebreak scores (placeholder)
     df["tiebreak_scores"] = ["none" "none" "none" "none" "none","none none none"]
 
+    #normalise empty strings
+    df = df.replace(["", " ", ".", "--", "NR", "?"], pd.NA)
+
     return df
