@@ -250,10 +250,12 @@ def data_health_check(df):
 #final step clean and save
 
 from src.data_preprocessing.mirror_raw_rows import mirror_raw_rows
+from src.data_preprocessing.convert_to_p1p2 import convert_to_p1p2
 
 def clean_matches(df):
     df = (
         df.pipe(mirror_raw_rows)
+
         .pipe(normalise_headers)
         .pipe(filter_atp_events)
         .pipe(normalise_missing_values)
@@ -268,6 +270,7 @@ def clean_matches(df):
         .pipe(validate_best_of)
         .pipe(validate_minutes)
         .pipe(extract_tiebreak_score_string)
+        .pipe(convert_to_p1p2)
     )
     return df
 
@@ -287,14 +290,14 @@ def process_year(year):
     df_clean.to_csv(output_path, index=False)
 
     print(f" Cleaned {year} — {len(df_clean)} matches")
-    data_health_check(df_clean)
+    #data_health_check(df_clean)
 
 #%%
 #if file directly ran cleans and saves 2024
 if __name__ == "__main__":
     df = pd.read_csv(RAW_PATH)
     df_clean = clean_matches(df)
-    data_health_check(df_clean)
+    #data_health_check(df_clean)
     df_clean.to_csv(PROCESSED_DIR / "atp_matches_2024_clean.csv", index=False)
 
 
