@@ -36,7 +36,8 @@ def mirror_raw_rows(df: pd.DataFrame) -> pd.DataFrame:
     all_pairs = player_pairs + serve_return_pairs
 
     for w_col, l_col in all_pairs:
-        df_loser[w_col], df_loser[l_col] = df_loser[l_col], df_loser[w_col]
+        df_loser[w_col] = df[l_col] 
+        df_loser[l_col] = df[w_col]
 
 
     # adding perspective and label for model
