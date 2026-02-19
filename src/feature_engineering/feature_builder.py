@@ -20,20 +20,16 @@ def build_features(processed_dir="data/processed"):
         df = add_serve_return_features(df)
         df = add_match_context_features(df)
 
-        #creates target variable for model
-        #atm im using a winner perspective dataset so label is always 1 (1==winner)
-        #later we may implement loser rows too
-        df["label"] = 1
 
         feature_frame.append(df)
 
-    all_years_df = pd.concat(feature_frame)
+    #ignore index prevents index collision when concatenating years
+    all_years_df = pd.concat(feature_frame, ignore_index=True)
     return all_years_df
 
 #building features from df not csv file for white box test
 def build_features_from_df(df: pd.DataFrame) -> pd.DataFrame:
     df = add_serve_return_features(df)
     df = add_match_context_features(df)
-    df["label"] = 1
     return df
 

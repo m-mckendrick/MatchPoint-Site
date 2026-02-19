@@ -1,10 +1,10 @@
 import pandas as pd
-from src.data_preprocessing.mirror_raw_rows import mirror_raw_rows
+from src.data_preprocessing.mirror_rows import mirror_rows
 
-def test_mirror_raw_rows_whitebox(raw_match_df):
+def test_mirror_rows_whitebox(cleaned_match_df):
 
-    df = raw_match_df.copy()
-    mirrored = mirror_raw_rows(df)
+    df = cleaned_match_df.copy()
+    mirrored = mirror_rows(df)
 
     # first winner and loser rows
     winner_row = mirrored[mirrored["perspective"] == "winner"].iloc[0]
@@ -28,18 +28,27 @@ def test_mirror_raw_rows_whitebox(raw_match_df):
         ("w_ace", "l_ace"),
         ("w_df", "l_df"),
         ("w_svpt", "l_svpt"),
-        ("w_1stIn", "l_1stIn"),
-        ("w_1stWon", "l_1stWon"),
-        ("w_2ndWon", "l_2ndWon"),
-        ("w_SvGms", "l_SvGms"),
-        ("w_bpSaved", "l_bpSaved"),
-        ("w_bpFaced", "l_bpFaced"),
+        ("w_1stin", "l_1stin"),
+        ("w_1stwon", "l_1stwon"),
+        ("w_2ndwon", "l_2ndwon"),
+        ("w_svgms", "l_svgms"),
+        ("w_bpsaved", "l_bpsaved"),
+        ("w_bpfaced", "l_bpfaced"),
     ]
 
     #check all swaps
+    #check if both are na if so do nothing
     for w_col, l_col in player_pairs + serve_return_pairs:
-        assert winner_row[w_col] == loser_row[l_col]
-        assert winner_row[l_col] == loser_row[w_col]
+        if pd.isna(winner_row[w_col]) and pd.isna(loser_row[l_col]):
+            pass
+        else:
+            assert winner_row[w_col] == loser_row[l_col]
+
+        # reverse swap (loser → winner)
+        if pd.isna(winner_row[l_col]) and pd.isna(loser_row[w_col]):
+            pass
+        else:
+            assert winner_row[l_col] == loser_row[w_col]
 
     # columns should be identical
     metadata_cols = [

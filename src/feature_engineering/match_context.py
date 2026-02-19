@@ -40,16 +40,16 @@ def encode_round(row):
 def add_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
 
     #rank and more specific rank points
-    df["rank_diff"] = df["loser_rank"] - df["winner_rank"]
-    df["rank_points_diff"] = df["loser_rank_points"] - df["winner_rank_points"]
+    df["rank_diff"] = df["p2_rank"] - df["p1_rank"]
+    df["rank_points_diff"] = df["p2_rank_points"] - df["p1_rank_points"]
     #seed significance (pressure?)
-    df["winner_unseeded"] = df["winner_seed"].isna().astype(int)
-    df["loser_unseeded"] = df["loser_seed"].isna().astype(int)
+    df["p1_unseeded"] = df["p1_seed"].isna().astype(int)
+    df["p2_unseeded"] = df["p2_seed"].isna().astype(int)
 
     #if both seed calculate difference
     df["seed_diff"] = np.where(
-        (df["winner_unseeded"] == 0) & (df["loser_unseeded"] == 0),
-        df["loser_seed"] - df["winner_seed"],
+        (df["p1_unseeded"] == 0) & (df["p2_unseeded"] == 0),
+        df["p2_seed"] - df["p1_seed"],
         np.nan
     )
 
@@ -66,9 +66,9 @@ def add_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
         df["is_retirement"] = 0
 
     #changes match pattern dynamics
-    df["winner_lefty"] = (df["winner_hand"] == "L").astype(int)
-    df["loser_lefty"] = (df["loser_hand"] == "L").astype(int)
-    df["lefty_diff"] = df["winner_lefty"] - df["loser_lefty"]
+    df["p1_lefty"] = (df["p1_hand"] == "L").astype(int)
+    df["p2_lefty"] = (df["p2_hand"] == "L").astype(int)
+    df["lefty_diff"] = df["p1_lefty"] - df["p2_lefty"]
 
     #takes surface columns makes 0/1 colums for each surface and fill them
     df = pd.get_dummies(df, columns=["surface"], prefix="surface")
@@ -80,40 +80,13 @@ def add_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     df["match_year"] = pd.to_datetime(df["tourney_date"]).dt.year
 
     #younger usually more durable
-    df["age_diff"] = df["loser_age"] - df["winner_age"]
+    df["age_diff"] = df["p2_age"] - df["p1_age"]
 
     #heavy influence on serve
-    df["height_diff"] = df["loser_ht"] - df["winner_ht"]
+    df["height_diff"] = df["p2_ht"] - df["p1_ht"]
 
     #help tournament understand importance maybe has effect on pressure
     prestige_map = {"G": 4, "M": 3, "A": 2, "B": 1}
     df["tourney_prestige"] = df["tourney_level"].map(prestige_map)
 
     return df
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

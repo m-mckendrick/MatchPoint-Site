@@ -1,12 +1,12 @@
 import pandas as pd
 from src.data_preprocessing.convert_to_p1p2 import convert_to_p1p2
 
-def test_convert_basic_mapping(raw_match_df):
-    out = convert_to_p1p2(raw_match_df)
+def test_convert_basic_mapping(cleaned_match_df):
+    out = convert_to_p1p2(cleaned_match_df)
 
     # loop through fixture
-    for i in range(len(raw_match_df)):
-        row_in = raw_match_df.iloc[i]
+    for i in range(len(cleaned_match_df)):
+        row_in = cleaned_match_df.iloc[i]
         row_out = out.iloc[i]
 
         # p1 should match winner
@@ -20,24 +20,24 @@ def test_convert_basic_mapping(raw_match_df):
         assert row_out["p2_ace"] == row_in["l_ace"]
 
 
-def test_metadata_preserved(raw_match_df):
-    out = convert_to_p1p2(raw_match_df)
+def test_metadata_preserved(cleaned_match_df):
+    out = convert_to_p1p2(cleaned_match_df)
 
     metadata_cols = [
         "tourney_id", "tourney_name", "surface", "draw_size",
         "tourney_level", "tourney_date", "match_num",
-        "score", "best_of", "round", "minutes"
+        "score", "best_of", "round", "minutes", "tiebreak_scores"
     ]
 
     for col in metadata_cols:
-        assert all(out[col] == raw_match_df[col])
+        assert all(out[col] == cleaned_match_df[col])
 
 
-def test_output_shape(raw_match_df):
-    out = convert_to_p1p2(raw_match_df)
+def test_output_shape(cleaned_match_df):
+    out = convert_to_p1p2(cleaned_match_df)
 
     # same number of rows
-    assert len(out) == len(raw_match_df)
+    assert len(out) == len(cleaned_match_df)
 
     # p1/p2 columns exist
     expected_p1_cols = ["p1_id", "p1_rank", "p1_ace"]
@@ -47,8 +47,8 @@ def test_output_shape(raw_match_df):
         assert col in out.columns
 
 
-def test_no_winner_loser_columns(raw_match_df):
-    out = convert_to_p1p2(raw_match_df)
+def test_no_winner_loser_columns(cleaned_match_df):
+    out = convert_to_p1p2(cleaned_match_df)
     #make sure no left over w l columns
     forbidden = [
         c for c in out.columns

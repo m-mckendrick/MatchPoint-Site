@@ -7,32 +7,32 @@ from src.feature_engineering.match_context import add_match_context_features, en
 
 def test_seed_diff_both_unseeded():
     df = pd.DataFrame([{
-        "winner_rank": 10,
-        "loser_rank": 20,
-        "winner_rank_points": 3000,
-        "loser_rank_points": 1500,
-        "winner_seed": np.nan,
-        "loser_seed": np.nan,
-        "winner_hand": "R",
-        "loser_hand": "R",
+        "p1_rank": 10,
+        "p2_rank": 20,
+        "p1_rank_points": 3000,
+        "p2_rank_points": 1500,
+        "p1_seed": np.nan,
+        "p2_seed": np.nan,
+        "p1_hand": "R",
+        "p2_hand": "R",
         "surface": "Clay",
         "round": "R16",
         "draw_size": 32,
         "tourney_level": "A",
         "best_of": 3,
         "tourney_date": "2024-01-01",
-        "winner_age": 30,
-        "loser_age": 25,
-        "winner_ht": 190,
-        "loser_ht": 185
+        "p1_age": 30,
+        "p2_age": 25,
+        "p1_ht": 190,
+        "p2_ht": 185
     }])
 
     out = add_match_context_features(df)
 
     #both are unseeded so seed diff should be na
     assert np.isnan(out["seed_diff"].iloc[0])
-    assert out["winner_unseeded"].iloc[0] == 1
-    assert out["loser_unseeded"].iloc[0] == 1
+    assert out["p1_unseeded"].iloc[0] == 1
+    assert out["p2_unseeded"].iloc[0] == 1
 
 #if round recorded as RR then encoded round cannot be encoded with algorithm
 def test_encode_round_invalid_round():
@@ -53,24 +53,24 @@ def test_encode_round_non_power_of_two_draw():
 #if tourney level isn't known eg z (or could be one wasnt removed during cleaning like Olympics)
 def test_prestige_unknown_level():
     df = pd.DataFrame([{
-        "winner_rank": 10,
-        "loser_rank": 20,
-        "winner_rank_points": 3000,
-        "loser_rank_points": 1500,
-        "winner_seed": 1,
-        "loser_seed": 2,
-        "winner_hand": "R",
-        "loser_hand": "R",
+        "p1_rank": 10,
+        "p2_rank": 20,
+        "p1_rank_points": 3000,
+        "p2_rank_points": 1500,
+        "p1_seed": 1,
+        "p2_seed": 2,
+        "p1_hand": "R",
+        "p2_hand": "R",
         "surface": "Grass",
         "round": "F",
         "draw_size": 32,
         "tourney_level": "Z",
         "best_of": 3,
         "tourney_date": "2024-01-01",
-        "winner_age": 30,
-        "loser_age": 25,
-        "winner_ht": 190,
-        "loser_ht": 185
+        "p1_age": 30,
+        "p2_age": 25,
+        "p1_ht": 190,
+        "p2_ht": 185
     }])
 
     out = add_match_context_features(df)
@@ -81,28 +81,28 @@ def test_prestige_unknown_level():
 #testing all the combination of the lefty matchup indicators
 def test_lefty_logic_all_combinations():
     df = pd.DataFrame([
-        {"winner_hand": "L", "loser_hand": "L"},
-        {"winner_hand": "L", "loser_hand": "R"},
-        {"winner_hand": "R", "loser_hand": "L"},
-        {"winner_hand": "R", "loser_hand": "R"},
+        {"p1_hand": "L", "p2_hand": "L"},
+        {"p1_hand": "L", "p2_hand": "R"},
+        {"p1_hand": "R", "p2_hand": "L"},
+        {"p1_hand": "R", "p2_hand": "R"},
     ])
 
-    df["winner_rank"] = 1
-    df["loser_rank"] = 2
-    df["winner_rank_points"] = 1000
-    df["loser_rank_points"] = 900
-    df["winner_seed"] = 1
-    df["loser_seed"] = 2
+    df["p1_rank"] = 1
+    df["p2_rank"] = 2
+    df["p1_rank_points"] = 1000
+    df["p2_rank_points"] = 900
+    df["p1_seed"] = 1
+    df["p2_seed"] = 2
     df["surface"] = "Hard"
     df["round"] = "R32"
     df["draw_size"] = 32
     df["tourney_level"] = "A"
     df["best_of"] = 3
     df["tourney_date"] = "2024-01-01"
-    df["winner_age"] = 30
-    df["loser_age"] = 25
-    df["winner_ht"] = 190
-    df["loser_ht"] = 185
+    df["p1_age"] = 30
+    df["p2_age"] = 25
+    df["p1_ht"] = 190
+    df["p2_ht"] = 185
 
     out = add_match_context_features(df)
 
@@ -114,24 +114,24 @@ def test_retirement_detection():
         {"score": "6-4,6-4"},
     ])
 
-    df["winner_rank"] = 1
-    df["loser_rank"] = 2
-    df["winner_rank_points"] = 1000
-    df["loser_rank_points"] = 900
-    df["winner_seed"] = 1
-    df["loser_seed"] = 2
+    df["p1_rank"] = 1
+    df["p2_rank"] = 2
+    df["p1_rank_points"] = 1000
+    df["p2_rank_points"] = 900
+    df["p1_seed"] = 1
+    df["p2_seed"] = 2
     df["surface"] = "Hard"
     df["round"] = "R32"
     df["draw_size"] = 32
     df["tourney_level"] = "A"
     df["best_of"] = 3
     df["tourney_date"] = "2024-01-01"
-    df["winner_age"] = 30
-    df["loser_age"] = 25
-    df["winner_ht"] = 190
-    df["loser_ht"] = 185
-    df["winner_hand"] = "L"
-    df["loser_hand"] = "R"
+    df["p1_age"] = 30
+    df["p2_age"] = 25
+    df["p1_ht"] = 190
+    df["p2_ht"] = 185
+    df["p1_hand"] = "L"
+    df["p2_hand"] = "R"
 
     out = add_match_context_features(df)
 

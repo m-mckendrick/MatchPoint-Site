@@ -248,15 +248,9 @@ def data_health_check(df):
 
 #%%
 #final step clean and save
-
-from src.data_preprocessing.mirror_raw_rows import mirror_raw_rows
-from src.data_preprocessing.convert_to_p1p2 import convert_to_p1p2
-
 def clean_matches(df):
     df = (
-        df.pipe(mirror_raw_rows)
-
-        .pipe(normalise_headers)
+       df.pipe(normalise_headers)
         .pipe(filter_atp_events)
         .pipe(normalise_missing_values)
         .pipe(parse_dates)
@@ -270,24 +264,33 @@ def clean_matches(df):
         .pipe(validate_best_of)
         .pipe(validate_minutes)
         .pipe(extract_tiebreak_score_string)
-        .pipe(convert_to_p1p2)
     )
     return df
 
 #%%
-# process year (function that reads raw csv and cleans them all and save them )
+#separaete make ready for model
+from src.data_preprocessing.mirror_rows import mirror_rows
+from src.data_preprocessing.convert_to_p1p2 import convert_to_p1p2
 
+def convert_for_model(df):
+    df = (
+        df.pipe(mirror_rows)
+        .pipe(convert_to_p1p2)
+     )
+    return df
+
+#%%
+# process year (function that reads raw csv and cleans them all and save them )
 
 def process_year(year):
 
     input_path = RAW_DIR / f"atp_matches_{year}.csv"
     output_path = PROCESSED_DIR / f"atp_matches_{year}_clean.csv"
 
-
     df = pd.read_csv(input_path)
     df_clean = clean_matches(df)
-    df_clean = filter_atp_events(df_clean)
-    df_clean.to_csv(output_path, index=False)
+    df_model_ready=conver_for_model(df_clean)
+    df_model.to_csv(output_path, index=False)
 
     print(f" Cleaned {year} — {len(df_clean)} matches")
     #data_health_check(df_clean)
@@ -297,7 +300,7 @@ def process_year(year):
 if __name__ == "__main__":
     df = pd.read_csv(RAW_PATH)
     df_clean = clean_matches(df)
-    #data_health_check(df_clean)
+    df_model_ready=conver_for_model(df_clean)
     df_clean.to_csv(PROCESSED_DIR / "atp_matches_2024_clean.csv", index=False)
 
 

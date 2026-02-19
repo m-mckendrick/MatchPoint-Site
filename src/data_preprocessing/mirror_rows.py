@@ -1,7 +1,7 @@
 import pandas as pd
 
 #for logistical regression need a winner perspective 1 and losers perspective 0
-def mirror_raw_rows(df: pd.DataFrame) -> pd.DataFrame:
+def mirror_rows(df: pd.DataFrame) -> pd.DataFrame:
 
     df_loser = df.copy()
 
@@ -24,19 +24,19 @@ def mirror_raw_rows(df: pd.DataFrame) -> pd.DataFrame:
         ("w_ace", "l_ace"),
         ("w_df", "l_df"),
         ("w_svpt", "l_svpt"),
-        ("w_1stIn", "l_1stIn"),
-        ("w_1stWon", "l_1stWon"),
-        ("w_2ndWon", "l_2ndWon"),
-        ("w_SvGms", "l_SvGms"),
-        ("w_bpSaved", "l_bpSaved"),
-        ("w_bpFaced", "l_bpFaced"),
+        ("w_1stin", "l_1stin"),
+        ("w_1stwon", "l_1stwon"),
+        ("w_2ndwon", "l_2ndwon"),
+        ("w_svgms", "l_svgms"),
+        ("w_bpsaved", "l_bpsaved"),
+        ("w_bpfaced", "l_bpfaced"),
     ]
 
     #swap all pairs
     all_pairs = player_pairs + serve_return_pairs
 
     for w_col, l_col in all_pairs:
-        df_loser[w_col] = df[l_col] 
+        df_loser[w_col] = df[l_col]
         df_loser[l_col] = df[w_col]
 
 

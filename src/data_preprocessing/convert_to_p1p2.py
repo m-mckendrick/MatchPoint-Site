@@ -48,11 +48,10 @@ def convert_to_p1p2(df):
         "p2_name": "loser_name",
     }
 
-
     new_df = pd.DataFrame()
 
-    #
-    match_cols = [c for c in df.columns if c not in p1_cols.values() and c not in p2_cols.values()]
+    # keep metadata
+    match_cols = [ c for c in df.columns if c not in p1_cols.values() and c not in p2_cols.values() ]
     new_df[match_cols] = df[match_cols]
 
     # map1+p2 columns
@@ -62,17 +61,17 @@ def convert_to_p1p2(df):
     for new_col, old_col in p2_cols.items():
         new_df[new_col] = df[old_col] if old_col in df.columns else pd.NA
 
-    #delete left over duplicate columns
+
+    # drop leftover winner/loser and w_/l_ columns
     cols_to_drop = [
-        "winner_seed", "winner_entry", "winner_name",
-        "loser_seed", "loser_entry", "loser_name"
+        c for c in new_df.columns
+        if c.startswith("winner_")
+           or c.startswith("loser_")
+           or c.startswith("w_")
+           or c.startswith("l_")
     ]
 
-    new_df = new_df.drop(columns=[c for c in cols_to_drop if c in new_df.columns])
-
-    # drop all leftover w and l columns
-    drop_cols = [c for c in df.columns if c.startswith("w_") or c.startswith("l_")]
-    new_df = new_df.drop(columns=drop_cols, errors="ignore")
+    new_df = new_df.drop(columns=cols_to_drop, errors="ignore")
 
 
     return new_df

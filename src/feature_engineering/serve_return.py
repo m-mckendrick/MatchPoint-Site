@@ -35,38 +35,39 @@ def compute_bp_conversion_pct(df, opp_df):
     opp_bp_saved = opp_df["bpsaved"]
     return (opp_bp_faced - opp_bp_saved) / opp_bp_faced.replace(0, np.nan)
 
+#maybe change this
 def compute_serve_dominance_index(spw_pct, rpw_pct):
     return spw_pct - rpw_pct
 
 def add_serve_return_features(df):
 
-    # Winner stats
-    #these line both get the w or l stats then renames them without the w or l in front
+    # p1 stats
+    #these line both get the p1 or p2 stats then renames them without the p1 or p2 in front
     #therefore the can both be plugged into the functions above
-    w = df.filter(regex="^w_").rename(columns=lambda c: c[2:])
-    l = df.filter(regex="^l_").rename(columns=lambda c: c[2:])
+    p1 = df.filter(regex="^p1_").rename(columns=lambda c: c[3:])
+    p2 = df.filter(regex="^p2_").rename(columns=lambda c: c[3:])
 
-    df["w_first_serve_pct"] = compute_first_serve_pct(w)
-    df["w_first_serve_won_pct"] = compute_first_serve_won_pct(w)
-    df["w_second_serve_won_pct"] = compute_second_serve_won_pct(w)
-    df["w_df_rate"] = compute_double_fault_rate(w)
-    df["w_aces_per_game"] = compute_aces_per_game(w)
-    df["w_bp_save_pct"] = compute_bp_save_pct(w)
-    df["w_spw_pct"] = compute_serve_points_won_pct(w)
-    df["w_rpw_pct"] = compute_return_points_won_pct(w, l)
-    df["w_bp_conv_pct"] = compute_bp_conversion_pct(w, l)
-    df["w_sdi"] = compute_serve_dominance_index(df["w_spw_pct"], df["w_rpw_pct"])
+    df["p1_first_serve_pct"] = compute_first_serve_pct(p1)
+    df["p1_first_serve_won_pct"] = compute_first_serve_won_pct(p1)
+    df["p1_second_serve_won_pct"] = compute_second_serve_won_pct(p1)
+    df["p1_df_rate"] = compute_double_fault_rate(p1)
+    df["p1_aces_per_game"] = compute_aces_per_game(p1)
+    df["p1_bp_save_pct"] = compute_bp_save_pct(p1)
+    df["p1_spw_pct"] = compute_serve_points_won_pct(p1)
+    df["p1_rpw_pct"] = compute_return_points_won_pct(p1, p2)
+    df["p1_bp_conv_pct"] = compute_bp_conversion_pct(p1, p2)
+    df["p1_sdi"] = compute_serve_dominance_index(df["p1_spw_pct"], df["p1_rpw_pct"])
 
-    # Loser stats
-    df["l_first_serve_pct"] = compute_first_serve_pct(l)
-    df["l_first_serve_won_pct"] = compute_first_serve_won_pct(l)
-    df["l_second_serve_won_pct"] = compute_second_serve_won_pct(l)
-    df["l_df_rate"] = compute_double_fault_rate(l)
-    df["l_aces_per_game"] = compute_aces_per_game(l)
-    df["l_bp_save_pct"] = compute_bp_save_pct(l)
-    df["l_spw_pct"] = compute_serve_points_won_pct(l)
-    df["l_rpw_pct"] = compute_return_points_won_pct(l, w)
-    df["l_bp_conv_pct"] = compute_bp_conversion_pct(l, w)
-    df["l_sdi"] = compute_serve_dominance_index(df["l_spw_pct"], df["l_rpw_pct"])
+    # loser stats
+    df["p2_first_serve_pct"] = compute_first_serve_pct(p2)
+    df["p2_first_serve_won_pct"] = compute_first_serve_won_pct(p2)
+    df["p2_second_serve_won_pct"] = compute_second_serve_won_pct(p2)
+    df["p2_df_rate"] = compute_double_fault_rate(p2)
+    df["p2_aces_per_game"] = compute_aces_per_game(p2)
+    df["p2_bp_save_pct"] = compute_bp_save_pct(p2)
+    df["p2_spw_pct"] = compute_serve_points_won_pct(p2)
+    df["p2_rpw_pct"] = compute_return_points_won_pct(p2, p1)
+    df["p2_bp_conv_pct"] = compute_bp_conversion_pct(p2, p1)
+    df["p2_sdi"] = compute_serve_dominance_index(df["p2_spw_pct"], df["p2_rpw_pct"])
 
     return df

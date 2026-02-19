@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 from datetime import datetime
 
+from src.data_preprocessing.convert_to_p1p2 import convert_to_p1p2
 
 #raw df example for testing
 #inclueds 2 matches before cleaning
@@ -130,27 +131,13 @@ def raw_match_df():
 #cleaned df with matches that have been cleaned
 @pytest.fixture
 def cleaned_match_df(raw_match_df):
-    df = raw_match_df.copy()
+    from src.data_preprocessing.clean_pipeline import clean_matches
+    return clean_matches(raw_match_df.copy())
 
-    #header normalisation
-    df.columns = df.columns.str.lower()
+#new fixture that converts cleaned df to model ready df with 2 perspectives
+@pytest.fixture
+def p1p2_match_df(cleaned_match_df):
+    from src.data_preprocessing.clean_pipeline import convert_for_model
+    return convert_for_model(cleaned_match_df.copy())
 
-    #convert date
-    df["tourney_date"] = pd.to_datetime(df["tourney_date"], format="%Y%m%d")
 
-    #map hands
-    hand_map = {"R": "Right", "L": "Left", "U": "Unknown"}
-    df["winner_hand"] = df["winner_hand"].map(hand_map)
-    df["loser_hand"] = df["loser_hand"].map(hand_map)
-
-    #normalise categories
-    df["surface"] = df["surface"].str.title()
-    df["round"] = df["round"].str.upper()
-
-    #add tiebreak scores (placeholder)
-    df["tiebreak_scores"] = ["none" "none" "none" "none" "none","none none none"]
-
-    #normalise empty strings
-    df = df.replace(["", " ", ".", "--", "NR", "?"], pd.NA)
-
-    return df

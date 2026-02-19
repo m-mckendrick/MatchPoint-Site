@@ -1,10 +1,10 @@
 import pandas as pd
-from src.data_preprocessing.mirror_raw_rows import mirror_raw_rows
+from src.data_preprocessing.mirror_rows import mirror_rows
 
-def test_mirror_raw_rows_blackbox(raw_match_df):
+def test_mirror_rows_blackbox(cleaned_match_df):
 
-    df = raw_match_df.copy()
-    mirrored = mirror_raw_rows(df)
+    df = cleaned_match_df.copy()
+    mirrored = mirror_rows(df)
 
     # row count doubled
     assert len(mirrored) == len(df) * 2
