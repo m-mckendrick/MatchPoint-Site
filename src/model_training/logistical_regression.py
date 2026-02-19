@@ -5,6 +5,7 @@ from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.preprocessing import StandardScaler
 import joblib
 
 '''
@@ -25,14 +26,15 @@ def load_feature_data(processed_dir):
     df = build_features(processed_dir)
     return df
 
-#get rid of columns that arn't predictive
+#get rid of columns that aren't predictive
+#intentionally excludes mathc level data
 def prepare_dataset(df: pd.DataFrame):
 
     y = df["label"]
 
     # columns that leak match outcome or depend on the opponent
     leaky_cols = [
-        "score", "tiebreak_scores", "minutes", "perspective",
+        "score", "tiebreak_scores", "minutes", "perspective","label",
 
         # match-level stats
         "p1_ace", "p1_df", "p1_svpt", "p1_1stin", "p1_1stwon", "p1_2ndwon",
@@ -57,7 +59,9 @@ def prepare_dataset(df: pd.DataFrame):
         "tourney_date", "round", "tourney_level", "p1_hand", "p2_hand"
     ]
 
-    cols_to_drop = [c for c in leaky_cols + id_text_cols if c in df.columns]
+    non_predictive = ["best_of", "draw_size"]
+
+    cols_to_drop = [c for c in leaky_cols + id_text_cols + non_predictive if c in df.columns]
 
     x = df.drop(columns=cols_to_drop)
 
@@ -70,27 +74,28 @@ def prepare_dataset(df: pd.DataFrame):
 
 
 #use standard scaler
+#basically makes it so bigger number doesn't = more significant difference
 def train_logistical_regression(x_train, y_train):
     scaler = StandardScaler()
     x_train_scaled = scaler.fit_transform(x_train)
 
     model = LogisticRegression(max_iter=2000)
-    model.fit(x_train, y_train)
-    return model
+    model.fit(x_train_scaled, y_train)
+    return model, scaler
 
 #
-def evaluate_logistical_regression(model, x_test, y_test):
-    y_preds = model.predict(x_test)
-    y_probs = model.predict_proba(x_test)[:, 1]
-
+def evaluate_logistical_regression(model, scaler, x_test, y_test):
+    x_test_scaled = scaler.transform(x_test)
+    y_preds = model.predict(x_test_scaled)
+    y_probs = model.predict_proba(x_test_scaled)[:, 1]
     return {
         "accuracy": accuracy_score(y_test, y_preds),
         "roc_auc": roc_auc_score(y_test, y_probs),
     }
 
-def save_logistical_regression(model, path="models/logreg_baseline.pkl"):
+def save_logistical_regression(model, scaler, path="models/logreg_baseline.pkl"):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
-    joblib.dump(model, path)
+    joblib.dump({"model": model, "scaler": scaler}, path)
 
 def main():
     print("Loading and building features...")
@@ -107,17 +112,17 @@ def main():
     )
 
     print("Training logistic regression...")
-    model = train_logistical_regression(x_train, y_train)
+    model, scaler = train_logistical_regression(x_train, y_train)
 
     print("Evaluating model...")
-    metrics = evaluate_logistical_regression(model, x_test, y_test)
+    metrics = evaluate_logistical_regression(model, scaler, x_test, y_test)
 
     print("Accuracy:", metrics["accuracy"])
 
     print("ROC AUC:", metrics["roc_auc"])
 
     print("Saving model...")
-    save_logistical_regression(model)
+    save_logistical_regression(model, scaler)
 
     print("Done!")
 
