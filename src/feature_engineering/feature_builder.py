@@ -33,3 +33,21 @@ def build_features_from_df(df: pd.DataFrame) -> pd.DataFrame:
     df = add_match_context_features(df)
     return df
 
+if __name__ == "__main__":
+    processed_dir = Path("data/processed")
+
+    print(f"Loading processed CSVs from: {processed_dir.resolve()}")
+
+    df = build_features(processed_dir)
+
+    print("\nsize:")
+    print(f"Rows: {df.shape[0]}")
+    print(f"Columns: {df.shape[1]}\n")
+
+    print("column names: ")
+    for col in df.columns:
+        print(col)
+
+    print("\nDone!")
+
+
