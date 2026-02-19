@@ -14,7 +14,7 @@ def build_features(processed_dir="data/processed"):
         raise FileNotFoundError("No csv files found in {}".format(processed_dir))
 
     feature_frame=[]
-
+    #right now only builds match level features
     for file in csv_files:
         df = pd.read_csv(file)
         df = add_serve_return_features(df)
