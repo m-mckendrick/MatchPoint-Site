@@ -17,6 +17,9 @@ def build_features(processed_dir="data/processed"):
     #right now only builds match level features
     for file in csv_files:
         df = pd.read_csv(file)
+        #datetime gets converted to string by pandas
+        df["tourney_date"] = pd.to_datetime(df["tourney_date"], errors="coerce")
+
         df = add_serve_return_features(df)
         df = add_match_context_features(df)
 
