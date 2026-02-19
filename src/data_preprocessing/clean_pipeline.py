@@ -8,7 +8,6 @@ from pathlib import Path
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 120)
 
-RAW_PATH = "data/raw/atp_matches_2024.csv"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
@@ -289,8 +288,8 @@ def process_year(year):
 
     df = pd.read_csv(input_path)
     df_clean = clean_matches(df)
-    df_model_ready=conver_for_model(df_clean)
-    df_model.to_csv(output_path, index=False)
+    df_model_ready=convert_for_model(df_clean)
+    df_model_ready.to_csv(output_path, index=False)
 
     print(f" Cleaned {year} — {len(df_clean)} matches")
     #data_health_check(df_clean)
@@ -298,9 +297,8 @@ def process_year(year):
 #%%
 #if file directly ran cleans and saves 2024
 if __name__ == "__main__":
-    df = pd.read_csv(RAW_PATH)
-    df_clean = clean_matches(df)
-    df_model_ready=conver_for_model(df_clean)
-    df_clean.to_csv(PROCESSED_DIR / "atp_matches_2024_clean.csv", index=False)
+    for i in range(2016,2018):
+        process_year(i)
+    #process_year(2018)
 
 

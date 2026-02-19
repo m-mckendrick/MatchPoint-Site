@@ -14,8 +14,13 @@ rule is set for 0 or 1 eg. if over 0.4 predict 1
 graph created is a s shaped line
 '''
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+RAW_DIR = PROJECT_ROOT / "data" / "raw"
+PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+
 #build our df with features
-def load_feature_data(processed_dir="../../data/processed"):
+def load_feature_data(processed_dir):
     df = build_features(processed_dir)
     return df
 
@@ -26,33 +31,28 @@ def prepare_dataset(df: pd.DataFrame):
 
     cols_to_drop = [
         #ids
-        "tourney_id", "match_num", "winner_id", "loser_id",
-
-        #raw text
-        "score", "tiebreak_scores", "tourney_name", "winner_entry", "loser_entry", "winner_name", "winner_ioc", "loser_name", "loser_ioc",
-
-        #raw categories that are replaced
-        "surface", "round", "tourney_level","winner_hand", "loser_hand",
-
-        #raw date
+        "tourney_id","match_num", "p1_id", "p2_id",
+        # Raw text fields
+        "tourney_name", "score", "tiebreak_scores", "p1_name", "p2_name", "p1_ioc", "p2_ioc", "p1_entry", "p2_entry",
+        # Raw categories (replaced by encoded versions)
+        "tourney_level", "round", "surface", "p1_hand", "p2_hand",
+        # Raw date
         "tourney_date",
+        # Perspective column (string)
+        "perspective",
     ]
 
 
     #make sure columns arnt na e.g(tiebreak scores)
     cols_to_drop = [c for c in cols_to_drop if c in df.columns]
 
-    #so also drop id columns
-    id_cols = [c for c in df.columns if "id" in c.lower()]
-    cols_to_drop.extend(id_cols)
-
     x=df.drop(columns=cols_to_drop)
 
-    #model cant handle na so replace na with 0
+    #model cant handle na so replace na with 0 probably figure out individual
     x = x.fillna(0)
 
     print("Non-numeric columns:", x.select_dtypes(include="object").columns.tolist())
-
+    print("columns used:",x.columns.tolist())
 
     return x,y
 
@@ -80,7 +80,7 @@ def main():
     print("Loading and building features...")
     print(Path("../../data/processed").resolve())
 
-    df = load_feature_data()
+    df = load_feature_data(PROCESSED_DIR)
 
     print("Preparing dataset...")
     x, y = prepare_dataset(df)
@@ -99,10 +99,10 @@ def main():
     print("Accuracy:", metrics["accuracy"])
 
     print("ROC AUC:", metrics["roc_auc"])
-    '''
+
     print("Saving model...")
     save_logistical_regression(model)
-    '''
+
     print("Done!")
 
 if __name__ == "__main__":
