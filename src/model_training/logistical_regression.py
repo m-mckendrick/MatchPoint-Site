@@ -1,4 +1,5 @@
 from src.feature_engineering.feature_builder import build_features
+from src.model_training.dataset_preparation import prepare_dataset
 
 import pandas as pd
 from pathlib import Path
@@ -26,64 +27,19 @@ def load_feature_data(processed_dir):
     df = build_features(processed_dir)
     return df
 
-#get rid of columns that aren't predictive
-#intentionally excludes mathc level data
-def prepare_dataset(df: pd.DataFrame):
-
-    y = df["label"]
-
-    # columns that leak match outcome or depend on the opponent
-    leaky_cols = [
-        "score", "tiebreak_scores", "minutes", "perspective","label",
-
-        # match-level stats
-        "p1_ace", "p1_df", "p1_svpt", "p1_1stin", "p1_1stwon", "p1_2ndwon",
-        "p1_svgms", "p1_bpsaved", "p1_bpfaced",
-        "p2_ace", "p2_df", "p2_svpt", "p2_1stin", "p2_1stwon", "p2_2ndwon",
-        "p2_svgms", "p2_bpsaved", "p2_bpfaced",
-
-        # engineered match-level stats
-        "p1_first_serve_pct", "p1_first_serve_won_pct", "p1_second_serve_won_pct",
-        "p1_df_rate", "p1_aces_per_game", "p1_bp_save_pct", "p1_spw_pct",
-        "p1_rpw_pct", "p1_bp_conv_pct", "p1_sdi",
-        "p2_first_serve_pct", "p2_first_serve_won_pct", "p2_second_serve_won_pct",
-        "p2_df_rate", "p2_aces_per_game", "p2_bp_save_pct", "p2_spw_pct",
-        "p2_rpw_pct", "p2_bp_conv_pct", "p2_sdi",
-    ]
-
-    # id and text columns
-    id_text_cols = [
-        "tourney_id", "match_num", "p1_id", "p2_id",
-        "tourney_name", "p1_name", "p2_name",
-        "p1_ioc", "p2_ioc", "p1_entry", "p2_entry",
-        "tourney_date", "round", "tourney_level", "p1_hand", "p2_hand"
-    ]
-
-    non_predictive = ["best_of", "draw_size"]
-
-    cols_to_drop = [c for c in leaky_cols + id_text_cols + non_predictive if c in df.columns]
-
-    x = df.drop(columns=cols_to_drop)
-
-    # Fill NA
-    x = x.fillna(0)
-
-    print("Non-numeric columns:", x.select_dtypes(include="object").columns.tolist())
-    print("columns used:",x.columns.tolist())
-    return x, y
-
 
 #use standard scaler
-#basically makes it so bigger number doesn't = more significant difference
+#it standardises every numeric feature so that they all live on the same scale
 def train_logistical_regression(x_train, y_train):
     scaler = StandardScaler()
     x_train_scaled = scaler.fit_transform(x_train)
 
+    #because my features vary in scale alot a the optimiser need more steps than normal(100) to find the best solution
     model = LogisticRegression(max_iter=2000)
     model.fit(x_train_scaled, y_train)
     return model, scaler
 
-#
+#ROC AUC: 69% of the time, the model ranks a winning match higher than a losing match
 def evaluate_logistical_regression(model, scaler, x_test, y_test):
     x_test_scaled = scaler.transform(x_test)
     y_preds = model.predict(x_test_scaled)
@@ -102,6 +58,8 @@ def main():
     print(Path("../../data/processed").resolve())
 
     df = load_feature_data(PROCESSED_DIR)
+    print ("Training Columns...")
+    print(df.columns)
 
     print("Preparing dataset...")
     x, y = prepare_dataset(df)
