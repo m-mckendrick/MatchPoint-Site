@@ -33,3 +33,5 @@ def handle_na(df: pd.DataFrame):
     # Categorical columns: fill with "Unknown"
     cat_cols = df.select_dtypes(include=["object"]).columns
     df[cat_cols] = df[cat_cols].fillna("Unknown")
+
+    return df
