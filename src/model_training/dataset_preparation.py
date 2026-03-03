@@ -12,9 +12,9 @@ def prepare_dataset(df: pd.DataFrame):
 
     y = df["label"]
 
-    ALLOWED_FEATURES = [ "p1_rank", "p1_age", "p1_ht", "p1_rank_points", "p1_seed", "p2_rank", "p2_age",
-                         "p2_ht", "p2_rank_points", "p2_seed", "rank_diff", "rank_points_diff", "p1_unseeded",
-                         "p2_unseeded", "seed_diff", "is_grand_slam", "is_masters", "is_best_of_five",
+    ALLOWED_FEATURES = [ "p1_rank", "p1_age", "p1_ht", "p1_rank_points", "p2_rank", "p2_age",
+                         "p2_ht", "p2_rank_points", "rank_diff", "rank_points_diff",
+                         "is_grand_slam", "is_masters", "is_best_of_five",
                          "p1_lefty", "p2_lefty", "lefty_diff", "surface_Clay", "surface_Grass",
                          "surface_Hard", "round_encoded", "match_year", "age_diff", "height_diff",
                          "tourney_prestige"
