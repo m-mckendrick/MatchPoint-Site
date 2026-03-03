@@ -2,7 +2,8 @@ import pandas as pd
 from pathlib import Path
 
 from .serve_return import add_serve_return_features
-from .match_context import add_match_context_features
+from .match_context import add_pre_match_context_features
+from .match_context import add_post_match_context_features
 
 def build_features(processed_dir="data/processed"):
     #get all csv that have been cleaned
@@ -21,7 +22,8 @@ def build_features(processed_dir="data/processed"):
         df["tourney_date"] = pd.to_datetime(df["tourney_date"], errors="coerce")
 
         df = add_serve_return_features(df)
-        df = add_match_context_features(df)
+        df = add_pre_match_context_features(df)
+        df = add_post_match_context_features(df)
 
 
         feature_frame.append(df)
@@ -33,7 +35,8 @@ def build_features(processed_dir="data/processed"):
 #building features from df not csv file for white box test
 def build_features_from_df(df: pd.DataFrame) -> pd.DataFrame:
     df = add_serve_return_features(df)
-    df = add_match_context_features(df)
+    df = add_pre_match_context_features(df)
+    df = add_post_match_context_features(df)
     return df
 
 if __name__ == "__main__":
