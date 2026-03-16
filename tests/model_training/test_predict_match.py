@@ -20,7 +20,7 @@ def test_prediction_pipeline():
     p2 = "Rafael Nadal"
 
     # pick a cutoff date
-    cutoff_date = pd.to_datetime("2019-01-01")
+    cutoff_date = pd.to_datetime("2017-01-01")
 
     # build match row
     row = build_match(df, p1, p2, model_features, cutoff_date)

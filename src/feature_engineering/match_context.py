@@ -56,6 +56,8 @@ def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     df["lefty_diff"] = df["p1_lefty"] - df["p2_lefty"]
 
     #takes surface columns makes 0/1 columns for each surface and fill them
+    #keep original surface for predict match input
+    df["surface_raw"] = df["surface"]
     df = pd.get_dummies(df, columns=["surface"], prefix="surface")
 
     #round encoder called

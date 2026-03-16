@@ -295,10 +295,10 @@ def process_year(year):
     #data_health_check(df_clean)
 
 #%%
-#if file directly ran cleans and saves 2024
+#if file ran directly clean specific years
 if __name__ == "__main__":
-    for i in range(2016,2018):
+    for i in range(2016,2020):
         process_year(i)
-    #process_year(2018)
+
 
 

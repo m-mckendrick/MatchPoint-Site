@@ -2,12 +2,14 @@ import joblib
 import pandas as pd
 from pathlib import Path
 from sklearn.preprocessing import StandardScaler
+from src.feature_engineering.match_context import encode_round
 
 MODEL_PATH = Path("models/logreg_baseline.pkl")
 DATA_PATH = Path("data/processed")
 
 from src.feature_engineering.feature_builder import build_features
 from src.model_training.logistical_regression import prepare_dataset
+from src.feature_engineering.match_context import add_pre_match_context_features
 
 def load_model():
     bundle = joblib.load(MODEL_PATH)
@@ -19,12 +21,12 @@ def load_data():
     return df
 
 #For this player, what’s the most recent match in the dataset, and were they stored as p1 or p2 in that match?
-def get_player_latest_stats(df, player_name, cutoff_date):
+def build_player_profile(df, player_name, cutoff_date):
     # find the most recent matches for this player both wins and losses
-    player_rows = df[(df["p1_name"] == player_name) | (df["p2_name"] == player_name)]
-
-    # filter to matches BEFORE the cutoff date
-    player_rows = player_rows[player_rows["tourney_date"] < cutoff_date]
+    player_rows = df[
+        ((df["p1_name"] == player_name) | (df["p2_name"] == player_name))
+        & (df["tourney_date"] < cutoff_date)
+    ]
 
     if player_rows.empty:
         raise ValueError(f"Player '{player_name}' not found in dataset")
@@ -32,40 +34,92 @@ def get_player_latest_stats(df, player_name, cutoff_date):
     # sort by date newest first
     latest = player_rows.sort_values("tourney_date", ascending=False).iloc[0]
 
-    # return row in p1 perspective
-    if latest["p1_name"] == player_name:
-        return latest, "p1"
-    else:
-        return latest, "p2"
+    #now creates player profile with latest stats
+    profile = {
+        "rank": latest["p1_rank"] if latest["p1_name"] == player_name else latest["p2_rank"],
+        "rank_points": latest["p1_rank_points"] if latest["p1_name"] == player_name else latest["p2_rank_points"],
+        "age": latest["p1_age"] if latest["p1_name"] == player_name else latest["p2_age"],
+        "height": latest["p1_ht"] if latest["p1_name"] == player_name else latest["p2_ht"],
+        "hand": latest["p1_hand"] if latest["p1_name"] == player_name else latest["p2_hand"],
+    }
 
-#basically take the latest match each player has played and simulate a match between them
-def build_match(df, p1_name, p2_name, model_features, cutoff_date):
-    # get latest stats for each player
-    p1_row, _ = get_player_latest_stats(df, p1_name, cutoff_date)
-    p2_row, _ = get_player_latest_stats(df, p2_name, cutoff_date)
+    return profile
 
-    #in order to get p1 vs p2 format just take first player's match and overwrite the p2 with the other players stats'
-    row = p1_row.copy()
+#look at tournament matches in the year and collect the metadata
+def get_tournament_metadata(df, tournament_name, year):
+    #filter df to show matches at tournament at the same year
+    rows=df[
+        (df["tourney_name"].str.lower() == tournament_name.lower())
+        & (df["match_year"] == year)
+    ]
 
-    # overwrite p2 stats with the second player’s stats
-    for col in df.columns:
-        if col.startswith("p2_"):
-            matching = col.replace("p2_", "p1_")
-            if matching in p2_row:
-                row[col] = p2_row[matching]
+    if rows.empty:
+        raise ValueError(f"Tournament '{tournament_name}' not found in dataset")
 
-    # drop label
-    row = row[model_features]
+    #becasue the metadata is constant throughout the tournament just take first row
+    row=rows.iloc[0]
 
-    #na handel
-    if row.isna().sum().sum() > 0:
-        print("Warning: NA found in prediction row")
-        print(row.isna().sum()[row.isna().sum() > 0])
-    row = row.fillna(0)
+    #tornament date included as it's the date of the tournament starting
+    meta = {
+        "tourney_date":row["tourney_date"],
+        "surface": row["surface_raw"],
+        "best_of": row["best_of"],
+        "tourney_level": row["tourney_level"],
+        "draw_size": row["draw_size"] if "draw_size" in rows.columns else None,
+    }
+
+    return meta
 
 
 
-    return row.to_frame().T  # return as dataframe
+#creates match row with all the features being used to predict inside
+#keep in mind the player profiles are completely made from just the most recent match
+def build_match(df, p1_name, p2_name, tournament, year, round_label, model_features):
+    #get tournament metadata
+    meta = get_tournament_metadata(df, tournament, year)
+
+    #calculate the cutoff date from matches to be used
+    cutoff_date = pd.to_datetime(meta["tourney_date"])
+
+    #create the 2 player profile to add to the match
+    p1 = build_player_profile(df, p1_name, cutoff_date)
+    p2 = build_player_profile(df, p2_name, cutoff_date)
+
+    #build match row
+    raw = pd.DataFrame([{
+        # tournament metadata
+        "tourney_date": meta["tourney_date"],
+        "surface": meta["surface"],
+        "draw_size": meta["draw_size"],
+        "tourney_level": meta["tourney_level"],
+        "best_of": meta["best_of"],
+        "round": round_label,
+
+        # player 1
+        "p1_rank": p1["rank"],
+        "p1_rank_points": p1["rank_points"],
+        "p1_age": p1["age"],
+        "p1_ht": p1["height"],
+        "p1_hand": p1["hand"],
+
+        # player 2
+        "p2_rank": p2["rank"],
+        "p2_rank_points": p2["rank_points"],
+        "p2_age": p2["age"],
+        "p2_ht": p2["height"],
+        "p2_hand": p2["hand"],
+    }])
+
+
+    # apply pre-match feature engineering
+    row = add_pre_match_context_features(raw)
+
+    # align with model features (what the model has been trained on)
+    row = row.reindex(columns=model_features, fill_value=0)
+
+    return row
+
+
 
 
 #match prediction atm super biased as only takes last match of the players into account
@@ -87,13 +141,18 @@ def main():
     print("Enter Player 2 name:")
     p2 = input().strip()
 
-    print("Enter match date (YYYY-MM-DD):")
-    date_str = input().strip()
-    cutoff_date = pd.to_datetime(date_str)
+    print("Enter tournament name (e.g., Wimbledon):")
+    tournament = input().strip()
 
+    print("Enter tournament year:")
+    year = int(input().strip())
+
+    print("Enter Round (e.g R16, QF, SF, F)")
+    round_label = input().strip()
 
     print("\nBuilding feature row...")
-    row = build_match(df, p1, p2, model_features, cutoff_date)
+    #row = build_match(df, p1, p2, tournament, year, round_label, model_features)
+    row = build_match(df,"Novak Djokovic","Daniil Medvedev","US Open",2018,"F",model_features)
 
     print("Scaling features...")
     row_scaled = scaler.transform(row)
