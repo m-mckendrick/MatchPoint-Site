@@ -6,6 +6,7 @@ from src.feature_engineering.match_context import encode_round
 
 MODEL_PATH = Path("models/logreg_baseline.pkl")
 DATA_PATH = Path("data/processed")
+MATCHES_PATH = Path("data/processed/matches")
 
 from src.feature_engineering.feature_builder import build_features
 from src.model_training.logistical_regression import prepare_dataset
@@ -17,30 +18,66 @@ def load_model():
 
 
 def load_data():
-    df = build_features(DATA_PATH)
+    df = build_features(MATCHES_PATH)
     return df
 
+#load ranking df
+def load_rankings():
+    rankings_path = DATA_PATH / "atp_rankings_2000-2020.csv"
+    df = pd.read_csv(rankings_path)
+    df["ranking_date"] = pd.to_datetime(df["ranking_date"])
+    return df
+
+#get time accurate player ranking
+def get_player_ranking(rankings_df, player_id, date):
+    #get all ranking of player where id is same and ranking date is = or less than the date
+    rows = rankings_df[(rankings_df["player_id"] == player_id) & (rankings_df["ranking_date"] <= date)]
+    #no rankings
+    if rows.empty:
+        return None
+    #get latest ranks and sort by latest
+    latest = rows.sort_values("ranking_date", ascending=False).iloc[0]
+    return {
+        "rank": latest["rank"],
+        "rank_points": latest["points"]
+    }
+
 #For this player, what’s the most recent match in the dataset, and were they stored as p1 or p2 in that match?
-def build_player_profile(df, player_name, cutoff_date):
+def build_player_profile(df, rankings_df, player_name, cutoff_date):
     # find the most recent matches for this player both wins and losses
     player_rows = df[
         ((df["p1_name"] == player_name) | (df["p2_name"] == player_name))
         & (df["tourney_date"] < cutoff_date)
     ]
-
     if player_rows.empty:
         raise ValueError(f"Player '{player_name}' not found in dataset")
 
     # sort by date newest first
     latest = player_rows.sort_values("tourney_date", ascending=False).iloc[0]
 
+    player_id= latest["p1_id"] if latest["p1_name"] == player_name else latest["p2_id"]
+
+    #get ranking with rankings csv
+    ranking_info = get_player_ranking(rankings_df, player_id, cutoff_date)
+    if ranking_info is None:
+        raise ValueError(f"No ranking available for {player_name} before {cutoff_date}")
+
+    if latest["p1_name"] == player_name:
+        age = latest["p1_age"]
+        height = latest["p1_ht"]
+        hand = latest["p1_hand"]
+    else:
+        age = latest["p2_age"]
+        height = latest["p2_ht"]
+        hand = latest["p2_hand"]
+
     #now creates player profile with latest stats
     profile = {
-        "rank": latest["p1_rank"] if latest["p1_name"] == player_name else latest["p2_rank"],
-        "rank_points": latest["p1_rank_points"] if latest["p1_name"] == player_name else latest["p2_rank_points"],
-        "age": latest["p1_age"] if latest["p1_name"] == player_name else latest["p2_age"],
-        "height": latest["p1_ht"] if latest["p1_name"] == player_name else latest["p2_ht"],
-        "hand": latest["p1_hand"] if latest["p1_name"] == player_name else latest["p2_hand"],
+        "rank": ranking_info["rank"],
+        "rank_points": ranking_info["rank_points"],
+        "age": age,
+        "height": height,
+        "hand": hand
     }
 
     return profile
@@ -74,7 +111,7 @@ def get_tournament_metadata(df, tournament_name, year):
 
 #creates match row with all the features being used to predict inside
 #keep in mind the player profiles are completely made from just the most recent match
-def build_match(df, p1_name, p2_name, tournament, year, round_label, model_features):
+def build_match(df, rankings_df, p1_name, p2_name, tournament, year, round_label, model_features):
     #get tournament metadata
     meta = get_tournament_metadata(df, tournament, year)
 
@@ -82,8 +119,8 @@ def build_match(df, p1_name, p2_name, tournament, year, round_label, model_featu
     cutoff_date = pd.to_datetime(meta["tourney_date"])
 
     #create the 2 player profile to add to the match
-    p1 = build_player_profile(df, p1_name, cutoff_date)
-    p2 = build_player_profile(df, p2_name, cutoff_date)
+    p1 = build_player_profile(df, rankings_df, p1_name, cutoff_date)
+    p2 = build_player_profile(df, rankings_df, p2_name, cutoff_date)
 
     #build match row
     raw = pd.DataFrame([{
@@ -130,6 +167,7 @@ def main():
 
     print("Loading data...")
     df = load_data()
+    rankings_df = load_rankings()
 
     # prepare dataset once to get the correct feature list
     x, y = prepare_dataset(df)
@@ -152,7 +190,7 @@ def main():
 
     print("\nBuilding feature row...")
     #row = build_match(df, p1, p2, tournament, year, round_label, model_features)
-    row = build_match(df,"Novak Djokovic","Daniil Medvedev","US Open",2018,"F",model_features)
+    row = build_match(df, rankings_df, "Novak Djokovic","Daniil Medvedev","US Open",2018,"F",model_features)
 
     print("Scaling features...")
     row_scaled = scaler.transform(row)

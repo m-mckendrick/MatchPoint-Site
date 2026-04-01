@@ -5,7 +5,7 @@ from .serve_return import add_serve_return_features
 from .match_context import add_pre_match_context_features
 from .match_context import add_post_match_context_features
 
-def build_features(processed_dir="data/processed"):
+def build_features(processed_dir="data/processed/matches"):
     #get all csv that have been cleaned
     #coverts folder path to folder object allows year sorting etc.
     processed_dir = Path(processed_dir)
