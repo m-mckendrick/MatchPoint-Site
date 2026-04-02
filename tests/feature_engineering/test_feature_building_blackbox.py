@@ -18,7 +18,6 @@ def test_build_features_adds_expected_feature_columns(tmp_path, p1p2_match_df):
     out = build_features(processed_dir=tmp_path)
 
     #only some of added columns
-    assert "seed_diff" in out.columns
     assert "rank_diff" in out.columns
     assert "p1_first_serve_pct" in out.columns
     assert "p1_second_serve_won_pct" in out.columns

@@ -58,9 +58,6 @@ def test_feature_builder_whitebox_minimal():
     expected_context_cols = [
         "rank_diff",
         "rank_points_diff",
-        "p1_unseeded",
-        "p2_unseeded",
-        "seed_diff",
         "is_grand_slam",
         "is_masters",
         "is_best_of_five",

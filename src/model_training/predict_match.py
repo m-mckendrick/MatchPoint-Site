@@ -47,7 +47,7 @@ def build_player_profile(df, rankings_df, player_name, cutoff_date):
     # find the most recent matches for this player both wins and losses
     player_rows = df[
         ((df["p1_name"] == player_name) | (df["p2_name"] == player_name))
-        & (df["tourney_date"] < cutoff_date)
+        & (df["tourney_date"] <= cutoff_date)
     ]
     if player_rows.empty:
         raise ValueError(f"Player '{player_name}' not found in dataset")
