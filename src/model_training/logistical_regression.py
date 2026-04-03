@@ -57,7 +57,7 @@ def main():
     print("Loading and building features...")
     print(Path("../../data/processed").resolve())
 
-    df = load_feature_data(PROCESSED_DIR)
+    df = load_feature_data(PROCESSED_DIR / "matches")
     print ("Training Columns...")
     print(df.columns)
 

@@ -40,7 +40,7 @@ def build_features_from_df(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 if __name__ == "__main__":
-    processed_dir = Path("data/processed")
+    processed_dir = Path("data/processed/matches")
 
     print(f"Loading processed CSVs from: {processed_dir.resolve()}")
 
