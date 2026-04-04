@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime
 
-from src.model_training.predict_match import (
+from src.prediction.match_builder import (
     get_player_ranking,
     build_player_profile,
     get_tournament_metadata,
@@ -25,11 +25,6 @@ def test_get_player_ranking_whitebox():
 
     assert result["rank"] == 3
     assert result["rank_points"] == 6000
-
-import pandas as pd
-from datetime import datetime
-from src.model_training.predict_match import get_player_ranking
-
 
 def test_ranking_freshness():
     rankings = pd.DataFrame({

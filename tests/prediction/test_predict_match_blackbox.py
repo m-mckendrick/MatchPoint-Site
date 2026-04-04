@@ -1,12 +1,14 @@
 import pandas as pd
-from src.model_training.predict_match import load_model, load_data, build_match, load_rankings
+from src.prediction.loader import load_model, load_matches ,load_rankings
+from src.prediction.match_builder import build_match
+from src.prediction.predictor import predict
 from src.model_training.logistical_regression import prepare_dataset
 
 #testing inputs to output
 def test_predict_match_blackbox():
     # load model and data
     model, scaler = load_model()
-    df = load_data()
+    df = load_matches()
     ranking_df = load_rankings()
 
     # get model features
@@ -30,8 +32,7 @@ def test_predict_match_blackbox():
     assert list(row.columns) == model_features
 
     # Scale + predict
-    row_scaled = scaler.transform(row)
-    prob = model.predict_proba(row_scaled)[0][1]
+    prob = predict(model, scaler, row)
 
     # Probability must be between 0 and 1
     assert 0 <= prob <= 1

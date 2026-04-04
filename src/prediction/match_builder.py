@@ -12,22 +12,6 @@ from src.feature_engineering.feature_builder import build_features
 from src.model_training.logistical_regression import prepare_dataset
 from src.feature_engineering.match_context import add_pre_match_context_features
 
-def load_model():
-    bundle = joblib.load(MODEL_PATH)
-    return bundle["model"], bundle["scaler"]
-
-
-def load_data():
-    df = build_features(MATCHES_PATH)
-    return df
-
-#load ranking df
-def load_rankings():
-    rankings_path = DATA_PATH / "atp_rankings_2000-2020.csv"
-    df = pd.read_csv(rankings_path)
-    df["ranking_date"] = pd.to_datetime(df["ranking_date"])
-    return df
-
 #get time accurate player ranking
 def get_player_ranking(rankings_df, player_id, date):
     #get all ranking of player where id is same and ranking date is = or less than the date
