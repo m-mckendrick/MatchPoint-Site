@@ -11,7 +11,7 @@ def build_narrative(top_features):
             parts.append("surface suitability influenced the prediction")
         elif "age" in name:
             parts.append("age difference contributed to the outcome")
-        elif "height" in name:
+        elif "ht" in name:
             parts.append("player physique had some impact")
 
     if not parts:
