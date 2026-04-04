@@ -140,4 +140,43 @@ def p1p2_match_df(cleaned_match_df):
     from src.data_preprocessing.clean_pipeline import convert_for_model
     return convert_for_model(cleaned_match_df.copy())
 
+#pytest fixture for explainability tests
+from src.prediction.loader import load_model, load_matches, load_rankings
+from src.model_training.logistical_regression import prepare_dataset
+
+@pytest.fixture(scope="session")
+def model_bundle():
+    model, scaler = load_model()
+    return {"model": model, "scaler": scaler}
+
+@pytest.fixture(scope="session")
+def full_data():
+    df = load_matches()
+    rankings = load_rankings()
+    return {"df": df, "rankings": rankings}
+
+@pytest.fixture(scope="session")
+def model_features(full_data):
+    df = full_data["df"]
+    x, y = prepare_dataset(df)
+    return x.columns.tolist()
+
+@pytest.fixture
+def synthetic_row(model_features):
+    # Create a minimal synthetic row with correct columns
+    data = {col: 0 for col in model_features}
+
+    # Add some realistic values
+    if "p1_rank" in data: data["p1_rank"] = 1
+    if "p2_rank" in data: data["p2_rank"] = 5
+    if "p1_age" in data: data["p1_age"] = 35
+    if "p2_age" in data: data["p2_age"] = 27
+    if "p1_ht" in data: data["p1_ht"] = 188
+    if "p2_ht" in data: data["p2_ht"] = 192
+    if "surface_Hard" in data: data["surface_Hard"] = 1
+    if "round_encoded" in data: data["round_encoded"] = 5
+    if "is_best_of_five" in data: data["is_best_of_five"] = 1
+
+    return pd.DataFrame([data])
+
 

@@ -1,5 +1,5 @@
 #very simple narrative for prototype
-def build_narrative(top_features):
+def build_narrative(top_features, winner):
     parts = []
 
     for f in top_features:
@@ -15,6 +15,6 @@ def build_narrative(top_features):
             parts.append("player physique had some impact")
 
     if not parts:
-        return "The model used several factors to generate this prediction."
+        return "The model predicted {winner} based on several contributing factors "
 
-    return "The prediction was mainly influenced by: " + ", ".join(parts) + "."
+    return "The model predicts {winner} mainly because " + ", ".join(parts) + "."
