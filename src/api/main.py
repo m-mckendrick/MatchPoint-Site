@@ -8,8 +8,8 @@ from src.prediction.loader import load_model, load_matches, load_rankings
 from src.prediction.match_builder import build_match
 from src.prediction.predictor import predict
 from src.model_training.logistical_regression import prepare_dataset
-# explanation will be added later
-# from src.explainability.explainer import explain_prediction
+
+from src.explainability.explainer import explain_prediction
 
 #loade model + data
 model, scaler = load_model()
@@ -77,7 +77,7 @@ def api_predict(payload: PredictRequest):
 
     winner_prob = round(winner_prob * 100, 2)
 
-    #player cards
+#player cards
     players = {
         "p1": {
             "name": payload.p1_name,
@@ -113,8 +113,18 @@ def api_predict(payload: PredictRequest):
         "surface": surface
     }
 
+
+    explanation = explain_prediction(
+        model=model,
+        row_df=row_df,
+        probability=winner_prob / 100,  # convert back to 0–1
+        winner=winner
+    )
+
+    narrative = explanation["narrative"]
+
     #widget zone to be added for explanation
-    widgets = []
+    widgets = explanation["widgets"]
 
     #return JSON
     return {
@@ -122,6 +132,7 @@ def api_predict(payload: PredictRequest):
         "probability": winner_prob,
         "players": players,
         "tournament": tournament,
+        "narrative": narrative,
         "widgets": widgets
     }
 

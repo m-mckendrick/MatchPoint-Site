@@ -13,7 +13,7 @@ document.getElementById("prediction-summary").innerHTML = `
 `;
 
 
-// Player cards
+//player cards
 document.getElementById("player-cards").innerHTML = `
     <div class="player-card">
         <h3>${data.players.p1.name}</h3>
@@ -36,13 +36,50 @@ document.getElementById("tournament-meta").innerHTML = `
     <p>Surface: ${data.tournament.surface}</p>
 `;
 
+//narrative explanation
+document.getElementById("narrative").innerHTML = `
+    <h2>Why This Prediction?</h2>
+    <p>${data.narrative}</p>
+`;
 
-// Widget switching (empty for now)
+
+//widget switching (empty for now)
 const widgetZone = document.getElementById("widget-zone");
 
-//later on will have relevant logic
+const widgets = data.widgets || [];
+
+//render widgets based on its type
 function renderWidget(type) {
-    widgetZone.innerHTML = "<p></p>";
+    const widget = widgets.find(w => w.type === type);
+
+    if (!widget) {
+        widgetZone.innerHTML = "<p>No data available for this widget.</p>";
+        return;
+    }
+
+    //handle widget types
+    switch (type) {
+        //top features widget
+        case "top_features":
+            widgetZone.innerHTML = `
+                <h3>${widget.title}</h3>
+                <ul>
+                    ${widget.data.map(f => `
+                        <li><strong>${f.feature}</strong>: ${f.value}</li>
+                    `).join("")}
+                </ul>
+            `;
+            break;
+
+        //fallback
+        default:
+            widgetZone.innerHTML = `
+                <h3>${widget.title}</h3>
+                <pre>${JSON.stringify(widget.data, null, 2)}</pre>
+            `;
+            break;
+    }
+
 }
 //render widgets based on button click
 document.querySelectorAll(".widget-buttons button").forEach(btn => {
@@ -50,3 +87,8 @@ document.querySelectorAll(".widget-buttons button").forEach(btn => {
         renderWidget(btn.dataset.widget);
     });
 });
+
+//render first widget by default (for prototype)
+if (widgets.length > 0) {
+    renderWidget(widgets[0].type);
+}
