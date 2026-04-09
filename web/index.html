@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MatchPoint : Tennis Predictor</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Tennis Match Predictor</h1>
+
+    <form id="predict-form" class="predict-form">
+        <label>Player 1</label>
+        <input name="p1_name" required>
+
+        <label>Player 2</label>
+        <input name="p2_name" required>
+
+        <label>Tournament</label>
+        <input name="tournament" required>
+
+        <label>Year</label>
+        <input name="year" type="number" required>
+
+        <label>Round</label>
+        <input name="round_label" required>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <hr>
+
+    <div id="result"></div>
+</div>
+
+
+</body>
+</html>
