@@ -15,6 +15,6 @@ def build_narrative(top_features, winner):
             parts.append("player physique had some impact")
 
     if not parts:
-        return "The model predicted {winner} based on several contributing factors "
+        return f"The model predicted {winner} based on several contributing factors "
 
-    return "The model predicts {winner} mainly because " + ", ".join(parts) + "."
+    return f"The model predicts {winner} mainly because " + ", ".join(parts) + "."

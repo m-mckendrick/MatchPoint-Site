@@ -2,7 +2,7 @@ import numpy as np
 
 def extract_feature_importance(model, row_df, top_n=5):
     row = row_df.iloc[0]
-    feature_names = row_df.columns
+    feature_names = [str(f) for f in row_df.columns]    #ensure json compatibility
 
     #random forest / XGBoost
     if hasattr(model, "feature_importances_"):
@@ -19,7 +19,7 @@ def extract_feature_importance(model, row_df, top_n=5):
     contributions = []
     for feature, value, impact in zip(feature_names, row.values, impacts):
         contributions.append({
-            "feature": feature,
+            "feature": str(feature),
             "value": float(value),
             "impact": float(impact)
         })
