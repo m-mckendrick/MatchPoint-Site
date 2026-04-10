@@ -6,10 +6,28 @@ if (!data) {
     throw new Error("No prediction data");
 }
 
+//progress bar fill based on prediction outcome
+const probFraction = data.probability / 100;
+const barFill = probFraction * 100
+
+//save p1 name so progress bar is filled from correct side
+const winnerIsP1 = data.winner === data.players.p1.name;
+
 //prediction sumaary
 document.getElementById("prediction-summary").innerHTML = `
     <h2>Winner: ${data.winner}</h2>
     <p>Probability: ${data.probability}%</p>
+    
+    <div class="progress-container">
+        <div class="progress-labels">
+            <span>${data.players.p1.name}</span>
+            <span>${data.players.p2.name}</span>
+        </div>
+
+        <div class="progress-bar ${winnerIsP1 ? "left-win" : "right-win"}">
+            <div class="progress-fill" style="width: ${barFill}%;"></div>
+        </div>
+    </div>
 `;
 
 
@@ -31,15 +49,19 @@ document.getElementById("player-cards").innerHTML = `
 
 // tourny metadata
 document.getElementById("tournament-meta").innerHTML = `
-    <h3>${data.tournament.name} (${data.tournament.year})</h3>
-    <p>Round: ${data.tournament.round}</p>
-    <p>Surface: ${data.tournament.surface}</p>
+    <div class="tournament-box">
+        <h3>${data.tournament.name} (${data.tournament.year})</h3>
+        <p>Round: ${data.tournament.round}</p>
+        <p>Surface: ${data.tournament.surface}</p>
+    </div>
 `;
 
 //narrative explanation
 document.getElementById("narrative").innerHTML = `
-    <h2>Why This Prediction?</h2>
-    <p>${data.narrative}</p>
+    <div class="narrative-box">
+        <h2>Why This Prediction?</h2>
+        <p>${data.narrative}</p>
+    </div>
 `;
 
 
