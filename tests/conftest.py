@@ -179,4 +179,3 @@ def synthetic_row(model_features):
 
     return pd.DataFrame([data])
 
-

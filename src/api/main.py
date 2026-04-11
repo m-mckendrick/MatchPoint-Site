@@ -50,7 +50,8 @@ class PredictRequest(BaseModel):
 def api_predict(payload: PredictRequest):
 
     #build match row
-    row_df = build_match(
+    #has been changed to give the row containing all column and the row the model predicts with
+    row_model, row_meta = build_match(
         df=matches_df,
         rankings_df=rankings_df,
         p1_name=payload.p1_name,
@@ -62,7 +63,7 @@ def api_predict(payload: PredictRequest):
     )
 
     #predict probability Player1 wins
-    prob_p1 = float(predict(model, scaler, row_df))
+    prob_p1 = float(predict(model, scaler, row_model))
     prob_p2 = 1 - prob_p1
 
     #get winner
@@ -77,50 +78,17 @@ def api_predict(payload: PredictRequest):
 
     winner_prob = round(winner_prob * 100, 2)
 
-#player cards
-    players = {
-        "p1": {
-            "name": payload.p1_name,
-            "ranking": int(row_df["p1_rank"].iloc[0]),
-            "age": int(row_df["p1_age"].iloc[0])
-        },
-        "p2": {
-            "name": payload.p2_name,
-            "ranking": int(row_df["p2_rank"].iloc[0]),
-            "age": int(row_df["p2_age"].iloc[0])
-        }
-    }
-
-    #torny metadata
-    #get surface string
-    surface = "Unknown"
-    surface_map = {
-        "surface_grass": "Grass",
-        "surface_clay": "Clay",
-        "surface_hard": "Hard",
-        "surface_carpet": "Carpet"
-    }
-
-    for col, name in surface_map.items():
-        if col in row_df.columns and int(row_df[col].iloc[0]) == 1:
-            surface = name
-            break
-
-    tournament = {
-        "name": payload.tournament,
-        "year": payload.year,
-        "round": payload.round_label,
-        "surface": surface
-    }
-
-
     explanation = explain_prediction(
         model=model,
-        row_df=row_df,
+        row_model=row_model,
+        row_meta=row_meta,
         probability=winner_prob / 100,  # convert back to 0–1
         winner=winner
     )
 
+    #get player cards and tourny metadata form explanation
+    players = explanation["players"]
+    tournament = explanation["tournament"]
     narrative = explanation["narrative"]
 
     #widget zone to be added for explanation

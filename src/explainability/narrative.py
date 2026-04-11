@@ -1,20 +1,13 @@
 #very simple narrative for prototype
+#this will be changed later to take the stats types into account and create a narrative based on what feature is the most popular
 def build_narrative(top_features, winner):
-    parts = []
+    if not top_features:
+        return f"The model predicts {winner} based on several contributing factors."
 
-    for f in top_features:
-        name = f["feature"]
+    # The top feature is the first one in the list
+    top_feature = top_features[0]["feature"]
 
-        if "rank" in name:
-            parts.append("ranking difference was a major factor")
-        elif "surface" in name:
-            parts.append("surface suitability influenced the prediction")
-        elif "age" in name:
-            parts.append("age difference contributed to the outcome")
-        elif "ht" in name:
-            parts.append("player physique had some impact")
+    # Make the feature name more readable
+    readable = top_feature.replace("_", " ").strip()
 
-    if not parts:
-        return f"The model predicted {winner} based on several contributing factors "
-
-    return f"The model predicts {winner} mainly because " + ", ".join(parts) + "."
+    return f"The model predicts {winner} mainly because {readable} had the strongest impact on the prediction."

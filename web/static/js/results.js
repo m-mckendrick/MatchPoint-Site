@@ -35,14 +35,18 @@ document.getElementById("prediction-summary").innerHTML = `
 document.getElementById("player-cards").innerHTML = `
     <div class="player-card">
         <h3>${data.players.p1.name}</h3>
-        <p>Ranking: ${data.players.p1.ranking}</p>
+        <p>Ranking: ${data.players.p1.rank}</p>
         <p>Age: ${data.players.p1.age}</p>
+        <p>Height: ${data.players.p1.height + " cm"}</p>
+        <p>Dominant Hand: ${data.players.p1.hand}</p>
     </div>
 
     <div class="player-card">
         <h3>${data.players.p2.name}</h3>
-        <p>Ranking: ${data.players.p2.ranking}</p>
+        <p>Ranking: ${data.players.p2.rank}</p>
         <p>Age: ${data.players.p2.age}</p>
+        <p>Height: ${data.players.p2.height + " cm"}</p>
+        <p>Dominant Hand: ${data.players.p2.hand}</p>
     </div>
 `;
 
@@ -50,7 +54,7 @@ document.getElementById("player-cards").innerHTML = `
 // tourny metadata
 document.getElementById("tournament-meta").innerHTML = `
     <div class="tournament-box">
-        <h3>${data.tournament.name} (${data.tournament.year})</h3>
+        <h3>${data.tournament.tournament} (${data.tournament.year})</h3>
         <p>Round: ${data.tournament.round}</p>
         <p>Surface: ${data.tournament.surface}</p>
     </div>

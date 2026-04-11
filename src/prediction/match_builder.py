@@ -47,16 +47,19 @@ def build_player_profile(df, rankings_df, player_name, cutoff_date):
         raise ValueError(f"No ranking available for {player_name} before {cutoff_date}")
 
     if latest["p1_name"] == player_name:
+        name = latest["p1_name"]
         age = latest["p1_age"]
         height = latest["p1_ht"]
         hand = latest["p1_hand"]
     else:
+        name = latest["p2_name"]
         age = latest["p2_age"]
         height = latest["p2_ht"]
         hand = latest["p2_hand"]
 
     #now creates player profile with latest stats
     profile = {
+        "name": name,
         "rank": ranking_info["rank"],
         "rank_points": ranking_info["rank_points"],
         "age": age,
@@ -82,6 +85,7 @@ def get_tournament_metadata(df, tournament_name, year):
 
     #tornament date included as it's the date of the tournament starting
     meta = {
+        "tourney_name": row["tourney_name"],
         "tourney_date":row["tourney_date"],
         "surface": row["surface_raw"],
         "best_of": row["best_of"],
@@ -109,6 +113,7 @@ def build_match(df, rankings_df, p1_name, p2_name, tournament, year, round_label
     #build match row
     raw = pd.DataFrame([{
         # tournament metadata
+        "tourney_name": meta["tourney_name"],
         "tourney_date": meta["tourney_date"],
         "surface": meta["surface"],
         "draw_size": meta["draw_size"],
@@ -117,6 +122,7 @@ def build_match(df, rankings_df, p1_name, p2_name, tournament, year, round_label
         "round": round_label,
 
         # player 1
+        "p1_name": p1["name"],
         "p1_rank": p1["rank"],
         "p1_rank_points": p1["rank_points"],
         "p1_age": p1["age"],
@@ -124,6 +130,7 @@ def build_match(df, rankings_df, p1_name, p2_name, tournament, year, round_label
         "p1_hand": p1["hand"],
 
         # player 2
+        "p2_name": p2["name"],
         "p2_rank": p2["rank"],
         "p2_rank_points": p2["rank_points"],
         "p2_age": p2["age"],
@@ -133,18 +140,16 @@ def build_match(df, rankings_df, p1_name, p2_name, tournament, year, round_label
 
 
     # apply pre-match feature engineering
-    row = add_pre_match_context_features(raw)
+    #and is a row containing all the matches metadata
+    row_full = add_pre_match_context_features(raw)
 
     # align with model features (what the model has been trained on)
-    row = row.reindex(columns=model_features, fill_value=0)
+    #basically the row above but only containing the columns the model will be trained on
+    row_model = row_full.reindex(columns=model_features, fill_value=0)
 
-    return row
+    return row_model, row_full
 
 
-
-
-#match prediction atm super biased as only takes last match of the players into account
-#match is simulated as if it took place in the 2019-2020 off season
 def main():
     print("Loading model...")
     model, scaler= load_model()
