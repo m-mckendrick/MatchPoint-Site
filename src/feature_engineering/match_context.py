@@ -14,7 +14,7 @@ ROUND_TO_PLAYERS = {
     "R128": 128
 }
 
-#in order to encode the round of a tournament correctly need to use this function
+#ml model prefer numeric order features
 def encode_round(row):
     draw = row["draw_size"]
     rnd = row["round"]
@@ -26,7 +26,7 @@ def encode_round(row):
     if players_remaining is None:
         return None
 
-    # drawsize effectivly rounded up to nearest power of 2 check notes for maths explanation
+    # drawsize/first round playerseffectivly rounded up to nearest power of 2 check notes for maths explanation
     first_round_players = 2 ** int(math.ceil(math.log2(draw)))
 
     #  round calculated be finding the number of times the player have been halved
@@ -37,21 +37,11 @@ def encode_round(row):
 
 
 
-def add_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
+def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
 
     #rank and more specific rank points
-    df["rank_diff"] = df["loser_rank"] - df["winner_rank"]
-    df["rank_points_diff"] = df["loser_rank_points"] - df["winner_rank_points"]
-    #seed significance (pressure?)
-    df["winner_unseeded"] = df["winner_seed"].isna().astype(int)
-    df["loser_unseeded"] = df["loser_seed"].isna().astype(int)
-
-    #if both seed calculate difference
-    df["seed_diff"] = np.where(
-        (df["winner_unseeded"] == 0) & (df["loser_unseeded"] == 0),
-        df["loser_seed"] - df["winner_seed"],
-        np.nan
-    )
+    df["rank_diff"] = df["p2_rank"] - df["p1_rank"]
+    df["rank_points_diff"] = df["p2_rank_points"] - df["p1_rank_points"]
 
     #o/1 colums required for machine learning models
     df["is_grand_slam"] = (df["tourney_level"] == "G").astype(int)
@@ -59,18 +49,15 @@ def add_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     #usefull as older master and other tournaments had 5 sets (not just slams)
     df["is_best_of_five"] = (df["best_of"] == 5).astype(int)
 
-    #retirement locater
-    if "score" in df.columns:
-        df["is_retirement"] = df["score"].str.contains("RET", case=False, na=False).astype(int)
-    else:
-        df["is_retirement"] = 0
 
     #changes match pattern dynamics
-    df["winner_lefty"] = (df["winner_hand"] == "L").astype(int)
-    df["loser_lefty"] = (df["loser_hand"] == "L").astype(int)
-    df["lefty_diff"] = df["winner_lefty"] - df["loser_lefty"]
+    df["p1_lefty"] = (df["p1_hand"] == "L").astype(int)
+    df["p2_lefty"] = (df["p2_hand"] == "L").astype(int)
+    df["lefty_diff"] = df["p1_lefty"] - df["p2_lefty"]
 
-    #takes surface columns makes 0/1 colums for each surface and fill them
+    #takes surface columns makes 0/1 columns for each surface and fill them
+    #keep original surface for predict match input
+    df["surface_raw"] = df["surface"]
     df = pd.get_dummies(df, columns=["surface"], prefix="surface")
 
     #round encoder called
@@ -80,10 +67,10 @@ def add_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     df["match_year"] = pd.to_datetime(df["tourney_date"]).dt.year
 
     #younger usually more durable
-    df["age_diff"] = df["loser_age"] - df["winner_age"]
+    df["age_diff"] = df["p2_age"] - df["p1_age"]
 
     #heavy influence on serve
-    df["height_diff"] = df["loser_ht"] - df["winner_ht"]
+    df["height_diff"] = df["p2_ht"] - df["p1_ht"]
 
     #help tournament understand importance maybe has effect on pressure
     prestige_map = {"G": 4, "M": 3, "A": 2, "B": 1}
@@ -92,28 +79,16 @@ def add_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def add_post_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
 
+    #retirement locater
+    if "score" in df.columns:
+        df["is_retirement"] = df["score"].str.contains("RET", case=False, na=False).astype(int)
+    else:
+        df["is_retirement"] = 0
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return df
 
 
 

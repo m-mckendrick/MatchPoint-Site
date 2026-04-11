@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 from datetime import datetime
 
+from src.data_preprocessing.convert_to_p1p2 import convert_to_p1p2
 
 #raw df example for testing
 #inclueds 2 matches before cleaning
@@ -130,27 +131,51 @@ def raw_match_df():
 #cleaned df with matches that have been cleaned
 @pytest.fixture
 def cleaned_match_df(raw_match_df):
-    df = raw_match_df.copy()
+    from src.data_preprocessing.clean_pipeline import clean_matches
+    return clean_matches(raw_match_df.copy())
 
-    #header normalisation
-    df.columns = df.columns.str.lower()
+#new fixture that converts cleaned df to model ready df with 2 perspectives
+@pytest.fixture
+def p1p2_match_df(cleaned_match_df):
+    from src.data_preprocessing.clean_pipeline import convert_for_model
+    return convert_for_model(cleaned_match_df.copy())
 
-    #convert date
-    df["tourney_date"] = pd.to_datetime(df["tourney_date"], format="%Y%m%d")
+#pytest fixture for explainability tests
+from src.prediction.loader import load_model, load_matches, load_rankings
+from src.model_training.logistical_regression import prepare_dataset
 
-    #map hands
-    hand_map = {"R": "Right", "L": "Left", "U": "Unknown"}
-    df["winner_hand"] = df["winner_hand"].map(hand_map)
-    df["loser_hand"] = df["loser_hand"].map(hand_map)
+@pytest.fixture(scope="session")
+def model_bundle():
+    model, scaler = load_model()
+    return {"model": model, "scaler": scaler}
 
-    #normalise categories
-    df["surface"] = df["surface"].str.title()
-    df["round"] = df["round"].str.upper()
+@pytest.fixture(scope="session")
+def full_data():
+    df = load_matches()
+    rankings = load_rankings()
+    return {"df": df, "rankings": rankings}
 
-    #add tiebreak scores (placeholder)
-    df["tiebreak_scores"] = ["none" "none" "none" "none" "none","none none none"]
+@pytest.fixture(scope="session")
+def model_features(full_data):
+    df = full_data["df"]
+    x, y = prepare_dataset(df)
+    return x.columns.tolist()
 
-    #normalise empty strings
-    df = df.replace(["", " ", ".", "--", "NR", "?"], pd.NA)
+@pytest.fixture
+def synthetic_row(model_features):
+    # Create a minimal synthetic row with correct columns
+    data = {col: 0 for col in model_features}
 
-    return df
+    # Add some realistic values
+    if "p1_rank" in data: data["p1_rank"] = 1
+    if "p2_rank" in data: data["p2_rank"] = 5
+    if "p1_age" in data: data["p1_age"] = 35
+    if "p2_age" in data: data["p2_age"] = 27
+    if "p1_ht" in data: data["p1_ht"] = 188
+    if "p2_ht" in data: data["p2_ht"] = 192
+    if "surface_Hard" in data: data["surface_Hard"] = 1
+    if "round_encoded" in data: data["round_encoded"] = 5
+    if "is_best_of_five" in data: data["is_best_of_five"] = 1
+
+    return pd.DataFrame([data])
+

@@ -23,7 +23,7 @@ from src.data_preprocessing.clean_pipeline import (
 
 #testing header to lowercase etc
 def test_normalise_headers_basic():
-    df = pd.DataFrame(columns=[" Winner Rank ", "loser-rank"])
+    df = pd.DataFrame(columns=[" winner Rank ", "loser-rank"])
     out = normalise_headers(df)
     assert list(out.columns) == ["winner_rank", "loser_rank"]
 
@@ -157,7 +157,7 @@ def test_ao_2019_to_2021_match_tiebreak():
     assert out == "none none none none 14-12"
 
 
-#testing full pipeline
+#testing full pipeline/(not testing convert to model friendly)
 def test_clean_matches_full_pipeline(raw_match_df):
     out = clean_matches(raw_match_df)
 

@@ -3,11 +3,15 @@
 #settings
 import pandas as pd
 import numpy as np
+from pathlib import Path
 
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 120)
 
-RAW_PATH = "../../data/raw/atp_matches_2024.csv"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+RAW_DIR = PROJECT_ROOT / "data" / "raw"
+PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
 #%%
 #step 1 : Normalise Headers and Missing Values
@@ -245,7 +249,7 @@ def data_health_check(df):
 #final step clean and save
 def clean_matches(df):
     df = (
-        df.pipe(normalise_headers)
+       df.pipe(normalise_headers)
         .pipe(filter_atp_events)
         .pipe(normalise_missing_values)
         .pipe(parse_dates)
@@ -263,24 +267,38 @@ def clean_matches(df):
     return df
 
 #%%
+#separaete make ready for model
+from src.data_preprocessing.mirror_rows import mirror_rows
+from src.data_preprocessing.convert_to_p1p2 import convert_to_p1p2
+
+def convert_for_model(df):
+    df = (
+        df.pipe(mirror_rows)
+        .pipe(convert_to_p1p2)
+     )
+    return df
+
+#%%
 # process year (function that reads raw csv and cleans them all and save them )
+
 def process_year(year):
-    input_path = f"../../data/raw/atp_matches_{year}.csv"
-    output_path = f"../../data/processed/atp_matches_{year}_clean.csv"
+
+    input_path = RAW_DIR / f"atp_matches_{year}.csv"
+    output_path = PROCESSED_DIR / f"atp_matches_{year}_clean.csv"
 
     df = pd.read_csv(input_path)
     df_clean = clean_matches(df)
-    df_clean = filter_atp_events(df_clean)
-    df_clean.to_csv(output_path, index=False)
+    df_model_ready=convert_for_model(df_clean)
+    df_model_ready.to_csv(output_path, index=False)
 
     print(f" Cleaned {year} — {len(df_clean)} matches")
-    data_health_check(df_clean)
+    #data_health_check(df_clean)
 
 #%%
-#if file directly ran cleans and saves 2024
+#if file ran directly clean specific years
 if __name__ == "__main__":
-    df = pd.read_csv(RAW_PATH)
-    df_clean = clean_matches(df)
-    data_health_check(df_clean)
-    df_clean.to_csv("../../data/processed/atp_matches_2024_clean.csv", index=False)
+    for i in range(2016,2020):
+        process_year(i)
+
+
 
