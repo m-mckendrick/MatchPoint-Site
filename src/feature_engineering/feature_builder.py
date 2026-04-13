@@ -5,46 +5,21 @@ from .serve_return import add_serve_return_features
 from .match_context import add_pre_match_context_features
 from .match_context import add_post_match_context_features
 
-def build_features(processed_dir="data/processed/matches"):
-    #get all csv that have been cleaned
-    #coverts folder path to folder object allows year sorting etc.
-    processed_dir = Path(processed_dir)
-    csv_files = sorted(processed_dir.glob("*.csv"))
+# df acts as both the synthetic row and all the processed matches
+#full df is always the full set of processed matches
+def build_features(df: pd.DataFrame, full_df: pd.DataFrame = None) -> pd.DataFrame:
 
-    if not csv_files:
-        raise FileNotFoundError("No csv files found in {}".format(processed_dir))
-
-    feature_frame=[]
-    #right now only builds match level features
-    for file in csv_files:
-        df = pd.read_csv(file)
-        #datetime gets converted to string by pandas
-        df["tourney_date"] = pd.to_datetime(df["tourney_date"], errors="coerce")
-
-        df = add_serve_return_features(df)
-        df = add_pre_match_context_features(df)
-        df = add_post_match_context_features(df)
-
-
-        feature_frame.append(df)
-
-    #ignore index prevents index collision when concatenating years
-    all_years_df = pd.concat(feature_frame, ignore_index=True)
-    return all_years_df
-
-#building features from df not csv file for white box test
-def build_features_from_df(df: pd.DataFrame) -> pd.DataFrame:
-    df = add_serve_return_features(df)
     df = add_pre_match_context_features(df)
     df = add_post_match_context_features(df)
+    # df = add_serve_return_features(df)
+    #full df allows in prediction the whole dataset to be pass through so that feature that require looking at previous matches can happend
+
     return df
 
+
 if __name__ == "__main__":
-    processed_dir = Path("data/processed/matches")
 
-    print(f"Loading processed CSVs from: {processed_dir.resolve()}")
-
-    df = build_features(processed_dir)
+    #df = build_features(load_processed_matches)
 
     print("\nsize:")
     print(f"Rows: {df.shape[0]}")
