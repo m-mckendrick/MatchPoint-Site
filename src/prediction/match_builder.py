@@ -2,15 +2,17 @@ import joblib
 import pandas as pd
 from pathlib import Path
 from sklearn.preprocessing import StandardScaler
-from src.feature_engineering.match_context import encode_round
+from src.feature_engineering.match_context import encode_round, add_pre_match_context_features
 
-MODEL_PATH = Path("models/logreg_baseline.pkl")
-DATA_PATH = Path("data/processed")
-MATCHES_PATH = Path("data/processed/matches")
+from data.loader import (
+    load_matches,
+    load_rankings,
+    load_processed_matches,
+    load_model
+)
 
 from src.feature_engineering.feature_builder import build_features
 from src.model_training.logistical_regression import prepare_dataset
-from src.feature_engineering.match_context import add_pre_match_context_features
 
 #get time accurate player ranking
 def get_player_ranking(rankings_df, player_id, date):
@@ -36,35 +38,26 @@ def build_player_profile(df, rankings_df, player_name, cutoff_date):
     if player_rows.empty:
         raise ValueError(f"Player '{player_name}' not found in dataset")
 
-    # sort by date newest first
+    # most recent match
     latest = player_rows.sort_values("tourney_date", ascending=False).iloc[0]
 
-    player_id= latest["p1_id"] if latest["p1_name"] == player_name else latest["p2_id"]
+    is_p1 = latest["p1_name"] == player_name
+    player_id= latest["p1_id"] if is_p1 else latest["p2_id"]
 
     #get ranking with rankings csv
     ranking_info = get_player_ranking(rankings_df, player_id, cutoff_date)
     if ranking_info is None:
         raise ValueError(f"No ranking available for {player_name} before {cutoff_date}")
 
-    if latest["p1_name"] == player_name:
-        name = latest["p1_name"]
-        age = latest["p1_age"]
-        height = latest["p1_ht"]
-        hand = latest["p1_hand"]
-    else:
-        name = latest["p2_name"]
-        age = latest["p2_age"]
-        height = latest["p2_ht"]
-        hand = latest["p2_hand"]
 
     #now creates player profile with latest stats
     profile = {
-        "name": name,
+        "name": player_name,
         "rank": ranking_info["rank"],
         "rank_points": ranking_info["rank_points"],
-        "age": age,
-        "height": height,
-        "hand": hand
+        "age": latest["p1_age"] if is_p1 else latest["p2_age"],
+        "height": latest["p1_ht"] if is_p1 else latest["p2_ht"],
+        "hand": latest["p1_hand"] if is_p1 else latest["p2_hand"],
     }
 
     return profile
@@ -91,6 +84,7 @@ def get_tournament_metadata(df, tournament_name, year):
         "best_of": row["best_of"],
         "tourney_level": row["tourney_level"],
         "draw_size": row["draw_size"] if "draw_size" in rows.columns else None,
+        "round" : None
     }
 
     return meta
@@ -110,9 +104,10 @@ def build_match(df, rankings_df, p1_name, p2_name, tournament, year, round_label
     p1 = build_player_profile(df, rankings_df, p1_name, cutoff_date)
     p2 = build_player_profile(df, rankings_df, p2_name, cutoff_date)
 
-    #build match row
+    #build match row with same columns to the processed matches
     raw = pd.DataFrame([{
         # tournament metadata
+        "tourney_id": None,
         "tourney_name": meta["tourney_name"],
         "tourney_date": meta["tourney_date"],
         "surface": meta["surface"],
@@ -121,13 +116,36 @@ def build_match(df, rankings_df, p1_name, p2_name, tournament, year, round_label
         "best_of": meta["best_of"],
         "round": round_label,
 
+        #post match data
+        "match_num": None,
+        "score": None,
+        "minutes": None,
+        "tiebreak_scores": None,
+        "perspective": None,
+        "label": None,
+
         # player 1
+        "p1_id": None,
         "p1_name": p1["name"],
         "p1_rank": p1["rank"],
         "p1_rank_points": p1["rank_points"],
         "p1_age": p1["age"],
         "p1_ht": p1["height"],
         "p1_hand": p1["hand"],
+        "p1_ioc": None,
+        "p1_seed": None,
+        "p1_entry": None,
+
+        #p1 post match stats
+        "p1_ace": None,
+        "p1_df": None,
+        "p1_svpt": None,
+        "p1_1stin": None,
+        "p1_1stwon": None,
+        "p1_2ndwon": None,
+        "p1_svgms": None,
+        "p1_bpsaved": None,
+        "p1_bpfaced": None,
 
         # player 2
         "p2_name": p2["name"],
@@ -136,12 +154,26 @@ def build_match(df, rankings_df, p1_name, p2_name, tournament, year, round_label
         "p2_age": p2["age"],
         "p2_ht": p2["height"],
         "p2_hand": p2["hand"],
-    }])
+        "p2_ioc": None,
+        "p2_seed": None,
+        "p2_entry": None,
 
+        #p2 post match stats
+        "p2_ace": None,
+        "p2_df": None,
+        "p2_svpt": None,
+        "p2_1stin": None,
+        "p2_1stwon": None,
+        "p2_2ndwon": None,
+        "p2_svgms": None,
+        "p2_bpsaved": None,
+        "p2_bpfaced": None,
+
+    }])
 
     # apply pre-match feature engineering
     #and is a row containing all the matches metadata
-    row_full = add_pre_match_context_features(raw)
+    row_full = build_features(raw, df)
 
     # align with model features (what the model has been trained on)
     #basically the row above but only containing the columns the model will be trained on
@@ -155,7 +187,7 @@ def main():
     model, scaler= load_model()
 
     print("Loading data...")
-    df = load_data()
+    df = load_matches()
     rankings_df = load_rankings()
 
     # prepare dataset once to get the correct feature list
