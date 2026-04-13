@@ -23,7 +23,7 @@ def load_matches():
 def load_processed_matches():
     df = load_matches()
     #apply feature builder (training mode)
-    df = build_features(df, df)
+    df = build_features(df)
     #make sure is in datetime
     df["tourney_date"] = pd.to_datetime(df["tourney_date"], errors="coerce")
     return df

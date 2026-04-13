@@ -173,7 +173,7 @@ def build_match(df, rankings_df, p1_name, p2_name, tournament, year, round_label
 
     # apply pre-match feature engineering
     #and is a row containing all the matches metadata
-    row_full = build_features(raw, df)
+    row_full = build_features(raw)
 
     # align with model features (what the model has been trained on)
     #basically the row above but only containing the columns the model will be trained on

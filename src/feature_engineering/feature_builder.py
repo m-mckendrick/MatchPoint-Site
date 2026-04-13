@@ -6,7 +6,7 @@ from .match_context import add_post_match_context_features
 
 # df acts as both the synthetic row and all the processed matches
 #full df is always the full set of processed matches
-def build_features(df: pd.DataFrame, full_df: pd.DataFrame = None) -> pd.DataFrame:
+def build_features(df: pd.DataFrame) -> pd.DataFrame:
 
     df = add_pre_match_context_features(df)
     df = add_post_match_context_features(df)

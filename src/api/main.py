@@ -9,17 +9,17 @@ from data.loader import (
     load_rankings,
     load_processed_matches,
 )
-
+from src.feature_engineering.feature_builder import build_features
 from src.prediction.match_builder import build_match
 from src.prediction.predictor import predict
 from src.model_training.logistical_regression import prepare_dataset
 
 from src.explainability.explainer import explain_prediction
 
-#loade model + data
+
+#load model + data
 model, scaler = load_model()
 matches_df = load_processed_matches()
-full_features = build_features(matches_df,matches_df)
 rankings_df = load_rankings()
 
 #get model features
