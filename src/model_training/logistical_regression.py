@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 import joblib
 
-from src.data.loader import (
+from data.loader import (
     load_matches,
     load_rankings,
     load_processed_matches,

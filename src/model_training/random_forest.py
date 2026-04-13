@@ -1,7 +1,7 @@
 from src.feature_engineering.feature_builder import build_features
 from src.model_training.dataset_preparation import prepare_dataset
 
-from src.data.loader import (
+from data.loader import (
     load_model,
     load_rankings,
     load_processed_matches
