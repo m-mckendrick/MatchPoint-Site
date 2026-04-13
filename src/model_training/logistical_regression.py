@@ -9,24 +9,19 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 import joblib
 
+from src.data.loader import (
+    load_matches,
+    load_rankings,
+    load_processed_matches,
+)
+
+
 '''
 logical regression
 nutshell: calculate probability to 0 or 1 (no or yes)
 rule is set for 0 or 1 eg. if over 0.4 predict 1
 graph created is a s shaped line
 '''
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-RAW_DIR = PROJECT_ROOT / "data" / "raw"
-PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-
-#build our df with match level features
-#out df is stats + match level features
-def load_feature_data(processed_dir):
-    df = build_features(processed_dir)
-    return df
-
 
 #use standard scaler
 #it standardises every numeric feature so that they all live on the same scale
@@ -55,9 +50,8 @@ def save_logistical_regression(model, scaler, path="models/logreg_baseline.pkl")
 
 def main():
     print("Loading and building features...")
-    print(Path("../../data/processed").resolve())
+    df = load_processed_matches()
 
-    df = load_feature_data(PROCESSED_DIR / "matches")
     print ("Training Columns...")
     print(df.columns)
 

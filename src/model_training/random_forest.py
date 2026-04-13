@@ -1,6 +1,12 @@
 from src.feature_engineering.feature_builder import build_features
 from src.model_training.dataset_preparation import prepare_dataset
 
+from src.data.loader import (
+    load_model,
+    load_rankings,
+    load_processed_matches
+)
+
 import pandas as pd
 from pathlib import Path
 from sklearn.model_selection import train_test_split
@@ -14,14 +20,6 @@ Each tree is trained on a slightly different sample of the data and
 only sees a random subset of features at each split, 
 which forces the trees to learn different patterns rather than all memorising the same structure
 """
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-
-def load_feature_data(processed_dir):
-    df = build_features(processed_dir)
-    return df
 
 def train_random_forest(x_train, y_train):
     model = RandomForestClassifier(
@@ -51,7 +49,7 @@ def save_random_forest(model, path="models/random_forest.pkl"):
 
 def main():
     print("Loading and building features...")
-    df = load_feature_data(PROCESSED_DIR / "matches")
+    df = load_processed_matches()
 
     print("Preparing dataset...")
     x, y = prepare_dataset(df)
