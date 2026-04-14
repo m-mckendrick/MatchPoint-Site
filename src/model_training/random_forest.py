@@ -4,7 +4,7 @@ from src.model_training.dataset_preparation import prepare_dataset
 from data.loader import (
     load_model,
     load_rankings,
-    load_processed_matches
+    load_matches_features
 )
 
 import pandas as pd
@@ -49,7 +49,7 @@ def save_random_forest(model, path="models/random_forest.pkl"):
 
 def main():
     print("Loading and building features...")
-    df = load_processed_matches()
+    df = load_matches_features()
 
     print("Preparing dataset...")
     x, y = prepare_dataset(df)

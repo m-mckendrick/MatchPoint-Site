@@ -12,7 +12,7 @@ import joblib
 from data.loader import (
     load_matches,
     load_rankings,
-    load_processed_matches,
+    load_matches_features,
 )
 
 
@@ -50,7 +50,7 @@ def save_logistical_regression(model, scaler, path="models/logreg_baseline.pkl")
 
 def main():
     print("Loading and building features...")
-    df = load_processed_matches()
+    df = load_matches_features()
 
     print ("Training Columns...")
     print(df.columns)

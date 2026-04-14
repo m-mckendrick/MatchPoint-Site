@@ -19,7 +19,7 @@ from src.explainability.explainer import explain_prediction
 
 #load model + data
 model, scaler = load_model()
-matches_df = load_processed_matches()
+matches_df = load_matches_features()
 rankings_df = load_rankings()
 
 #get model features

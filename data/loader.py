@@ -20,7 +20,7 @@ def load_matches():
     return df
 
 
-def load_processed_matches():
+def load_matches_features():
     df = load_matches()
     #apply feature builder (training mode)
     df = build_features(df)
