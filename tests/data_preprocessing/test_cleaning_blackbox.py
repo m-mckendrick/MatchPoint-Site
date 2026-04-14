@@ -38,12 +38,12 @@ def test_parse_dates_valid_and_invalid():
 #testing teh numeric convert for all the stats
 def test_convert_numeric():
     df = pd.DataFrame({
-        "w_aces": ["10", "bad"],
+        "w_ace": ["10", "bad"],
         "l_df": ["3", None]
     })
     out = convert_numeric(df)
-    assert out["w_aces"].dtype == "float64"
-    assert pd.isna(out["w_aces"].iloc[1])
+    assert out["w_ace"].dtype == "float64"
+    assert pd.isna(out["w_ace"].iloc[1])
 
 
 #all rankings and seed to integers

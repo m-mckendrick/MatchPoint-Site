@@ -95,7 +95,7 @@ def raw_match_df():
             "loser_ioc": "CHN",
             "loser_age": 18.9,
 
-            "score": "6-1 6-1 1-0 RET",
+            "score": "6-1 6-1 6-0",
             "best_of": 5,
             "round": "R32",
             "minutes": 66,
