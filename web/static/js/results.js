@@ -6,22 +6,26 @@ if (!data) {
     throw new Error("No prediction data");
 }
 
+//extract sections from decoupled JSON
+const prediction = data.prediction;
+const explain = data.explainability;
+
 //progress bar fill based on prediction outcome
-const probFraction = data.probability / 100;
+const probFraction = prediction.probability / 100;
 const barFill = probFraction * 100
 
 //save p1 name so progress bar is filled from correct side
-const winnerIsP1 = data.winner === data.players.p1.name;
+const winnerIsP1 = prediction.winner === explain.players.p1.name;
 
 //prediction sumaary
 document.getElementById("prediction-summary").innerHTML = `
-    <h2>Winner: ${data.winner}</h2>
-    <p>Probability: ${data.probability}%</p>
+    <h2>Winner: ${prediction.winner}</h2>
+    <p>Probability: ${prediction.probability}%</p>
     
     <div class="progress-container">
         <div class="progress-labels">
-            <span>${data.players.p1.name}</span>
-            <span>${data.players.p2.name}</span>
+            <span>${explain.players.p1.name}</span>
+            <span>${explain.players.p2.name}</span>
         </div>
 
         <div class="progress-bar ${winnerIsP1 ? "left-win" : "right-win"}">
@@ -34,19 +38,19 @@ document.getElementById("prediction-summary").innerHTML = `
 //player cards
 document.getElementById("player-cards").innerHTML = `
     <div class="player-card">
-        <h3>${data.players.p1.name}</h3>
-        <p>Ranking: ${data.players.p1.rank}</p>
-        <p>Age: ${data.players.p1.age}</p>
-        <p>Height: ${data.players.p1.height + " cm"}</p>
-        <p>Dominant Hand: ${data.players.p1.hand}</p>
+        <h3>${explain.players.p1.name}</h3>
+        <p>Ranking: ${explain.players.p1.rank}</p>
+        <p>Age: ${explain.players.p1.age}</p>
+        <p>Height: ${explain.players.p1.height + " cm"}</p>
+        <p>Dominant Hand: ${explain.players.p1.hand}</p>
     </div>
 
     <div class="player-card">
-        <h3>${data.players.p2.name}</h3>
-        <p>Ranking: ${data.players.p2.rank}</p>
-        <p>Age: ${data.players.p2.age}</p>
-        <p>Height: ${data.players.p2.height + " cm"}</p>
-        <p>Dominant Hand: ${data.players.p2.hand}</p>
+        <h3>${explain.players.p2.name}</h3>
+        <p>Ranking: ${explain.players.p2.rank}</p>
+        <p>Age: ${explain.players.p2.age}</p>
+        <p>Height: ${explain.players.p2.height + " cm"}</p>
+        <p>Dominant Hand: ${explain.players.p2.hand}</p>
     </div>
 `;
 
@@ -54,9 +58,9 @@ document.getElementById("player-cards").innerHTML = `
 // tourny metadata
 document.getElementById("tournament-meta").innerHTML = `
     <div class="tournament-box">
-        <h3>${data.tournament.tournament} (${data.tournament.year})</h3>
-        <p>Round: ${data.tournament.round}</p>
-        <p>Surface: ${data.tournament.surface}</p>
+        <h3>${explain.tournament.tournament} (${explain.tournament.year})</h3>
+        <p>Round: ${explain.tournament.round}</p>
+        <p>Surface: ${explain.tournament.surface}</p>
     </div>
 `;
 
@@ -64,15 +68,14 @@ document.getElementById("tournament-meta").innerHTML = `
 document.getElementById("narrative").innerHTML = `
     <div class="narrative-box">
         <h2>Why This Prediction?</h2>
-        <p>${data.narrative}</p>
+        <p>${explain.narrative}</p>
     </div>
 `;
 
 
 //widget switching (empty for now)
 const widgetZone = document.getElementById("widget-zone");
-
-const widgets = data.widgets || [];
+const widgets = explain.widgets || [];
 
 //render widgets based on its type
 function renderWidget(type) {

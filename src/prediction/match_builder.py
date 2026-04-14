@@ -7,7 +7,7 @@ from src.feature_engineering.match_context import encode_round, add_pre_match_co
 from data.loader import (
     load_matches,
     load_rankings,
-    load_processed_matches,
+    load_matches_features,
     load_model
 )
 

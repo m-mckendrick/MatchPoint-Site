@@ -7,7 +7,7 @@ from pathlib import Path
 from data.loader import (
     load_model,
     load_rankings,
-    load_processed_matches,
+    load_matches_features,
 )
 from src.feature_engineering.feature_builder import build_features
 from src.prediction.match_builder import build_match
@@ -102,12 +102,16 @@ def api_predict(payload: PredictRequest):
 
     #return JSON
     return {
-        "winner": winner,
-        "probability": winner_prob,
-        "players": players,
-        "tournament": tournament,
-        "narrative": narrative,
-        "widgets": widgets
+        "prediction": {
+            "winner": winner,
+            "probability": winner_prob
+        },
+        "explainability": {
+            "players": players,
+            "tournament": tournament,
+            "narrative": narrative,
+            "widgets": widgets
+        }
     }
 
 @app.get("/results")
