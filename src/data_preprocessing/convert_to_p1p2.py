@@ -1,5 +1,11 @@
 import pandas as pd
 
+"""
+convert_to_p1p2 : restructures each mirrored row into a consistent p1/p2 format,
+mapping the winner to p1 and the loser to p2,
+ensuring the model doesnt recieve any bias column names”
+"""
+
 def convert_to_p1p2(df):
     df = df.copy()
 

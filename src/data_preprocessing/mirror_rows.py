@@ -1,6 +1,12 @@
 import pandas as pd
 
-#for logistical regression need a winner perspective 1 and losers perspective 0
+"""
+mirror_rows : duplicates each match into a winner‑perspective and loser‑perspective row
+by swapping all winner/loser fields,
+allowing the model to learn from both sides of the match
+and preventing it from assuming the winner is always ‘player 1’.
+"""
+
 def mirror_rows(df: pd.DataFrame) -> pd.DataFrame:
 
     df_loser = df.copy()

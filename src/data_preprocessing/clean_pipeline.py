@@ -8,7 +8,7 @@ from pathlib import Path
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 120)
 
-from src.prediction.loader import RAW_MATCHES_PATH, MATCHES_PATH
+from data.loader import RAW_MATCHES_PATH, MATCHES_PATH
 
 
 #%%
@@ -389,7 +389,7 @@ def process_year(year):
 allows years to be cleaned quickly 
 """
 if __name__ == "__main__":
-    for i in range(2016,2020):
+    for i in range(2010,2020):
         process_year(i)
 
 
