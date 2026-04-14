@@ -2,15 +2,17 @@ import pandas as pd
 from pathlib import Path
 
 #same as clean pipeline just reads ranking files
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-RAW_DIR = PROJECT_ROOT / "data" / "raw"
-PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+from data.loader import RAW_MATCHES_PATH, PROCESSED_PATH
 
+"""
+combine rankings : find ranking files and combines them 
+and sort them so that player ranking are shown from earliest to latest
+"""
 def combine_rankings():
     files = [
-        RAW_DIR / "atp_rankings_00s.csv",
-        RAW_DIR / "atp_rankings_10s.csv",
-        RAW_DIR / "atp_rankings_20s.csv",
+        RAW_MATCHES_PATH / "atp_rankings_00s.csv",
+        RAW_MATCHES_PATH / "atp_rankings_10s.csv",
+        RAW_MATCHES_PATH / "atp_rankings_20s.csv",
         ]
 
     df_list = []
@@ -31,8 +33,8 @@ def combine_rankings():
     #sort rankings so player ranking are all shown from earliest to latest
     rankings = rankings.sort_values(["player_id", "ranking_date"])
 
-    PROCESSED_DIR.mkdir(exist_ok=True)
-    rankings.to_csv(PROCESSED_DIR / "atp_rankings_2000-2020.csv", index=False)
+    PROCESSED_PATH.mkdir(exist_ok=True)
+    rankings.to_csv(PROCESSED_PATH / "atp_rankings_2000-2020.csv", index=False)
 
     return rankings
 
