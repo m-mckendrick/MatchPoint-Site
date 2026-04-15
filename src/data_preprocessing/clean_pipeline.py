@@ -146,7 +146,7 @@ def validate_physical_stats(df):
 
 
 def validate_surface(df):
-    valid = {"Hard", "Clay", "Grass"}
+    valid = {"Hard", "Clay", "Grass", "Carpet"}
     bad = df[~df["surface"].isin(valid)] #bad = all surfaces not in above list
     if len(bad) > 0:
         print("Warning: unexpected surface values found:")
@@ -182,6 +182,7 @@ def validate_minutes(df):
 #%%
 """
 step 9 : remove all matches that are not atp events
+also remove matches that are early round (qualifying) and bronze medal matches
 """
 
 def filter_atp_events(df):
@@ -202,6 +203,11 @@ def filter_atp_events(df):
     df = df[~df["tourney_name"].str.contains(pattern, case=False, na=False)]
 
     return df
+
+def filter_matches(df):
+    banned_rounds = {"BR", "ER"}
+    return df[~df["round"].isin(banned_rounds)]
+
 
 #%%
 """
@@ -287,7 +293,7 @@ def data_health_check(df):
     print("\n")
 
     # unexpected values?
-    expected_surface = {"Hard", "Clay", "Grass"}
+    expected_surface = {"Hard", "Clay", "Grass", "Carpet"}
     expected_rounds = {"R128","R64","R32","R16","QF","SF","F","RR"}
     expected_levels = {"A","M","G","F"}
 
@@ -332,6 +338,7 @@ step 11 : clean and save
 def clean_matches(df):
     df = (
        df.pipe(normalise_headers)
+        .pipe(filter_matches)
         .pipe(filter_atp_events)
         .pipe(normalise_missing_values)
         .pipe(parse_dates)
@@ -376,10 +383,18 @@ def process_year(year):
     input_path = RAW_MATCHES_PATH / f"atp_matches_{year}.csv"
     output_path = MATCHES_PATH / f"atp_matches_{year}_clean.csv"
 
+    #cleaning pipeline
     df = pd.read_csv(input_path)
+    raw_count = len(df)
     df_clean = clean_matches(df)
     data_health_check(df_clean)
     df_model_ready=convert_for_model(df_clean)
+
+    #how many roles removed
+    clean_count = len(df_clean)
+    removed = raw_count - clean_count
+
+    print(f"Removed {removed} rows out of {raw_count} ({removed/raw_count:.2%}) during cleaning.")
     MATCHES_PATH.mkdir(parents=True, exist_ok=True)
     df_model_ready.to_csv(output_path, index=False)
 
@@ -390,7 +405,7 @@ def process_year(year):
 allows years to be cleaned quickly 
 """
 if __name__ == "__main__":
-    for i in range(2010,2020):
+    for i in range(2000,2023):
         process_year(i)
 
 

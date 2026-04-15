@@ -84,6 +84,20 @@ def test_filter_atp_events():
     assert len(out) == 1
     assert out["tourney_level"].iloc[0] == "A"
 
+def test_filter_matches_only_removes_br_er():
+    df = pd.DataFrame({
+        "round": ["R32", "R16", "QF", "SF", "F", "RR", "BR", "ER"]
+    })
+
+    out = filter_matches(df)
+
+    # BR and ER must be removed
+    assert "BR" not in out["round"].values
+    assert "ER" not in out["round"].values
+
+    expected = {"R32", "R16", "QF", "SF", "F", "RR"}
+    assert set(out["round"].values) == expected
+
 #testing all iterations of tiebreaks scores are calculated correctly before added to csv
 def test_classic_tiebreak_simple():
     row = {

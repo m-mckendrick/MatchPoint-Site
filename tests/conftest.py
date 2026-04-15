@@ -141,7 +141,7 @@ def p1p2_match_df(cleaned_match_df):
     return convert_for_model(cleaned_match_df.copy())
 
 #pytest fixture for explainability tests
-from src.prediction.loader import load_model, load_matches, load_rankings
+from data.loader import load_model, load_matches, load_rankings
 from src.model_training.logistical_regression import prepare_dataset
 
 @pytest.fixture(scope="session")

@@ -10,6 +10,7 @@ from src.data_preprocessing.clean_pipeline import (
 
 #white-box tests
 #these test every edge case and branch (every line of code)
+#uses capsys to capture printed output of the data health test
 
 def test_validate_physical_stats_filters_invalid_values():
     df = pd.DataFrame([{
