@@ -193,7 +193,7 @@ def filter_atp_events(df):
         "United Cup",
         "Laver Cup",
         "Next Gen Finals",
-        'NextGen Finals'
+        'NextGen Finals',
         "Olympics",
         "Davis Cup",
         "Exhibition"

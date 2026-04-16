@@ -79,8 +79,8 @@ def test_clean_categories():
 #testing laver cup is removed and aussie open kept
 def test_filter_atp_events():
     df = pd.DataFrame({
-        "tourney_level": ["A", "X"],
-        "tourney_name": ["Australian Open", "Laver Cup"]
+        "tourney_level": ["A", "X", "F" ],
+        "tourney_name": ["Australian Open", "Laver Cup", "NextGen Finals"]
     })
     out = filter_atp_events(df)
     assert len(out) == 1
