@@ -212,8 +212,41 @@ def filter_matches(df):
 #%%
 """
 step 10 : add tiebreak scores to data
+first find tetirements and remove ret string from score
 inclueds test for type of tiebreak logic 
 """
+
+def remove_retirement_and_flag(df):
+    retirement_tokens = {"RET", "RET.", "RETIREMENT", "W/O", "WO"}
+
+    is_ret_list = []
+    cleaned_scores = []
+
+    #if there's no score
+    for score in df["score"]:
+        if pd.isna(score):
+            is_ret_list.append(0)
+            cleaned_scores.append(score)
+            continue
+
+        sets = score.split()
+        cleaned = []
+        retired = 0
+
+        for set in sets:
+            if set.upper() in retirement_tokens:
+                retired = 1
+                break
+            cleaned.append(set)
+
+        is_ret_list.append(retired)
+        #join all set by a space
+        cleaned_scores.append(" ".join(cleaned))
+
+    df["is_retirement"] = is_ret_list
+    df["score"] = cleaned_scores
+    return df
+
 
 def extract_tiebreak_from_set(set_str, is_final_set, match_tiebreak_allowed):
     # match tiebreak
@@ -257,10 +290,6 @@ def extract_tiebreak_score_string_row(row):
         return False
 
     for i, set_str in enumerate(sets):
-
-        # STOP parsing when RET or W/O appears
-        if set_str.upper() in ["RET", "RET.", "RETIREMENT", "W/O", "WO"]:
-            break
 
         # sets indices are 0,1,2
         is_final_set = (i == best_of-1)
@@ -356,6 +385,7 @@ def clean_matches(df):
         .pipe(validate_round)
         .pipe(validate_best_of)
         .pipe(validate_minutes)
+        .pipe(remove_retirement_and_flag)
         .pipe(extract_tiebreak_score_string)
     )
     return df

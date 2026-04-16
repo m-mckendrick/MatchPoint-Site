@@ -14,6 +14,7 @@ from src.data_preprocessing.clean_pipeline import (
     filter_atp_events,
     filter_matches,
     clean_matches,
+    remove_retirement_and_flag,
     extract_tiebreak_score_string,
     extract_tiebreak_score_string_row
 )
@@ -99,6 +100,32 @@ def test_filter_matches_only_removes_br_er():
     expected = {"R32", "R16", "QF", "SF", "F", "RR"}
     assert set(out["round"].values) == expected
 
+
+def test_remove_retirement_and_flag_basic():
+    df = pd.DataFrame({
+        "score": [
+            "7-5 4-0 RET",
+            "6-4 6-4",
+            "6-3 RET.",
+            "7-6(5) 2-1 RETIREMENT",
+            "W/O",
+            None
+        ]
+    })
+
+    out = remove_retirement_and_flag(df.copy())
+
+    assert out["is_retirement"].tolist() == [1, 0, 1, 1, 1, 0]
+
+    assert out["score"].tolist() == [
+        "7-5 4-0",
+        "6-4 6-4",
+        "6-3",
+        "7-6(5) 2-1",
+        "",
+        np.nan
+    ]
+
 #testing all iterations of tiebreaks scores are calculated correctly before added to csv
 def test_classic_tiebreak_simple():
     row = {
@@ -133,20 +160,6 @@ def test_no_tiebreaks():
         "tourney_level": "A"
     }
     out = extract_tiebreak_score_string_row(row)
-    assert out == "none none"
-
-def test_tiebreak_extractor_stops_on_ret():
-    row = pd.Series({
-        "score": "7-5 4-0 RET",
-        "best_of": 3,
-        "tourney_name": "Australian Open",
-        "tourney_date": pd.Timestamp("2024-01-20"),
-        "tourney_level": "G"
-    })
-
-    out = extract_tiebreak_score_string_row(row)
-
-    # Should only produce tiebreaks for the real sets: 7-5 and 4-0
     assert out == "none none"
 
 

@@ -36,8 +36,8 @@ def test_combine_rankings_basic(tmp_path, monkeypatch):
     df20.to_csv(f20, index=False)
 
     #makes raw matches path point to the test directory
-    monkeypatch.setattr("src.data_preprocessing.combine_rankings.RAW_MATCHES_PATH", tmp_path)
-    monkeypatch.setattr("src.data_preprocessing.combine_rankings.PROCESSED_PATH", tmp_path)
+    monkeypatch.setattr("src.data_preprocessing.rankings.RAW_MATCHES_PATH", tmp_path)
+    monkeypatch.setattr("src.data_preprocessing.rankings.PROCESSED_PATH", tmp_path)
 
     out = combine_rankings()
 
