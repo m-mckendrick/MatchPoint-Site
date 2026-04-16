@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
-from src.feature_engineering.match_context import add_pre_match_context_features, encode_round, add_post_match_context_features
+from src.feature_engineering.match_context import add_pre_match_context_features, encode_round, assign_tour_finals_country, TOURNAMENT_COUNTRY
 
 #white-box tests
-#these test every edge case and branch (every line of code)
+#these test every edge case and branch (every line of code)_row
 """
 def test_seed_diff_both_unseeded():
     df = pd.DataFrame([{
@@ -63,6 +63,7 @@ def test_prestige_unknown_level():
         "p2_seed": 2,
         "p1_hand": "R",
         "p2_hand": "R",
+        "tourney_name": "Wimbledon",
         "surface": "Grass",
         "round": "F",
         "draw_size": 32,
@@ -96,6 +97,7 @@ def test_lefty_logic_all_combinations():
     df["p1_seed"] = 1
     df["p2_seed"] = 2
     df["surface"] = "Hard"
+    df["tourney_name"] = "Adelaide"
     df["round"] = "R32"
     df["draw_size"] = 32
     df["tourney_level"] = "A"
@@ -105,36 +107,26 @@ def test_lefty_logic_all_combinations():
     df["p2_age"] = 25
     df["p1_ht"] = 190
     df["p2_ht"] = 185
+    df["p1_ioc"] = "AUS"
+    df["p2_ioc"] = "ESP"
 
     out = add_pre_match_context_features(df)
 
     assert list(out["lefty_diff"]) == [0, 1, -1, 0]
 
-def test_retirement_detection():
-    df = pd.DataFrame([
-        {"score": "6-1 6-1 1-0 RET"},
-        {"score": "6-4,6-4"},
-    ])
+def test_assign_tour_finals_country_branches():
+    # houston era
+    row = {"tourney_name": "Masters Cup", "tourney_date": pd.Timestamp("2003-11-10")}
+    assert assign_tour_finals_country(row) == "USA"
 
-    df["p1_rank"] = 1
-    df["p2_rank"] = 2
-    df["p1_rank_points"] = 1000
-    df["p2_rank_points"] = 900
-    df["p1_seed"] = 1
-    df["p2_seed"] = 2
-    df["surface"] = "Hard"
-    df["round"] = "R32"
-    df["draw_size"] = 32
-    df["tourney_level"] = "A"
-    df["best_of"] = 3
-    df["tourney_date"] = "2024-01-01"
-    df["p1_age"] = 30
-    df["p2_age"] = 25
-    df["p1_ht"] = 190
-    df["p2_ht"] = 185
-    df["p1_hand"] = "L"
-    df["p2_hand"] = "R"
+    # shanghai era
+    row = {"tourney_name": "Masters Cup", "tourney_date": pd.Timestamp("2007-11-10")}
+    assert assign_tour_finals_country(row) == "CHN"
 
-    out = add_post_match_context_features(df)
+    # london era
+    row = {"tourney_name": "Tour Finals", "tourney_date": pd.Timestamp("2015-11-10")}
+    assert assign_tour_finals_country(row) == "GBR"
 
-    assert list(out["is_retirement"]) == [1,0]
+    # turin era
+    row = {"tourney_name": "ATP Finals", "tourney_date": pd.Timestamp("2022-11-10")}
+    assert assign_tour_finals_country(row) == "ITA"

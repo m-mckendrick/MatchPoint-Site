@@ -12,6 +12,7 @@ from src.data_preprocessing.clean_pipeline import (
     clean_categories,
     validate_physical_stats,
     filter_atp_events,
+    filter_matches,
     clean_matches,
     extract_tiebreak_score_string,
     extract_tiebreak_score_string_row

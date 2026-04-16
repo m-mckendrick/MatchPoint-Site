@@ -14,6 +14,84 @@ ROUND_TO_PLAYERS = {
     "R128": 128
 }
 
+
+TOURNAMENT_COUNTRY = {
+    # australia
+    "Australian Open": "AUS", "Adelaide": "AUS", "Sydney": "AUS", "Sydney Olympics": "AUS", "Brisbane": "AUS",
+
+    # USA
+    "US Open": "USA", "Indian Wells Masters": "USA", "Miami Masters": "USA", "Cincinnati Masters": "USA",
+    "Atlanta": "USA", "Washington": "USA", "Delray Beach": "USA", "Houston": "USA", "Memphis": "USA",
+    "San Jose": "USA", "Long Island": "USA", "Los Angeles": "USA", "Scottsdale": "USA", "Orlando": "USA",
+    "Indianapolis": "USA", "New Haven": "USA", "Winston-Salem": "USA",
+
+    # united kingdom
+    "Wimbledon": "GBR", "Queen's Club": "GBR", "Nottingham": "GBR", "London": "GBR",
+
+    # france
+    "Roland Garros": "FRA", "Paris Masters": "FRA", "Marseille": "FRA", "Lyon": "FRA", "Metz": "FRA",
+
+    # spain
+    "Barcelona": "ESP", "Madrid Masters": "ESP", "Mallorca": "ESP", "Valencia": "ESP",
+
+    # italy
+    "Rome Masters": "ITA", "Palermo": "ITA", "Milan": "ITA",
+
+    # germany
+    "Hamburg Masters": "GER", "Munich": "GER", "Stuttgart": "GER", "Stuttgart Outdoor": "GER",
+
+    # switzerland
+    "Basel": "SUI", "Gstaad": "SUI", "Geneva": "SUI",
+
+    # austria
+    "Vienna": "AUT", "Kitzbuhel": "AUT", "St. Poelten": "AUT",
+
+    # netherlands
+    "Rotterdam": "NED", "s Hertogenbosch": "NED",
+
+    # belgium
+    "Antwerp": "BEL",
+
+    # sweden
+    "Stockholm": "SWE", "Bastad": "SWE",
+
+    # denmark
+    "Copenhagen": "DEN",
+
+    # russia
+    "Moscow": "RUS", "St. Petersburg": "RUS",
+
+    # china
+    "Beijing": "CHN", "Shanghai Masters": "CHN", "Shenzhen": "CHN",
+
+    # japan
+    "Tokyo": "JPN",
+
+    # argentina
+    "Buenos Aires": "ARG",
+
+    # chile
+    "Santiago": "CHI", "Vina del Mar": "CHI",
+
+    # brazil
+    "Rio de Janeiro": "BRA", "Sao Paulo": "BRA", "Costa Do Sauipe": "BRA",
+
+    # mexico
+    "Acapulco": "MEX",
+
+    # middle east
+    "Doha": "QAT", "Dubai": "UAE",
+
+    # others from early years
+    "Bogota": "COL", "Casablanca": "MAR", "Tashkent": "UZB", "Bangkok": "THA",
+    "Ho Chi Minh City": "VNM", "San Marino": "SMR", "Brighton": "GBR", "Toulouse": "FRA",
+    "Hong Kong": "HKG", "Sopot": "POL", "Umag": "CRO", "Zagreb": "CRO",
+    "Estoril": "POR", "Belgrade": "SRB", "Johannesburg": "RSA", "Kuala Lumpur": "MYS",
+    "Istanbul": "TUR", "Antalya": "TUR", "Budapest": "HUN", "Quito": "ECU",
+    "Marrakech": "MAR", "Chengdu": "CHN",
+}
+
+
 #ml model prefer numeric order features
 def encode_round(row):
     draw = row["draw_size"]
@@ -36,8 +114,42 @@ def encode_round(row):
     return round_number
 
 
+def assign_tour_finals_country(row):
+    name = row["tourney_name"]
+    year = row["tourney_date"].year
+
+    if name in ["Masters Cup", "Tour Finals", "ATP Finals"]:
+        if 2000 <= year <= 2004:
+            return "USA"
+        elif 2005 <= year <= 2008:
+            return "CHN"
+        elif 2009 <= year <= 2020:
+            return "GBR"
+        elif 2021 <= year <= 2023:
+            return "ITA"
+        else:
+            return None
+    return None
+
+def add_tourney_countries(df):
+    # tournament country assignment
+    df["tourney_country"] = df["tourney_name"].map(TOURNAMENT_COUNTRY)
+
+    # override for atp finals
+    df["tf_country"] = df.apply(assign_tour_finals_country, axis=1)
+    df["tourney_country"] = df["tf_country"].fillna(df["tourney_country"])
+    df = df.drop(columns=["tf_country"])
+
+    # validation: ensure every tournament has a country
+    missing = df[df["tourney_country"].isna()]["tourney_name"].unique()
+    if len(missing) > 0:
+        raise ValueError(f"Missing country mapping for tournaments: {missing}")
+
+    return df
 
 def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
+
+    df["tourney_date"] = pd.to_datetime(df["tourney_date"], errors="coerce")
 
     #rank and more specific rank points
     df["rank_diff"] = df["p2_rank"] - df["p1_rank"]
@@ -64,7 +176,7 @@ def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     df["round_encoded"] = df.apply(encode_round, axis=1)
 
     #can help era context
-    df["match_year"] = pd.to_datetime(df["tourney_date"]).dt.year
+    df["match_year"] = (df["tourney_date"]).dt.year
 
     #younger usually more durable
     df["age_diff"] = df["p2_age"] - df["p1_age"]
@@ -76,19 +188,44 @@ def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     prestige_map = {"G": 4, "M": 3, "A": 2, "B": 1}
     df["tourney_prestige"] = df["tourney_level"].map(prestige_map)
 
+    #get points for tournament round helpful for pressure calculations
+    POINTS_TABLE = {
+        "G":  {"F":2000, "SF":1200, "QF":720, "R16":360, "R32":180, "R64":90, "R128":45},
+        "M":  {"F":1000, "SF":600,  "QF":360, "R16":180, "R32":90,  "R64":45},
+        "A":  {"F":500,  "SF":300,  "QF":180, "R16":90,  "R32":45},
+        "B":  {"F":250,  "SF":150,  "QF":90,  "R16":45,  "R32":20},
+    }
+
+    def get_round_points(row):
+        level = row["tourney_level"]
+        rnd = row["round"]
+        return POINTS_TABLE.get(level, {}).get(rnd, np.nan)
+
+    df["round_points"] = df.apply(get_round_points, axis=1)
+
+    #round flag
+    df["is_final"] = (df["round"] == "F").astype(int)
+    df["is_semi"] = (df["round"] == "SF").astype(int)
+    df["is_quarter"] = (df["round"] == "QF").astype(int)
+    df["is_early_round"] = df["round"].isin(["R128","R64","R32"]).astype(int)
+
+    #contextualise tournament size
+    df["is_large_draw"] = (df["draw_size"] >= 64).astype(int)
+    df["is_small_draw"] = (df["draw_size"] <= 32).astype(int)
+
+    #maybe look to make a more complex speed function
+    surface_speed = {"Hard": 2, "Grass": 3, "Clay": 1}
+    df["surface_speed"] = df["surface_raw"].map(surface_speed)
+
+    #add tournament countries
+    add_tourney_countries(df)
+
+    # home court features
+    df["p1_home"] = (df["p1_ioc"] == df["tourney_country"]).astype(int)
+    df["p2_home"] = (df["p2_ioc"] == df["tourney_country"]).astype(int)
+    df["home_advantage_diff"] = df["p1_home"] - df["p2_home"]
+
+
+
+
     return df
-
-
-def add_post_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
-
-    #retirement locater
-    if "score" in df.columns:
-        df["is_retirement"] = df["score"].str.contains("RET", case=False, na=False).astype(int)
-    else:
-        df["is_retirement"] = 0
-
-    return df
-
-
-

@@ -405,7 +405,7 @@ def process_year(year):
 allows years to be cleaned quickly 
 """
 if __name__ == "__main__":
-    for i in range(2000,2023):
+    for i in range(2000,2024):
         process_year(i)
 
 

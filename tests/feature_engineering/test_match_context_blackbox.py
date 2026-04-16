@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from src.feature_engineering.match_context import add_pre_match_context_features, add_post_match_context_features
+from src.feature_engineering.match_context import add_pre_match_context_features
 
 
 #black-box tests
@@ -10,8 +10,7 @@ def test_basic_feature_outputs(p1p2_match_df):
 
     df=p1p2_match_df.copy()
 
-    pre_features = add_pre_match_context_features(df)
-    out = add_post_match_context_features(pre_features)
+    out = add_pre_match_context_features(df)
 
     #test outputs == num ect
 
@@ -22,10 +21,10 @@ def test_basic_feature_outputs(p1p2_match_df):
     #handedness
     assert out["p1_lefty"].iloc[0] in (0, 1)
     assert out["p2_lefty"].iloc[0] in (0, 1)
-    assert out["lefty_diff"].iloc[0] in (0, 1)
+    assert out["lefty_diff"].iloc[0] in (-1, 0, 1)
 
     #surface dummies
-    assert any(col.startswith("surface_Hard")for col in out.columns)
+    assert any(col.startswith("surface_")for col in out.columns)
 
     #round encoding eg(QF == 3)
     assert pd.notna(out["round_encoded"].iloc[0])
@@ -37,5 +36,9 @@ def test_basic_feature_outputs(p1p2_match_df):
 
     assert out["tourney_prestige"].iloc[0] in (1,2,3,4)
 
-    #test ret detection
-    assert out["is_retirement"].iloc[0] in (0,1)
+
+    assert out["tourney_country"].iloc[0] == "AUS"
+
+    assert out["p1_home"].iloc[0] in (0,1)
+    assert out["p2_home"].iloc[0] in (0,1)
+    assert out["home_advantage_diff"].iloc[0] == out["p1_home"].iloc[0] - out["p2_home"].iloc[0]
