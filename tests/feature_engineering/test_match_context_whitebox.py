@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from src.feature_engineering.match_context import add_pre_match_context_features, encode_round, assign_tour_finals_country, TOURNAMENT_COUNTRY
+from src.feature_engineering.match_context import add_pre_match_context_features, encode_round, assign_tour_finals_country, TOURNAMENT_COUNTRY , add_indoor_feature
 
 #white-box tests
 #these test every edge case and branch (every line of code)_row
