@@ -257,6 +257,11 @@ def extract_tiebreak_score_string_row(row):
         return False
 
     for i, set_str in enumerate(sets):
+
+        # STOP parsing when RET or W/O appears
+        if set_str.upper() in ["RET", "RET.", "RETIREMENT", "W/O", "WO"]:
+            break
+
         # sets indices are 0,1,2
         is_final_set = (i == best_of-1)
 

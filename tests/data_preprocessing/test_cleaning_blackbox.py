@@ -135,6 +135,20 @@ def test_no_tiebreaks():
     out = extract_tiebreak_score_string_row(row)
     assert out == "none none"
 
+def test_tiebreak_extractor_stops_on_ret():
+    row = pd.Series({
+        "score": "7-5 4-0 RET",
+        "best_of": 3,
+        "tourney_name": "Australian Open",
+        "tourney_date": pd.Timestamp("2024-01-20"),
+        "tourney_level": "G"
+    })
+
+    out = extract_tiebreak_score_string_row(row)
+
+    # Should only produce tiebreaks for the real sets: 7-5 and 4-0
+    assert out == "none none"
+
 
 def test_advantage_set():
     row = {
