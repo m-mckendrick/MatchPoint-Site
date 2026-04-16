@@ -147,6 +147,68 @@ def add_tourney_countries(df):
 
     return df
 
+def add_indoor_feature(df):
+
+    ALWAYS_INDOOR = {
+        "Paris Masters",
+        "Basel",
+        "Vienna",
+        "Rotterdam",
+        "Marseille",
+        "Metz",
+        "St. Petersburg",
+        "Stockholm",
+        "Lyon",
+        "Copenhagen",
+        "Milan",
+        "Antwerp",
+        "Sofia",
+        "Montpellier",
+        "Zagreb",
+        "Brighton",
+        "Toulouse",
+        "Hong Kong",
+        "Memphis",   # indoor until 2014, ATP removed after 2014
+        "San Jose",
+    }
+
+    def is_indoor(row):
+        name = row["tourney_name"]
+        year = row["tourney_date"].year
+
+        if name in ALWAYS_INDOOR:
+            return 1
+
+        # specific cases
+        if name == "Madrid Masters":
+            return 1 if 2002 <= year <= 2008 else 0
+
+        if name == "Shanghai":
+            return 1 if 2002 <= year <= 2004 else 0
+
+        if name == "Shanghai Masters":
+            return 0
+
+        if name in ["Masters Cup", "Tour Finals", "ATP Finals"]:
+            if 2000 <= year <= 2003:
+                return 0   # houston outdoor
+            elif 2005 <= year <= 2008:
+                return 1   # shanghai indoor
+            elif 2009 <= year <= 2020:
+                return 1   # london indoor
+            elif 2021 <= year <= 2023:
+                return 1   # turin indoor
+            else:
+                return 0
+
+        #assume outdoor unless said
+        return 0
+
+    df["is_indoor"] = df.apply(is_indoor, axis=1).astype(int)
+
+    return df
+
+
 def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
 
     df["tourney_date"] = pd.to_datetime(df["tourney_date"], errors="coerce")
@@ -225,7 +287,7 @@ def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     df["p2_home"] = (df["p2_ioc"] == df["tourney_country"]).astype(int)
     df["home_advantage_diff"] = df["p1_home"] - df["p2_home"]
 
-
+    add_indoor_feature(df)
 
 
     return df

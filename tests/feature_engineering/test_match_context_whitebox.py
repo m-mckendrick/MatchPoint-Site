@@ -73,7 +73,9 @@ def test_prestige_unknown_level():
         "p1_age": 30,
         "p2_age": 25,
         "p1_ht": 190,
-        "p2_ht": 185
+        "p2_ht": 185,
+        "p1_ioc" : "GBR",
+        "p2_ioc" : "ESP"
     }])
 
     out = add_pre_match_context_features(df)
@@ -130,3 +132,29 @@ def test_assign_tour_finals_country_branches():
     # turin era
     row = {"tourney_name": "ATP Finals", "tourney_date": pd.Timestamp("2022-11-10")}
     assert assign_tour_finals_country(row) == "ITA"
+
+
+def test_indoor_madrid_years():
+    df = pd.DataFrame([
+        {"tourney_name": "Madrid Masters", "tourney_date": "2005-05-10"},
+        {"tourney_name": "Madrid Masters", "tourney_date": "2015-05-10"},
+    ])
+    df["tourney_date"] = pd.to_datetime(df["tourney_date"])
+
+    out = add_indoor_feature(df)
+
+    assert out["is_indoor"].iloc[0] == 1   # indoor era
+    assert out["is_indoor"].iloc[1] == 0   # outdoor era
+
+
+def test_indoor_tour_finals():
+    df = pd.DataFrame([
+        {"tourney_name": "Masters Cup", "tourney_date": "2002-11-10"},  # Houston outdoor
+        {"tourney_name": "Masters Cup", "tourney_date": "2006-11-10"},  # Shanghai indoor
+        {"tourney_name": "ATP Finals", "tourney_date": "2015-11-10"},   # London indoor
+    ])
+    df["tourney_date"] = pd.to_datetime(df["tourney_date"])
+
+    out = add_indoor_feature(df)
+
+    assert out["is_indoor"].tolist() == [0, 1, 1]

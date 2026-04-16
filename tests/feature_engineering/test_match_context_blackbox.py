@@ -42,3 +42,7 @@ def test_basic_feature_outputs(p1p2_match_df):
     assert out["p1_home"].iloc[0] in (0,1)
     assert out["p2_home"].iloc[0] in (0,1)
     assert out["home_advantage_diff"].iloc[0] == out["p1_home"].iloc[0] - out["p2_home"].iloc[0]
+
+    assert "is_indoor" in out.columns
+    assert out["is_indoor"].iloc[0] in (0, 1)
+
