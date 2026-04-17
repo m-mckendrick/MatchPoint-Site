@@ -323,7 +323,17 @@ def data_health_check(df):
 
     # any high number of missing values (not recorded)
     print("Missing values (top 10):")
-    print(df.isna().sum().sort_values(ascending=False).head(10))
+    missing_counts = df.isna().sum().sort_values(ascending=False)
+    print(missing_counts.head(30))
+    print("Rows containing missing values:\n")
+
+    for col, count in missing_counts.items():
+        if count > 0:
+            print(f"--- Missing in column: {col} ({count} rows) ---")
+            # Show the rows and the actual values in that column
+            print(df[df[col].isna()][[col]].head(10))
+            print("\n")
+
     print("\n")
 
     # unexpected values?
@@ -344,14 +354,14 @@ def data_health_check(df):
     print("\n")
 
     # value range checks
-    print("Height range (winner/loser):")
-    print(df["winner_ht"].min(), "to", df["winner_ht"].max())
-    print(df["loser_ht"].min(), "to", df["loser_ht"].max())
+    print("Height range (p1/p2):")
+    print(df["p1_ht"].min(), "to", df["p1_ht"].max())
+    print(df["p2_ht"].min(), "to", df["p2_ht"].max())
     print("\n")
 
-    print("Age range (winner/loser):")
-    print(df["winner_age"].min(), "to", df["winner_age"].max())
-    print(df["loser_age"].min(), "to", df["loser_age"].max())
+    print("Age range (p1/p2):")
+    print(df["p1_age"].min(), "to", df["p1_age"].max())
+    print(df["p2_age"].min(), "to", df["p2_age"].max())
     print("\n")
 
     print("Minutes range:")
@@ -408,9 +418,20 @@ def convert_for_model(df):
 
 #%%
 """
+step 13 : handel the na's
+
+"""
+from .na_handling import handle_na
+
+def handle_missing_values(df):
+    return df.pipe(handle_na)
+
+
+#%%
+"""
 process year : 
 function that takes a year and find the appropriate year in the raw matches files
-and puts it through the piepline
+and puts it through the pipeline
 """
 
 def process_year(year):
@@ -422,8 +443,9 @@ def process_year(year):
     df = pd.read_csv(input_path)
     raw_count = len(df)
     df_clean = clean_matches(df)
-    data_health_check(df_clean)
-    df_model_ready=convert_for_model(df_clean)
+    df_model_ready = convert_for_model(df_clean)
+    df_feature_ready = handle_missing_values(df_model_ready)
+    data_health_check(df_feature_ready)
 
     #how many roles removed
     clean_count = len(df_clean)
@@ -431,7 +453,7 @@ def process_year(year):
 
     print(f"Removed {removed} rows out of {raw_count} ({removed/raw_count:.2%}) during cleaning.")
     MATCHES_PATH.mkdir(parents=True, exist_ok=True)
-    df_model_ready.to_csv(output_path, index=False)
+    df_feature_ready.to_csv(output_path, index=False)
 
     print(f" Cleaned {year} — {len(df_clean)} matches")
 
