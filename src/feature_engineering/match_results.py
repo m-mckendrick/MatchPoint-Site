@@ -20,7 +20,7 @@ def parse_games_from_set(set_str):
     except:
         return None, None
 
-
+#p1 win is 1 when player 1 wins and 0 when p 2 wins
 def compute_match_result(score_str, tiebreak_str, p1_win):
     """
     Given:
@@ -99,7 +99,7 @@ def add_match_result_features(df):
         lambda row: compute_match_result(
             row["score"],
             row["tiebreak_scores"],
-            row["p1_win"]
+            row["label"]
         ),
         axis=1
     )

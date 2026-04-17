@@ -74,3 +74,72 @@ def compute_estimated_break_pct(df, opp_df):
     opp_hold = opp_spw ** 4
     return 1 - opp_hold
 
+def add_serve_return_features(df):
+    # get p1 and p2 stats and put in mini df to use the compute functions
+    def extract(prefix):
+        return df[[f"{prefix}{col}" for col in [
+            "ace", "df", "svpt", "1stin", "1stwon", "2ndwon",
+            "svgms", "bpsaved", "bpfaced"
+        ]]].rename(columns=lambda c: c.replace(prefix, ""))
+
+    p1 = extract("p1_")
+    p2 = extract("p2_")
+
+    #serve features
+    df["p1_first_serve_pct"] = compute_first_serve_pct(p1)
+    df["p2_first_serve_pct"] = compute_first_serve_pct(p2)
+
+    df["p1_first_serve_won_pct"] = compute_first_serve_won_pct(p1)
+    df["p2_first_serve_won_pct"] = compute_first_serve_won_pct(p2)
+
+    df["p1_first_serve_in_play_won_pct"] = compute_first_serve_in_play_won_pct(p1)
+    df["p2_first_serve_in_play_won_pct"] = compute_first_serve_in_play_won_pct(p2)
+
+    df["p1_second_serve_won_pct"] = compute_second_serve_won_pct(p1)
+    df["p2_second_serve_won_pct"] = compute_second_serve_won_pct(p2)
+
+    df["p1_second_serve_in_play_won_pct"] = compute_second_serve_in_play_won_pct(p1)
+    df["p2_second_serve_in_play_won_pct"] = compute_second_serve_in_play_won_pct(p2)
+
+    df["p1_serve_points_won_pct"] = compute_serve_points_won_pct(p1)
+    df["p2_serve_points_won_pct"] = compute_serve_points_won_pct(p2)
+
+    df["p1_double_fault_rate"] = compute_double_fault_rate(p1)
+    df["p2_double_fault_rate"] = compute_double_fault_rate(p2)
+
+    df["p1_aces_per_game"] = compute_aces_per_game(p1)
+    df["p2_aces_per_game"] = compute_aces_per_game(p2)
+
+    df["p1_aces_per_first_serve_in"] = compute_aces_per_first_serve_in(p1)
+    df["p2_aces_per_first_serve_in"] = compute_aces_per_first_serve_in(p2)
+
+    df["p1_first_serve_unreturned_pct"] = compute_first_serve_unreturned_pct(p1)
+    df["p2_first_serve_unreturned_pct"] = compute_first_serve_unreturned_pct(p2)
+
+    df["p1_bp_save_pct"] = compute_bp_save_pct(p1)
+    df["p2_bp_save_pct"] = compute_bp_save_pct(p2)
+
+    df["p1_estimated_hold_pct"] = compute_estimated_hold_pct(p1)
+    df["p2_estimated_hold_pct"] = compute_estimated_hold_pct(p2)
+
+    df["p1_serve_efficiency"] = compute_serve_efficiency(p1)
+    df["p2_serve_efficiency"] = compute_serve_efficiency(p2)
+
+    # return features
+    df["p1_return_points_won_pct"] = compute_return_points_won_pct(p1, p2)
+    df["p2_return_points_won_pct"] = compute_return_points_won_pct(p2, p1)
+
+    df["p1_bp_conversion_pct"] = compute_bp_conversion_pct(p1, p2)
+    df["p2_bp_conversion_pct"] = compute_bp_conversion_pct(p2, p1)
+
+    df["p1_sdi"] = compute_serve_dominance_index(
+        df["p1_serve_points_won_pct"], df["p1_return_points_won_pct"]
+    )
+    df["p2_sdi"] = compute_serve_dominance_index(
+        df["p2_serve_points_won_pct"], df["p2_return_points_won_pct"]
+    )
+
+    df["p1_estimated_break_pct"] = compute_estimated_break_pct(p1, p2)
+    df["p2_estimated_break_pct"] = compute_estimated_break_pct(p2, p1)
+
+    return df
