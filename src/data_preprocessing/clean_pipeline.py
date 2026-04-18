@@ -84,13 +84,32 @@ def clean_categories(df):
 step 5 : remove non-matches
 """
 
-def remove_retirements(df):
-    return df[~df["score"].str.contains("RET", na=False)]
-
 def remove_non_matches(df):
-    bad_keywords = ["W/O", "DEF", "ABN", "SUSP"]
+    bad_keywords = ["W/O", "DEF", "ABN", "SUSP", "WO"]
     pattern = "|".join(bad_keywords)
     return df[~df["score"].str.contains(pattern, na=False)]
+
+def drop_scoreless_retirements(df):
+    retirement_tokens = {"RET", "RET.", "RETIREMENT"}
+
+    score_str = df["score"].astype(str).str.upper()
+
+    def is_scoreless_retirement(s):
+        # contains a retirement token
+        has_ret = any(tok in s for tok in retirement_tokens)
+        # contains no digits
+        has_no_score = not any(ch.isdigit() for ch in s)
+        return has_ret and has_no_score
+
+    mask = score_str.apply(is_scoreless_retirement)
+
+    #remove rows that has RET and no Digits
+    removed = mask.sum()
+    print(f"Removed {removed} scoreless retirement matches.")
+
+    return df[~mask].copy()
+
+
 
 
 #%%
@@ -183,6 +202,7 @@ def validate_minutes(df):
 """
 step 9 : remove all matches that are not atp events
 also remove matches that are early round (qualifying) and bronze medal matches
+also remove match that are w/o as they essentially are matchs that didnt happen
 """
 
 def filter_atp_events(df):
@@ -208,25 +228,26 @@ def filter_matches(df):
     banned_rounds = {"BR", "ER"}
     return df[~df["round"].isin(banned_rounds)]
 
-
 #%%
 """
 step 10 : add tiebreak scores to data
-first find tetirements and remove ret string from score
 inclueds test for type of tiebreak logic 
 """
 
 def remove_retirement_and_flag(df):
     retirement_tokens = {"RET", "RET.", "RETIREMENT", "W/O", "WO"}
 
-    is_ret_list = []
+    retirement_flags = []
     cleaned_scores = []
 
     #if there's no score
+    #after testing need to make sure score is a string
     for score in df["score"]:
-        if pd.isna(score):
-            is_ret_list.append(0)
-            cleaned_scores.append(score)
+        #if score not string (Nan ect)
+        if not isinstance(score, str):
+            #retirement with no score
+            retirement_flags.append(0)
+            cleaned_scores.append("0-0")
             continue
 
         sets = score.split()
@@ -239,11 +260,11 @@ def remove_retirement_and_flag(df):
                 break
             cleaned.append(set)
 
-        is_ret_list.append(retired)
+        retirement_flags.append(retired)
         #join all set by a space
         cleaned_scores.append(" ".join(cleaned))
 
-    df["is_retirement"] = is_ret_list
+    df["is_retirement"] = retirement_flags
     df["score"] = cleaned_scores
     return df
 
@@ -272,7 +293,16 @@ def extract_tiebreak_from_set(set_str, is_final_set, match_tiebreak_allowed):
 
 
 def extract_tiebreak_score_string_row(row):
-    score_str = row["score"]
+    #make sure score is string
+    score_str = row.get("score", "")
+    if not isinstance(score_str, str):
+        score_str = str(score_str)
+    score_str = score_str.strip()
+
+    # no score no tiebreaks
+    if score_str == "":
+        return "none"
+
     best_of = row["best_of"]
     tourney = row["tourney_name"].lower()
     year = row["tourney_date"].year
@@ -382,8 +412,10 @@ step 11 : clean and save
 def clean_matches(df):
     df = (
        df.pipe(normalise_headers)
-        .pipe(filter_matches)
+        .pipe(remove_non_matches)
+        .pipe(drop_scoreless_retirements)
         .pipe(filter_atp_events)
+        .pipe(filter_matches)
         .pipe(normalise_missing_values)
         .pipe(parse_dates)
         .pipe(convert_numeric)
@@ -426,7 +458,6 @@ from .na_handling import handle_na
 def handle_missing_values(df):
     return df.pipe(handle_na)
 
-
 #%%
 """
 process year : 
@@ -442,28 +473,33 @@ def process_year(year):
     #cleaning pipeline
     df = pd.read_csv(input_path)
     raw_count = len(df)
-    df_clean = clean_matches(df)
-    df_model_ready = convert_for_model(df_clean)
-    df_feature_ready = handle_missing_values(df_model_ready)
-    data_health_check(df_feature_ready)
+    df = clean_matches(df)
+    df = convert_for_model(df)
+    full_na_audit(df, "BEFORE NA HANDLING")
+    df = handle_missing_values(df)
+    full_na_audit(df, "AFTER NA HANDLING")
+    data_health_check(df)
 
     #how many roles removed
-    clean_count = len(df_clean)
-    removed = raw_count - clean_count
+    clean_count = len(df)
 
-    print(f"Removed {removed} rows out of {raw_count} ({removed/raw_count:.2%}) during cleaning.")
+    net_change = clean_count - raw_count
+    print(f"Raw rows: {raw_count}")
+    print(f"Final rows after cleaning + mirroring: {clean_count}")
+    print(f"Net change: {net_change:+} rows")
+
+
     MATCHES_PATH.mkdir(parents=True, exist_ok=True)
-    df_feature_ready.to_csv(output_path, index=False)
+    df.to_csv(output_path, index=False)
 
-    print(f" Cleaned {year} — {len(df_clean)} matches")
+    #print(f" Cleaned {year} — {len(df)} matches")
 
 #%%
 """
 allows years to be cleaned quickly 
 """
 if __name__ == "__main__":
-    for i in range(2000,2024):
+    for i in range(2000,2023):
         process_year(i)
-
 
 

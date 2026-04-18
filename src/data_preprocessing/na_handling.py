@@ -17,10 +17,11 @@ def fill_missing_serve_stats(df):
 
 
 #fill with ""
+#found out the only missing scores were due to retirement before game had been completed so score was NaN
 def fill_missing_score(df):
-    if "score" in df.columns:
-        df["score"] = df["score"].fillna("").astype(str)
+    df["score"] = df["score"].fillna("0-0")
     return df
+
 
 #if previous excist use that otherwise median
 def fill_missing_height(df):
@@ -115,8 +116,8 @@ def fill_missing_minutes(df):
 
 def handle_na(df):
 
-    df = fill_missing_serve_stats(df)
     df = fill_missing_score(df)
+    df = fill_missing_serve_stats(df)
     df = fill_missing_rank(df)
     df = fill_missing_height(df)
     df = drop_unused_columns(df)

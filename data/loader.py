@@ -1,7 +1,6 @@
 import joblib
 import pandas as pd
 from pathlib import Path
-from src.feature_engineering.feature_builder import build_features
 
 #change based on what model you wish to use
 MODEL_PATH = Path("models/logreg_baseline.pkl")
@@ -22,18 +21,10 @@ def load_raw_matches():
 
 def load_matches():
     #load all processed match CSVs into a single DataFrame
-    files = list(Path(MATCHES_PATH).glob("*.csv"))
+    files = list(Path(MATCHES_PATH).glob("*_clean.csv"))
+
     df = pd.concat([pd.read_csv(f) for f in files], ignore_index=True)
 
-    return df
-
-
-def load_matches_features():
-    df = load_matches()
-    #apply feature builder (training mode)
-    df = build_features(df)
-    #make sure is in datetime
-    df["tourney_date"] = pd.to_datetime(df["tourney_date"], errors="coerce")
     return df
 
 
