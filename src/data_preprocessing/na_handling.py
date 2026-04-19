@@ -35,15 +35,15 @@ def fill_missing_height(df):
         if ht_col not in df.columns or id_col not in df.columns:
             continue
 
-        # fill with median first
-        df[ht_col] = df[ht_col].fillna(median_ht)
-
-        # then find last know height for player of certain id
+        # first find last know height for player of certain id
         df[ht_col] = (
             df.groupby(id_col)[ht_col]
             .apply(lambda s: s.ffill().bfill())
             .reset_index(level=0, drop=True)
         )
+
+        # if still na fill with median
+        df[ht_col] = df[ht_col].fillna(median_ht)
 
     return df
 
@@ -86,12 +86,14 @@ def drop_unused_columns(df):
 
 # fill rank with low rank and rank points with 0
 # missing rank tends to be a very low unranked player
+#very small chance some player are rank but ranking points cant be found dont need to worry about this too much
+#rank is the primary strength indicator not rank points
 def fill_missing_rank(df):
 
     if "p1_rank" in df.columns:
-        df["p1_rank"] = df["p1_rank"].fillna(2000)
+        df["p1_rank"] = df["p1_rank"].fillna(500)
     if "p2_rank" in df.columns:
-        df["p2_rank"] = df["p2_rank"].fillna(2000)
+        df["p2_rank"] = df["p2_rank"].fillna(500)
 
     if "p1_rank_points" in df.columns:
         df["p1_rank_points"] = df["p1_rank_points"].fillna(0)

@@ -16,7 +16,8 @@ from src.data_preprocessing.clean_pipeline import (
     clean_matches,
     remove_retirement_and_flag,
     extract_tiebreak_score_string,
-    extract_tiebreak_score_string_row
+    extract_tiebreak_score_string_row,
+    drop_scoreless_retirements
 )
 
 
@@ -123,7 +124,7 @@ def test_remove_retirement_and_flag_basic():
         "6-3",
         "7-6(5) 2-1",
         "",
-        np.nan
+        "0-0"
     ]
 
 #testing all iterations of tiebreaks scores are calculated correctly before added to csv
@@ -208,3 +209,33 @@ def test_clean_matches_full_pipeline(raw_match_df):
     assert out["winner_hand"].iloc[0] == "Right"
     assert out["winner_rank"].dtype == "Int64"
     assert out["tourney_date"].iloc[0].year == 2024
+
+#found out real function isn't robust to handle None (None isn't actually passed in teh file because there not None score)
+def test_drop_scoreless_retirements():
+    df = pd.DataFrame({
+        "score": [" RET", " ret", "6-4 2-1 RET", "7-6(5)"]
+    })
+
+    out = drop_scoreless_retirements(df)
+
+    # should remove RET and no digits with ret cases
+    assert " RET" not in out["score"].values
+    assert " ret" not in out["score"].values
+
+    # should keep normal matches and normal retirements
+    assert "6-4 2-1 RET" in out["score"].values
+    assert "7-6(5)" in out["score"].values
+
+#this test not likely to be super useful
+def test_remove_retirement_and_flag_nan_score():
+    df = pd.DataFrame({"score": [None]})
+    out = remove_retirement_and_flag(df)
+    assert out["is_retirement"].iloc[0] == 0
+    assert out["score"].iloc[0] == "0-0"
+
+def test_remove_retirement_and_flag_keeps_normal_scores():
+    df = pd.DataFrame({"score": ["6-4 6-4"]})
+    out = remove_retirement_and_flag(df)
+    assert out["is_retirement"].iloc[0] == 0
+    assert out["score"].iloc[0] == "6-4 6-4"
+

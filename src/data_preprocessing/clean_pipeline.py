@@ -82,16 +82,16 @@ def clean_categories(df):
 #%%
 """
 step 5 : remove non-matches
+includes removing match that were retirement before 1 game was completed 
 """
 
 def remove_non_matches(df):
-    bad_keywords = ["W/O", "DEF", "ABN", "SUSP", "WO"]
+    bad_keywords = ["W/O", "DEF", "Def.", "ABN", "SUSP", "WO"]
     pattern = "|".join(bad_keywords)
     return df[~df["score"].str.contains(pattern, na=False)]
 
 def drop_scoreless_retirements(df):
     retirement_tokens = {"RET", "RET.", "RETIREMENT"}
-
     score_str = df["score"].astype(str).str.upper()
 
     def is_scoreless_retirement(s):
@@ -231,7 +231,8 @@ def filter_matches(df):
 #%%
 """
 step 10 : add tiebreak scores to data
-inclueds test for type of tiebreak logic 
+includes test for type of tiebreak logic 
+also removes RET from score string to make score parsing simpler
 """
 
 def remove_retirement_and_flag(df):
@@ -245,7 +246,7 @@ def remove_retirement_and_flag(df):
     for score in df["score"]:
         #if score not string (Nan ect)
         if not isinstance(score, str):
-            #retirement with no score
+            # retirement with no score
             retirement_flags.append(0)
             cleaned_scores.append("0-0")
             continue
@@ -406,7 +407,7 @@ def data_health_check(df):
 
 #%%
 """
-step 11 : clean and save
+step 12 : clean and save
 """
 
 def clean_matches(df):
@@ -434,7 +435,7 @@ def clean_matches(df):
 
 #%%
 """
-step 12 : run df through the mirror row and convert to p1 p2 
+step 13 : run df through the mirror row and convert to p1 p2 
 makes the df model suitable and prevent bias
 """
 
@@ -450,7 +451,7 @@ def convert_for_model(df):
 
 #%%
 """
-step 13 : handel the na's
+step 14 : handel the na's
 
 """
 from .na_handling import handle_na
@@ -475,9 +476,7 @@ def process_year(year):
     raw_count = len(df)
     df = clean_matches(df)
     df = convert_for_model(df)
-    full_na_audit(df, "BEFORE NA HANDLING")
     df = handle_missing_values(df)
-    full_na_audit(df, "AFTER NA HANDLING")
     data_health_check(df)
 
     #how many roles removed
@@ -492,7 +491,7 @@ def process_year(year):
     MATCHES_PATH.mkdir(parents=True, exist_ok=True)
     df.to_csv(output_path, index=False)
 
-    #print(f" Cleaned {year} — {len(df)} matches")
+    print(f" Cleaned {year} — {len(df)} matches")
 
 #%%
 """
