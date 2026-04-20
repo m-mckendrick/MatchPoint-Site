@@ -62,4 +62,8 @@ def add_fatigue_index(df, tau=3, min_effect=0.5):
     df["p1_fatigue_index"] = df["p1_fatigue_raw"] / max_val
     df["p2_fatigue_index"] = df["p2_fatigue_raw"] / max_val
 
+    #drop columns after
+    df.drop(columns=["p1_fatigue_raw", "p2_fatigue_raw"], inplace=True)
+
+
     return df

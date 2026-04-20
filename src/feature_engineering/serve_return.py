@@ -142,4 +142,9 @@ def add_serve_return_features(df):
     df["p1_estimated_break_pct"] = compute_estimated_break_pct(p1, p2)
     df["p2_estimated_break_pct"] = compute_estimated_break_pct(p2, p1)
 
+    # Replace NaN and inf with 0 for all serve/return features
+    # if they are nan mean stats = 0
+    serve_cols = [c for c in df.columns if c.startswith(("p1_", "p2_"))]
+    df[serve_cols] = df[serve_cols].replace([np.inf, -np.inf], np.nan).fillna(0)
+
     return df

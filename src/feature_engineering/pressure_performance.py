@@ -92,7 +92,7 @@ def add_pressure_performance_features(df):
     df["p1_close_sets_won"] = close[0]
     df["p2_close_sets_won"] = close[1]
 
-    # the combined pressure performance index
+    # the combined pressure performance index, how well the player handled pressure
     df["p1_pressure_index"] = (
             0.4 * df["p1_bp_save_pct"] +
             0.3 * df["p1_bp_conv_pct"] +
@@ -113,15 +113,13 @@ def add_pressure_performance_features(df):
             0.4 * np.log1p(df["round_points"])
     )
 
-    # normalize to 0–1
-    df["pressure_multiplier"] = df["match_importance"] / df["match_importance"].max()
+    # normalize to 0–1, stage pressure is the pressure of the importance of the match itself in the range of 0-1
+    df["stage_pressure"] = df["match_importance"] / df["match_importance"].max()
 
     # scale pressure index
-    df["p1_pressure_index"] *= df["pressure_multiplier"]
-    df["p2_pressure_index"] *= df["pressure_multiplier"]
+    df["p1_pressure_index"] *= df["stage_pressure"]
+    df["p2_pressure_index"] *= df["stage_pressure"]
 
-    # stage_pressure = a measure of teh performance under pressure with respect to the importance of the match.
-    df["stage_pressure"] = df["pressure_multiplier"]
 
 
     return df
