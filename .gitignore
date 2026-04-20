@@ -1,39 +1,42 @@
-
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Pickle/model files
 *.pkl
 *.pickle
-
-.venv/
-venv/
-env/
-
-.idea/
-.vscode/
-*.iml
-
-data/raw/
-data/interim/
-data/temp/
-*.csv
-*.xlsx
-*.xls
-*.tsv
-
-!data/processed/
-
-models/
 *.joblib
 *.sav
 *.h5
 *.onnx
 
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Data directories
+data/raw/*
+data/interim/*
+data/temp/*
+
+# Keep processed data
+!data/processed/
+
+# Logs
 logs/
 *.log
 
+# Jupyter
 .ipynb_checkpoints/
 
+# OS junk
 .DS_Store
 Thumbs.db
