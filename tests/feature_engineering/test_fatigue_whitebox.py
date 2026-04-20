@@ -15,8 +15,9 @@ def test_fatigue_whitebox_basic_decay():
     out = add_fatigue_index(df, tau=3, min_effect=0.0001)
 
     # first match has no history so fatigue = 0
-    assert out.loc[0, "p1_fatigue_raw"] == 0
+    assert out.loc[0, "p1_fatigue_index"] == 0
 
     # second match should have fatigue from match 1
-    expected = 100 * np.exp(-2 / 3)
-    assert abs(out.loc[1, "p1_fatigue_raw"] - expected) < 1e-6
+    raw = 100 * np.exp(-2 / 3)
+    expected = raw/raw
+    assert abs(out.loc[1, "p1_fatigue_index"] - expected) < 1e-6

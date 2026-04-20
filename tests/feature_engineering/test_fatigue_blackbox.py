@@ -19,11 +19,11 @@ def test_fatigue_blackbox_end_to_end():
     out = add_fatigue_index(df, tau=3, min_effect=0.5)
 
     # no history
-    assert out.loc[0, "p1_fatigue_raw"] == 0
+    assert out.loc[0, "p1_fatigue_index"] == 0
 
     # fatigue from match 1 only
-    assert out.loc[1, "p1_fatigue_raw"] > 0
+    assert out.loc[1, "p1_fatigue_index"] > 0
 
     # match 1 should be ignored , match 2 should count
-    assert out.loc[2, "p1_fatigue_raw"] > 0
-    assert out.loc[2, "p1_fatigue_raw"] < out.loc[1, "p1_fatigue_raw"]
+    assert out.loc[2, "p1_fatigue_index"] > 0
+    assert out.loc[2, "p1_fatigue_index"] < out.loc[1, "p1_fatigue_index"]
