@@ -13,6 +13,7 @@ from src.data_preprocessing.clean_pipeline import (
     validate_physical_stats,
     filter_atp_events,
     filter_matches,
+    filter_rr_events,
     clean_matches,
     remove_retirement_and_flag,
     extract_tiebreak_score_string,
@@ -100,6 +101,47 @@ def test_filter_matches_only_removes_br_er():
 
     expected = {"R32", "R16", "QF", "SF", "F", "RR"}
     assert set(out["round"].values) == expected
+
+def test_filter_rr_events_removes_non_finals_rr():
+
+    df = pd.DataFrame([
+        # RR that leave
+        {"tourney_name": "Dusseldorf", "round": "RR"},
+        {"tourney_name": "Las Vegas", "round": "RR"},
+        {"tourney_name": "Buenos Aires", "round": "RR"},
+
+        # RR that stay
+        {"tourney_name": "Tour Finals", "round": "RR"},
+        {"tourney_name": "Masters Cup", "round": "RR"},
+        {"tourney_name": "ATP Finals", "round": "RR"},
+
+        # normal rounds
+        {"tourney_name": "Wimbledon", "round": "R32"},
+    ])
+
+    cleaned = filter_rr_events(df)
+
+    expected_tourneys = {
+        "Tour Finals",
+        "Masters Cup",
+        "ATP Finals",
+        "Wimbledon",
+    }
+    assert set(cleaned["tourney_name"].unique()) == expected_tourneys
+
+    # RR only appear in ATP Finals
+    rr_rows = cleaned[cleaned["round"] == "RR"]
+    assert set(rr_rows["tourney_name"].unique()) == {
+        "Tour Finals",
+        "Masters Cup",
+        "ATP Finals"
+    }
+
+    # round rows should remain untouched
+    assert "Wimbledon" in cleaned["tourney_name"].values
+    assert cleaned.loc[cleaned["tourney_name"] == "Wimbledon", "round"].iloc[0] == "R32"
+
+
 
 
 def test_remove_retirement_and_flag_basic():

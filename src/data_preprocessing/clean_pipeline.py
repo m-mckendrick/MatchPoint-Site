@@ -228,6 +228,13 @@ def filter_matches(df):
     banned_rounds = {"BR", "ER"}
     return df[~df["round"].isin(banned_rounds)]
 
+def filter_rr_events(df):
+    # keep RR only for ATP finals as otherwise they are worth 0 points
+    rr_bad = df[(df["round"] == "RR") &
+                (~df["tourney_name"].isin(["Masters Cup", "Tour Finals", "ATP Finals"]))]
+    return df.drop(rr_bad.index)
+
+
 #%%
 """
 step 10 : add tiebreak scores to data
@@ -417,6 +424,7 @@ def clean_matches(df):
         .pipe(drop_scoreless_retirements)
         .pipe(filter_atp_events)
         .pipe(filter_matches)
+        .pipe(filter_rr_events)
         .pipe(normalise_missing_values)
         .pipe(parse_dates)
         .pipe(convert_numeric)
