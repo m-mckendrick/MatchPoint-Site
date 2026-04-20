@@ -32,6 +32,5 @@ def test_pressure_performance_blackbox_range():
 
     #checks to see that the low pressure is being treated as such compared to the high pressure slam sf
     assert out.loc[0, "match_importance"] < out.loc[1, "match_importance"]
-    assert out.loc[0, "pressure_multiplier"] < out.loc[1, "pressure_multiplier"]
+    assert out.loc[0, "stage_pressure"] < out.loc[1, "stage_pressure"]
     assert out.loc[0, "p1_pressure_index"] < out.loc[1, "p1_pressure_index"]
-    assert np.isclose(out["stage_pressure"], out["pressure_multiplier"]).all()

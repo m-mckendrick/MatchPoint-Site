@@ -7,7 +7,7 @@ def test_match_result_blackbox_basic_three_set_match():
     df = pd.DataFrame({
         "score": ["7-6(4) 6-7(8) 6-2"],
         "tiebreak_scores": ["7-4 10-8 none"],
-        "p1_win": [1]
+        "label": [1]
     })
 
     out = add_match_result_features(df.copy())
@@ -33,7 +33,7 @@ def test_match_result_blackbox_straight_sets():
     df = pd.DataFrame({
         "score": ["6-4 6-4"],
         "tiebreak_scores": ["none none"],
-        "p1_win": [1]
+        "label": [1]
     })
 
     out = add_match_result_features(df.copy())
@@ -48,7 +48,7 @@ def test_match_result_blackbox_no_tiebreaks():
     df = pd.DataFrame({
         "score": ["6-3 3-6 6-4"],
         "tiebreak_scores": ["none none none"],
-        "p1_win": [1]
+        "label": [1]
     })
 
     out = add_match_result_features(df.copy())

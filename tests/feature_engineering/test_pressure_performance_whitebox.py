@@ -74,4 +74,4 @@ def test_match_importance_and_multiplier():
     out = add_pressure_performance_features(df.copy())
 
     assert out.loc[0, "match_importance"] < out.loc[1, "match_importance"]
-    assert out.loc[0, "pressure_multiplier"] < out.loc[1, "pressure_multiplier"]
+    assert out.loc[0, "stage_pressure"] < out.loc[1, "stage_pressure"]

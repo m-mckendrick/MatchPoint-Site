@@ -1,5 +1,5 @@
 import pandas as pd
-from src.prediction.loader import load_model, load_matches ,load_rankings
+from data.loader import load_model, load_matches ,load_rankings, load_matches_features
 from src.prediction.match_builder import build_match
 from src.prediction.predictor import predict
 from src.model_training.logistical_regression import prepare_dataset
