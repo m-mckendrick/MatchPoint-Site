@@ -299,6 +299,12 @@ def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     df["surface_raw"] = df["surface"]
     df = pd.get_dummies(df, columns=["surface"], prefix="surface")
 
+    # ensure all expected surface columns exist
+    for surface in ["Carpet", "Clay", "Grass", "Hard"]:
+        col = f"surface_{surface}"
+        if col not in df.columns:
+            df[col] = 0
+
     # round encoder called
     df["round_encoded"] = df.apply(encode_round, axis=1)
 
