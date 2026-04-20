@@ -4,41 +4,12 @@ from src.feature_engineering.match_context import add_pre_match_context_features
 
 #white-box tests
 #these test every edge case and branch (every line of code)_row
-"""
-def test_seed_diff_both_unseeded():
-    df = pd.DataFrame([{
-        "p1_rank": 10,
-        "p2_rank": 20,
-        "p1_rank_points": 3000,
-        "p2_rank_points": 1500,
-        "p1_seed": np.nan,
-        "p2_seed": np.nan,
-        "p1_hand": "R",
-        "p2_hand": "R",
-        "surface": "Clay",
-        "round": "R16",
-        "draw_size": 32,
-        "tourney_level": "A",
-        "best_of": 3,
-        "tourney_date": "2024-01-01",
-        "p1_age": 30,
-        "p2_age": 25,
-        "p1_ht": 190,
-        "p2_ht": 185
-    }])
-
-    out = add_pre_match_context_features(df)
-
-    #both are unseeded so seed diff should be na
-    assert np.isnan(out["seed_diff"].iloc[0])
-    assert out["p1_unseeded"].iloc[0] == 1
-    assert out["p2_unseeded"].iloc[0] == 1
-"""
 
 
 #if round recorded as RR then encoded round cannot be encoded with algorithm
 def test_encode_round_invalid_round():
     row = {
+        "tourney_name": "Adelaide",
         "draw_size": 32,
         "round": "RR"
     }
@@ -47,6 +18,7 @@ def test_encode_round_invalid_round():
 #test round encoder works if round number isn't a power of 2 (round is still 1st)
 def test_encode_round_non_power_of_two_draw():
     row = {
+        "tourney_name": "Adelaide",
         "draw_size": 28,
         "round": "R32"
     }

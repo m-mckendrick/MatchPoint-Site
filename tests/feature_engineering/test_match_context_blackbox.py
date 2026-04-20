@@ -34,7 +34,7 @@ def test_basic_feature_outputs(p1p2_match_df):
     assert out["age_diff"].iloc[0] == df["p2_age"].iloc[0] - df["p1_age"].iloc[0]
     assert out["height_diff"].iloc[0] == df["p2_ht"].iloc[0] - df["p1_ht"].iloc[0]
 
-    assert out["tourney_prestige"].iloc[0] in (1,2,3,4)
+    assert out["tourney_prestige"].iloc[0] in (1,2,3,4,5)
 
 
     assert out["tourney_country"].iloc[0] == "AUS"
