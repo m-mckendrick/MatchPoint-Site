@@ -9,14 +9,15 @@ from .fatigue import add_fatigue_index
 from .form import add_form_features
 
 from src.feature_engineering.form_profiles import (
-    add_career_form,
-    add_h2h_form,
-    add_52week_form,
-    add_tournament_form,
+    add_form_all,
+    add_form_same,
+    add_h2h_form_all,
+    add_h2h_form_same,
+    add_tournament_form_all,
 )
 
 
-from data.loader import load_matches
+from data.loader import load_matches, PROCESSED_PATH
 
 import time
 from rich.console import Console
@@ -38,12 +39,10 @@ FEATURE_CONFIG = {
     "fatigue": True,
     "pressure": True,
 
-    "form": False,
-    "surface_form": False,
-    "h2h": False,
-    "career": False,
-    "recency": False,
-    "tournament_form": False,
+    "form": True,
+    "surface_form": True,
+    "h2h": True,
+    "tournament_form": True,
 }
 
 """
@@ -83,80 +82,54 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     if FEATURE_CONFIG["form"]:
         df = timed_step(
             "Short-term form",
-            lambda d: add_form_features(d, windows=[3], surface_mode="all"),
+            add_form_all,
             df
         )
-
-    if FEATURE_CONFIG["career"]:
         df = timed_step(
-            "Career form",
-            lambda d: add_career_form(d, windows=[10], surface_mode="all"),
+            "Short-term surface form",
+            add_form_same,
             df
         )
 
     if FEATURE_CONFIG["h2h"]:
         df = timed_step(
             "H2H form",
-            lambda d: add_h2h_form(d, windows=[3], surface_mode="all"),
+            add_h2h_form_all,
+            df
+        )
+        df = timed_step(
+            "H2H surface form",
+            add_h2h_form_same,
             df
         )
 
-    if FEATURE_CONFIG["recency"]:
-        df = timed_step(
-            "52-week form",
-            lambda d: add_52week_form(d, windows=[5], surface_mode="all"),
-            df
-        )
 
     if FEATURE_CONFIG["tournament_form"]:
         df = timed_step(
             "Tournament form",
-            lambda d: add_tournament_form(d, windows=[5], surface_mode="all"),
+            add_tournament_form_all,
             df
         )
-
-    # --- SURFACE FORM ---
-    if FEATURE_CONFIG["surface_form"]:
-        df = timed_step(
-            "Surface form",
-            lambda d: add_form_features(d, windows=[5], surface_mode="same"),
-            df
-        )
-
-    return df
-
-
-    """
-    
-    full_na_audit(df)
-    
-    full_na_audit(df)
-    
-
-              # short-term
-    df = add_form_features(df, windows=[2], surface_mode="all")
-    df = add_career_form(df, windows=[10], surface_mode="all")           # longer-term
-    df = add_h2h_form(df, windows=[3], surface_mode="all")               # rivalry
-    df = add_52week_form(df, windows=[5], surface_mode="all")            # recency
-    df = add_tournament_form(df, windows=[5], surface_mode="all")
-
-    df = add_form_features(df, windows=[5], surface_mode="same")         # short-term surface form
-    df = add_career_form(df, windows=[10], surface_mode="same")          # long-term surface form
-    df = add_h2h_form(df, windows=[3], surface_mode="same")              # rivalry on this surface
-    df = add_52week_form(df, windows=[5], surface_mode="same")           # recency on this surface
-    df = add_tournament_form(df, windows=[5], surface_mode="same")
-
-    
-    """
 
     return df
 
 
 if __name__ == "__main__":
 
+    output_path = PROCESSED_PATH / f"features.csv"
 
     df=load_matches()
+
+    TEST_MODE = True
+    TEST_ROWS = 500
+
+    if TEST_MODE:
+        print(f"\n[TEST MODE] Using only the first {TEST_ROWS} rows for debugging.\n")
+        df = df.head(TEST_ROWS).copy()
+
     df = build_features(df)
+
+    df.to_csv(output_path, index=False)
 
     print("\nsize:")
     print(f"Rows: {df.shape[0]}")

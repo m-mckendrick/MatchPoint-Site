@@ -23,11 +23,6 @@ def select_h2h(past_matches, current_row, prefix, **kwargs):
         ]
 
 
-def select_last_52_weeks(past_matches, current_row, **kwargs):
-    cutoff = current_row["tourney_date"] - pd.Timedelta(days=365)
-    return past_matches[past_matches["tourney_date"] >= cutoff]
-
-
 def select_tournament_career(past_matches, current_row, **kwargs):
     # excludes matches from this current tournament
     tid = current_row["tourney_id"]
@@ -44,47 +39,58 @@ these are all
 just calling add form feature using the appropriate match selector
 """
 
-def add_career_form(df, windows=[5], surface_mode="all"):
+def add_form_all(df):
 
     return add_form_features(
         df,
-        windows=windows,
-        surface_mode=surface_mode,
-        match_selector=select_career
+        windows=[3],
+        surface_mode="all",
+        match_selector=select_career,
+        prefix_tag="all"
+    )
+
+def add_form_same(df):
+    return add_form_features(
+        df,
+        windows=[3],
+        surface_mode="same",
+        match_selector=select_career,
+        prefix_tag="same"
     )
 
 
-def add_h2h_form(df, windows=[5], surface_mode="all"):
+
+def add_h2h_form_all(df):
     """
     Add H2H form features using only matches vs the current opponent.
     """
     return add_form_features(
         df,
-        windows=windows,
-        surface_mode=surface_mode,
-        match_selector=select_h2h
+        windows=[3],
+        surface_mode="all",
+        match_selector=select_h2h,
+        prefix_tag="h2h_all"
     )
 
-
-def add_52week_form(df, windows=[5], surface_mode="all"):
-    """
-    Add last-52-weeks form features.
-    """
+def add_h2h_form_same(df):
     return add_form_features(
         df,
-        windows=windows,
-        surface_mode=surface_mode,
-        match_selector=select_last_52_weeks
+        windows=[3],
+        surface_mode="same",
+        match_selector=select_h2h,
+        prefix_tag="h2h_same"
     )
 
 
-def add_tournament_form(df, windows=[5], surface_mode="all"):
+
+def add_tournament_form_all(df):
     """
     Add tournament-career form features.
     """
     return add_form_features(
         df,
-        windows=windows,
-        surface_mode=surface_mode,
-        match_selector=select_tournament_career
+        windows=[3],
+        surface_mode="all",
+        match_selector=select_tournament_career,
+        prefix_tag="h2h_same"
     )

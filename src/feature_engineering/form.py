@@ -7,6 +7,7 @@ def add_form_features(
         windows=[5],
         surface_mode="all",
         match_selector=None,
+        prefix_tag = None
 ):
     """
     Adds form features for p1 and p2 using rolling windows e.g 5 games, 10 games
@@ -21,8 +22,8 @@ def add_form_features(
     df = df.sort_values(["tourney_date", "match_num"]).copy()
 
     # compute form for each player
-    df = _compute_player_form(df, "p1_id", "p1_", windows, surface_mode, match_selector)
-    df = _compute_player_form(df, "p2_id", "p2_", windows, surface_mode, match_selector)
+    df = _compute_player_form(df, "p1_id", "p1_", windows, surface_mode, match_selector, prefix_tag)
+    df = _compute_player_form(df, "p2_id", "p2_", windows, surface_mode, match_selector, prefix_tag)
 
     return df
 
@@ -113,7 +114,7 @@ def _filter_past_matches(
 
 
 
-def _compute_player_form(df, player_id_col, prefix, windows, surface_mode, match_selector):
+def _compute_player_form(df, player_id_col, prefix, windows, surface_mode, match_selector, prefix_tag):
 
     form_records = []
 
@@ -131,8 +132,6 @@ def _compute_player_form(df, player_id_col, prefix, windows, surface_mode, match
         for match_pos in range(len(player_matches)):
 
             df_index = player_matches.index[match_pos]
-            current_row = player_matches.iloc[match_pos]
-            current_surface = current_row["surface_raw"]
 
             # filter past matches
             past_matches = _filter_past_matches(
@@ -147,7 +146,7 @@ def _compute_player_form(df, player_id_col, prefix, windows, surface_mode, match
             form_values = {}
             for window_size in windows:
                 form_values.update(
-                    _rolling_form_block(past_matches, stats, window_size, prefix)
+                    _rolling_form_block(past_matches, stats, window_size, prefix, prefix_tag)
                 )
 
             form_records.append((df_index, form_values))
@@ -163,17 +162,18 @@ def _compute_player_form(df, player_id_col, prefix, windows, surface_mode, match
 
     return df
 
-    return df
 
 
-def _rolling_form_block(past_matches, stats, window_size, prefix):
+def _rolling_form_block(past_matches, stats, window_size, prefix, prefix_tag):
     """
     Compute rolling form for a given window size.
     """
 
+    tag = f"{prefix_tag}_" if prefix_tag else ""
+
     # if no history return zeros for all form metrics
     if len(past_matches) == 0:
-        return {f"{prefix}form_{window_size}_{metric}": 0 for metric in _form_keys()}
+        return {f"{prefix}form_{tag}{window_size}_{metric}": 0 for metric in _form_keys()}
 
     # select last N matches
     recent_matches = past_matches.iloc[-window_size:]
@@ -182,25 +182,25 @@ def _rolling_form_block(past_matches, stats, window_size, prefix):
     out = {}
 
     # results form
-    out[f"{prefix}form_{window_size}_winrate"] = stats["win"].loc[recent_indices].mean()
+    out[f"{prefix}form_{tag}{window_size}_winrate"] = stats["win"].loc[recent_indices].mean()
 
-    out[f"{prefix}form_{window_size}_sets_pct"] = (
+    out[f"{prefix}form_{tag}{window_size}_sets_pct"] = (
             stats["sets_won"].loc[recent_indices] /
             (stats["sets_won"].loc[recent_indices] + stats["sets_lost"].loc[recent_indices] + 1e-6)
     ).mean()
 
-    out[f"{prefix}form_{window_size}_games_pct"] = (
+    out[f"{prefix}form_{tag}{window_size}_games_pct"] = (
             stats["games_won"].loc[recent_indices] /
             (stats["games_won"].loc[recent_indices] + stats["games_lost"].loc[recent_indices] + 1e-6)
     ).mean()
 
-    out[f"{prefix}form_{window_size}_tiebreak_win_pct"] = (
+    out[f"{prefix}form_{tag}{window_size}_tiebreak_win_pct"] = (
             stats["tiebreaks_won"].loc[recent_indices] /
             (stats["tiebreaks_won"].loc[recent_indices] + stats["tiebreaks_lost"].loc[recent_indices] + 1e-6)
     ).mean()
 
-    out[f"{prefix}form_{window_size}_deciding_set_win"] = stats["deciding_set_win"].loc[recent_indices].mean()
-    out[f"{prefix}form_{window_size}_straight_sets_win"] = stats["straight_sets_win"].loc[recent_indices].mean()
+    out[f"{prefix}form_{tag}{window_size}_deciding_set_win"] = stats["deciding_set_win"].loc[recent_indices].mean()
+    out[f"{prefix}form_{tag}{window_size}_straight_sets_win"] = stats["straight_sets_win"].loc[recent_indices].mean()
 
     # serve form
     serve_metrics = [
@@ -210,19 +210,19 @@ def _rolling_form_block(past_matches, stats, window_size, prefix):
     ]
 
     for metric in serve_metrics:
-        out[f"{prefix}form_{window_size}_{metric}"] = stats[metric].loc[recent_indices].mean()
+        out[f"{prefix}form_{tag}{window_size}_{metric}"] = stats[metric].loc[recent_indices].mean()
 
-    # return Form
+    # return form
     return_metrics = [
         "return_pts_won_pct", "bp_conversion_pct", "estimated_break_pct"
     ]
 
     for metric in return_metrics:
-        out[f"{prefix}form_{window_size}_{metric}"] = stats[metric].loc[recent_indices].mean()
+        out[f"{prefix}form_{tag}{window_size}_{metric}"] = stats[metric].loc[recent_indices].mean()
 
-    # pressure Form
-    out[f"{prefix}form_{window_size}_pressure_index"] = stats["pressure_index"].loc[recent_indices].mean()
-    out[f"{prefix}form_{window_size}_close_sets_won"] = stats["close_sets_won"].loc[recent_indices].mean()
+    # pressure form
+    out[f"{prefix}form_{tag}{window_size}_pressure_index"] = stats["pressure_index"].loc[recent_indices].mean()
+    out[f"{prefix}form_{tag}{window_size}_close_sets_won"] = stats["close_sets_won"].loc[recent_indices].mean()
 
     return out
 
