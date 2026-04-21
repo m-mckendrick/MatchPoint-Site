@@ -113,3 +113,15 @@ def test_tournament_form_blackbox():
     # tournament-career excludes current-year matches
     p1_first = out[out["p1_id"] == 1].iloc[0]
     assert p1_first["p1_form_tournament_3_winrate"] == 0
+
+def test_no_nans_in_form_columns():
+    df = make_df()
+    out = add_form_all(df)
+    form_cols = [c for c in out.columns if "form_all_" in c]
+    assert out[form_cols].isna().sum().sum() == 0
+
+def test_form_columns_are_float():
+    df = make_df()
+    out = add_form_all(df)
+    form_cols = [c for c in out.columns if "form_all_" in c]
+    assert all(out[c].dtype.kind == "f" for c in form_cols)

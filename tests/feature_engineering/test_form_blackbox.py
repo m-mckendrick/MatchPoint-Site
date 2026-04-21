@@ -129,3 +129,10 @@ def test_blackbox_mirrored_df_not_double_counted():
     # player 2 should see ONLY the row where p2_id == 2
     p2_row = out[out["p2_id"] == 2].iloc[0]
     assert p2_row["p2_form_all_1_winrate"] == 0
+
+def test_no_future_leakage():
+    df = make_base_df()
+    out = add_form_features(df, windows=[3], surface_mode="all", match_selector=None , prefix_tag="all")
+    # row 0 must always be zero
+    assert out.iloc[0].filter(like="form_all_3").sum() == 0
+
