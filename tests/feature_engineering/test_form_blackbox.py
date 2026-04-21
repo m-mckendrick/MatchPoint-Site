@@ -45,12 +45,12 @@ def make_base_df():
     return pd.DataFrame(data)
 
 
-def test_blackbox_basic_form():
+def test_blackbox_form_all():
     df = make_base_df()
-    out = add_form_features(df, windows=[2])
+    out = add_form_features(df, windows=[2], surface_mode="all", match_selector=None, prefix_tag="all")
 
     # check that form columns exist
-    expected_cols = [c for c in out.columns if "form_2" in c]
+    expected_cols = [c for c in out.columns if "form_all_2" in c]
     assert len(expected_cols) > 0
 
     # first match must have all zeros
@@ -60,16 +60,16 @@ def test_blackbox_basic_form():
 
     # second match must use only match 1 stats
     second_row = out.iloc[1]
-    assert second_row["p1_form_2_winrate"] == 1.0  # match 1 was a win
+    assert second_row["p1_form_all_2_winrate"] == 1.0  # match 1 was a win
 
 
-def test_blackbox_surface_filter():
+def test_blackbox_form_same():
     df = make_base_df()
-    out = add_form_features(df, windows=[3], surface_mode="same")
+    out = add_form_features(df, windows=[3], surface_mode="same", prefix_tag="same")
 
     # only match 3 is clay
     row3 = out.iloc[2]
-    assert row3["p1_form_3_winrate"] == 0  # no past clay matches so 0
+    assert row3["p1_form_same_3_winrate"] == 0  # no past clay matches so 0
 
 
 def test_blackbox_mirrored_df_not_double_counted():
@@ -118,14 +118,14 @@ def test_blackbox_mirrored_df_not_double_counted():
         "p1_estimated_break_pct": [0.20, 0.15],
     })
 
-    out = add_form_features(df, windows=[1])
+    out = add_form_features(df, windows=[1], surface_mode="all", match_selector=None , prefix_tag="all")
 
     # player 1 should see ONLY the row where p1_id == 1
     p1_row = out[out["p1_id"] == 1].iloc[0]
 
     # winrate must be 0 because no past matches exist
-    assert p1_row["p1_form_1_winrate"] == 0
+    assert p1_row["p1_form_all_1_winrate"] == 0
 
     # player 2 should see ONLY the row where p2_id == 2
     p2_row = out[out["p2_id"] == 2].iloc[0]
-    assert p2_row["p2_form_1_winrate"] == 0
+    assert p2_row["p2_form_all_1_winrate"] == 0

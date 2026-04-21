@@ -92,5 +92,5 @@ def add_tournament_form_all(df):
         windows=[3],
         surface_mode="all",
         match_selector=select_tournament_career,
-        prefix_tag="h2h_same"
+        prefix_tag="tournament"
     )

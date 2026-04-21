@@ -1,9 +1,11 @@
 import pandas as pd
 from src.feature_engineering.form_profiles import (
-    add_career_form,
-    add_h2h_form,
-    add_52week_form,
-    add_tournament_form,
+    add_form_all,
+    add_form_same,
+    add_h2h_form_all,
+    add_h2h_form_same,
+    add_tournament_form_all
+
 )
 
 
@@ -23,7 +25,7 @@ def make_df():
         "p1_id": [1, 2, 1, 3, 1, 4],
         "p2_id": [2, 1, 3, 1, 4, 1],
 
-        "surface_raw": ["Hard"] * 6,
+        "surface_raw": ["Hard", "Hard", "Clay", "Clay", "Hard", "Hard"],
         "label": [1, 0, 0, 1, 1, 0],
 
         # minimal stats
@@ -59,41 +61,55 @@ def make_df():
     }
     return pd.DataFrame(data)
 
-def test_career_form_blackbox():
+def test_form_all_blackbox():
     df = make_df()
-    out = add_career_form(df.copy(), windows=[3])
+    out = add_form_all(df.copy())
 
     # Player 1's second match should use exactly 1 past match
     p1_second = out[out["p1_id"] == 1].iloc[1]
-    assert "p1_form_3_winrate" in p1_second
-    assert p1_second["p1_form_3_winrate"] >= 0
+    assert "p1_form_all_3_winrate" in p1_second
+    assert p1_second["p1_form_all_3_winrate"] >= 0
 
-
-def test_h2h_form_blackbox():
+def test_form_same_blackbox():
     df = make_df()
-    out = add_h2h_form(df.copy(), windows=[3])
+    out = add_form_same(df.copy())
+
+    # match 3 is clay and p1 ahs no past clay matches
+    p1_third = out[out["p1_id"] == 1].iloc[2]
+    assert p1_third["p1_form_same_3_winrate"] == 0
+
+
+
+def test_h2h_form_all_blackbox():
+    df = make_df()
+    out = add_h2h_form_all(df.copy())
 
     # Player 1 vs Player 2 has only 1 past H2H match
     p1_row = out[out["p1_id"] == 1].iloc[0]
-    assert p1_row["p1_form_3_winrate"] == 0  # no past matches yet
+    assert p1_row["p1_form_h2h_all_3_winrate"] == 0  # no past matches yet
 
     p1_second = out[out["p1_id"] == 1].iloc[1]
-    assert p1_second["p1_form_3_winrate"] in (0, 1)
+    assert p1_second["p1_form_h2h_all_3_winrate"] in (0, 1)
 
-
-def test_52week_form_blackbox():
+def test_h2h_form_same_blackbox():
     df = make_df()
-    out = add_52week_form(df.copy(), windows=[3])
+    out = add_h2h_form_same(df.copy())
 
-    # The 2023 match should be excluded for 2024 rows
+    # first match has no past H2H on same surface
+    p1_first = out[out["p1_id"] == 1].iloc[0]
+    assert p1_first["p1_form_h2h_same_3_winrate"] == 0
+
+    # second match still no past H2H on same surface (Clay vs Hard)
     p1_second = out[out["p1_id"] == 1].iloc[1]
-    assert p1_second["p1_form_3_winrate"] >= 0
+    assert p1_second["p1_form_h2h_same_3_winrate"] == 0
+
+
 
 
 def test_tournament_form_blackbox():
     df = make_df()
-    out = add_tournament_form(df.copy(), windows=[3])
+    out = add_tournament_form_all(df.copy())
 
     # tournament-career excludes current-year matches
     p1_first = out[out["p1_id"] == 1].iloc[0]
-    assert p1_first["p1_form_3_winrate"] == 0
+    assert p1_first["p1_form_tournament_3_winrate"] == 0
