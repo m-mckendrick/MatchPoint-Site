@@ -79,6 +79,22 @@ def clean_categories(df):
     df["round"] = df["round"].str.upper()
     return df
 
+def normalize_tourney_names(df):
+    # strip whitespace
+    df["tourney_name"] = df["tourney_name"].str.strip()
+
+    # fix specific known inconsistencies
+    df["tourney_name"] = df["tourney_name"].replace({
+        "Belgrade ": "Belgrade",
+        "belgrade ": "Belgrade",   # safety
+        "Rio De Janeiro": "Rio de Janeiro",
+        "St. Petersburg": "St Petersburg",
+        "Us Open": "US Open",
+    })
+
+    return df
+
+
 #%%
 """
 step 5 : remove non-matches
@@ -430,6 +446,7 @@ def clean_matches(df):
         .pipe(convert_numeric)
         .pipe(clean_ranks_and_seeds)
         .pipe(map_hands)
+        .pipe(normalize_tourney_names)
         .pipe(clean_categories)
         .pipe(validate_physical_stats)
         .pipe(validate_surface)
@@ -506,7 +523,7 @@ def process_year(year):
 allows years to be cleaned quickly 
 """
 if __name__ == "__main__":
-    for i in range(2000,2023):
+    for i in range(2000,2024):
         process_year(i)
 
 

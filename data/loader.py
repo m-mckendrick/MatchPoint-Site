@@ -7,6 +7,7 @@ MODEL_PATH = Path("models/logreg_baseline.pkl")
 RAW_MATCHES_PATH = Path("data/raw")
 MATCHES_PATH = Path("data/processed/matches")
 PROCESSED_PATH = Path("data/processed")
+FEATURES_PATH = Path("data/matches/features.csv")
 RANKINGS_PATH = Path("data/processed/atp_rankings_2000-2020.csv")
 
 def load_model():
@@ -31,4 +32,8 @@ def load_matches():
 def load_rankings():
     df = pd.read_csv(RANKINGS_PATH)
     df["ranking_date"] = pd.to_datetime(df["ranking_date"])
+    return df
+
+def load_features():
+    df = pd.read_csv(FEATURES_PATH)
     return df

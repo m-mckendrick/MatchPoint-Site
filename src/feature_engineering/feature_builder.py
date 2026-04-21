@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     df=load_matches()
 
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_ROWS = 500
 
     if TEST_MODE:

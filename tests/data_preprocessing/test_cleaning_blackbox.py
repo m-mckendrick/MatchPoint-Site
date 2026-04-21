@@ -9,6 +9,7 @@ from src.data_preprocessing.clean_pipeline import (
     convert_numeric,
     clean_ranks_and_seeds,
     map_hands,
+    normalize_tourney_names,
     clean_categories,
     validate_physical_stats,
     filter_atp_events,
@@ -281,3 +282,39 @@ def test_remove_retirement_and_flag_keeps_normal_scores():
     assert out["is_retirement"].iloc[0] == 0
     assert out["score"].iloc[0] == "6-4 6-4"
 
+
+def test_normalize_tourney_names_blackbox():
+    # input dataframe with known inconsistencies
+    df = pd.DataFrame({
+        "tourney_name": [
+            "Belgrade ",
+            "Belgrade",
+            "Rio De Janeiro",
+            "Rio de Janeiro",
+            "St. Petersburg",
+            "St Petersburg",
+            "Us Open",
+            "US Open",
+            "Wimbledon",  # control case
+        ]
+    })
+
+    expected = [
+        "Belgrade",
+        "Belgrade",
+        "Rio de Janeiro",
+        "Rio de Janeiro",
+        "St Petersburg",
+        "St Petersburg",
+        "US Open",
+        "US Open",
+        "Wimbledon",
+    ]
+
+    cleaned = normalize_tourney_names(df.copy())
+
+    assert cleaned["tourney_name"].tolist() == expected
+
+    assert all(not name.endswith(" ") for name in cleaned["tourney_name"])
+
+    assert cleaned.loc[8, "tourney_name"] == "Wimbledon"

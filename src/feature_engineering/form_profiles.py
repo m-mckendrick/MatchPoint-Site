@@ -25,11 +25,11 @@ def select_h2h(past_matches, current_row, prefix, **kwargs):
 
 def select_tournament_career(past_matches, current_row, **kwargs):
     # excludes matches from this current tournament
-    tid = current_row["tourney_id"]
+    signature = current_row["tourney_signature"]
     year = current_row["match_year"]
 
     return past_matches[
-        (past_matches["tourney_id"] == tid) &
+        (past_matches["tourney_signature"] == signature) &
         (past_matches["match_year"] < year)
         ]
 

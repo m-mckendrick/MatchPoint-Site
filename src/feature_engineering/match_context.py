@@ -276,6 +276,13 @@ def add_indoor_feature(df):
 
 def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
 
+    #tourny signature that allows
+    df["tourney_signature"] = (
+            df["tourney_name"].str.lower().str.strip() + "_" +
+            df["tourney_level"].astype(str) + "_" +
+            df["surface_raw"].astype(str)
+    )
+
     df["tourney_date"] = pd.to_datetime(df["tourney_date"], errors="coerce")
 
     # rank and more specific rank points
