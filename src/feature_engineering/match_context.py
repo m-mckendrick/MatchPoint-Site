@@ -292,8 +292,8 @@ def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
     #changes match pattern dynamics
-    df["p1_lefty"] = (df["p1_hand"] == "L").astype(int)
-    df["p2_lefty"] = (df["p2_hand"] == "L").astype(int)
+    df["p1_lefty"] = (df["p1_hand"] == "Left").astype(int)
+    df["p2_lefty"] = (df["p2_hand"] == "Left").astype(int)
     df["lefty_diff"] = df["p1_lefty"] - df["p2_lefty"]
 
     # takes surface columns makes 0/1 columns for each surface and fill them

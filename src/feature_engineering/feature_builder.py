@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     df=load_matches()
 
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_ROWS = 500
 
     if TEST_MODE:
@@ -129,7 +129,7 @@ if __name__ == "__main__":
 
     df = build_features(df)
 
-    #df.to_csv(output_path, index=False)
+    df.to_csv(output_path, index=False)
 
     print("\nsize:")
     print(f"Rows: {df.shape[0]}")
