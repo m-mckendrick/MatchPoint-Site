@@ -134,7 +134,7 @@ TOURNAMENT_COUNTRY = {
     "Cagliari": "ITA",
     "Parma": "ITA",
     "Belgrade 2": "SRB",
-    "Belgrade ": "SRB",  # trailing space
+    "Belgrade": "SRB",  # trailing space
     "San Diego": "USA",
     "Adelaide 1": "AUS",
     "Adelaide 2": "AUS",
@@ -146,7 +146,7 @@ TOURNAMENT_COUNTRY = {
     "Florence": "ITA",
     "Gijon": "ESP",
     "Naples": "ITA",
-    "Rio De Janeiro": "BRA",
+    "Rio de Janeiro": "BRA",
     "Banja Luka": "BIH",
 }
 
@@ -276,12 +276,7 @@ def add_indoor_feature(df):
 
 def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
 
-    #tourny signature that allows
-    df["tourney_signature"] = (
-            df["tourney_name"].str.lower().str.strip() + "_" +
-            df["tourney_level"].astype(str) + "_" +
-            df["surface_raw"].astype(str)
-    )
+
 
     df["tourney_date"] = pd.to_datetime(df["tourney_date"], errors="coerce")
 
@@ -305,6 +300,13 @@ def add_pre_match_context_features(df: pd.DataFrame) -> pd.DataFrame:
     # keep original surface for predict match input
     df["surface_raw"] = df["surface"]
     df = pd.get_dummies(df, columns=["surface"], prefix="surface")
+
+    #tourny signature that allows
+    df["tourney_signature"] = (
+            df["tourney_name"].str.lower().str.strip() + "_" +
+            df["tourney_level"].astype(str) + "_" +
+            df["surface_raw"].astype(str)
+    )
 
     # ensure all expected surface columns exist
     for surface in ["Carpet", "Clay", "Grass", "Hard"]:

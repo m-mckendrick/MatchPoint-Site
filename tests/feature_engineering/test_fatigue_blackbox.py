@@ -1,29 +1,49 @@
 import pandas as pd
 import numpy as np
 
-from src.feature_engineering.fatigue import add_fatigue_index
+from src.feature_engineering.fatigue import add_fatigue_features
 
 def test_fatigue_blackbox_end_to_end():
     df = pd.DataFrame({
-        "p1_id": [1, 1, 1],
-        "p2_id": [2, 2, 2],
+        "p1_id": [1, 1, 1, 1],
+        "p2_id": [2, 2, 2, 2],
         "tourney_date": pd.to_datetime([
             "2024-01-01",
-            "2024-01-02",
-            "2024-01-10"
+            "2024-01-01",
+            "2024-01-15",
+            "2024-01-15"
         ]),
-        "match_num": [1, 2, 3],
-        "minutes": [120, 90, 60]
+
+        "tourney_signature": ["A", "A", "B", "B"],
+        "round_encoded": [0, 1, 0, 1],
+        "minutes": [120, 90, 60, 30]
     })
 
-    out = add_fatigue_index(df, tau=3, min_effect=0.5)
+    out = add_fatigue_features(df, tau=3, min_effect=0.01)
 
-    # no history
-    assert out.loc[0, "p1_fatigue_index"] == 0
+    # columns exist
+    assert "p1_fatigue_pre" in out.columns
+    assert "p1_fatigue_in" in out.columns
 
-    # fatigue from match 1 only
-    assert out.loc[1, "p1_fatigue_index"] > 0
+    # no nones
+    assert out["p1_fatigue_pre"].isna().sum() == 0
+    assert out["p1_fatigue_in"].isna().sum() == 0
 
-    # match 1 should be ignored , match 2 should count
-    assert out.loc[2, "p1_fatigue_index"] > 0
-    assert out.loc[2, "p1_fatigue_index"] < out.loc[1, "p1_fatigue_index"]
+    #in tournament
+    assert out.loc[0, "p1_fatigue_in"] == 0
+    assert out.loc[1, "p1_fatigue_in"] > 0
+    assert out.loc[2, "p1_fatigue_in"] == 0
+    assert out.loc[3, "p1_fatigue_in"] > 0
+
+    #pre tournament
+    assert out.loc[0, "p1_fatigue_pre"] == 0
+    assert out.loc[1, "p1_fatigue_pre"] == 0
+    assert out.loc[2, "p1_fatigue_pre"] > 0
+    assert out.loc[3, "p1_fatigue_pre"] > 0
+
+    # pre‑tournament fatigue constant within tournament
+    assert out.loc[2, "p1_fatigue_pre"] == out.loc[3, "p1_fatigue_pre"]
+
+    # normalisation
+    assert out["p1_fatigue_pre"].max() <= 1
+    assert out["p1_fatigue_in"].max() <= 1

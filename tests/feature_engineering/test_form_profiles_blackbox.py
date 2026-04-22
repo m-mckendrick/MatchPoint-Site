@@ -57,6 +57,7 @@ def make_df():
 
         # tournament metadata
         "tourney_id": ["A", "A", "A", "A", "A", "A"],
+        "tourney_signature": ["a", "a", "a", "a", "a", "a"],
         "match_year": [2024, 2024, 2024, 2024, 2023, 2023],
     }
     return pd.DataFrame(data)

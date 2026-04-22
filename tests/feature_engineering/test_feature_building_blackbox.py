@@ -80,7 +80,7 @@ EXPECTED_NON_FORM_COLS = [
     "p1_games_lost", "p2_games_lost",
 
     # fatigue
-    "p1_fatigue_index", "p2_fatigue_index",
+    "p1_fatigue_in", "p2_fatigue_in","p1_fatigue_pre", "p2_fatigue_pre",
 
     # pressure performance
     "p1_bp_conv_pct", "p2_bp_conv_pct",
@@ -121,8 +121,10 @@ def test_feature_toggle_disables_feature(small_df):
 
     df_out = build_features(small_df)
 
-    assert "p1_fatigue_index" not in df_out.columns
-    assert "p2_fatigue_index" not in df_out.columns
+    assert "p1_fatigue_in" not in df_out.columns
+    assert "p2_fatigue_in" not in df_out.columns
+    assert "p1_fatigue_pre" not in df_out.columns
+    assert "p2_fatigue_pre" not in df_out.columns
 
     # reset toggle
     FEATURE_CONFIG["fatigue"] = True

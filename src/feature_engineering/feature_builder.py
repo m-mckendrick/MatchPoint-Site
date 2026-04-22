@@ -5,7 +5,7 @@ from .match_context import add_pre_match_context_features
 from .match_results import add_match_result_features
 from .serve_return import add_serve_return_features
 from .pressure_performance import add_pressure_performance_features
-from .fatigue import add_fatigue_index
+from .fatigue import add_fatigue_features
 from .form import add_form_features
 
 from src.feature_engineering.form_profiles import (
@@ -72,7 +72,7 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
         df = timed_step("Match result features", add_match_result_features, df)
 
     if FEATURE_CONFIG["fatigue"]:
-        df = timed_step("Fatigue index", add_fatigue_index, df)
+        df = timed_step("Fatigue index", add_fatigue_features, df)
 
     if FEATURE_CONFIG["pressure"]:
         df = timed_step("Pressure performance", add_pressure_performance_features, df)
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     df=load_matches()
 
-    TEST_MODE = False
+    TEST_MODE = True
     TEST_ROWS = 500
 
     if TEST_MODE:
@@ -129,7 +129,7 @@ if __name__ == "__main__":
 
     df = build_features(df)
 
-    df.to_csv(output_path, index=False)
+    #df.to_csv(output_path, index=False)
 
     print("\nsize:")
     print(f"Rows: {df.shape[0]}")

@@ -2,68 +2,109 @@ import numpy as np
 import pandas as pd
 
 
-"""
-fatigue index
-calculated exponentially in relation to the amount of rest time
-then when rest is low, length of match and proximity of matches to each other
-build the fatigue value
-"""
+def add_fatigue_features(df, tau=3, min_effect=0.5):
 
-def add_fatigue_index(df, tau=3, min_effect=0.5):
+    df = df.sort_values(["tourney_date", "round_encoded"]).copy()
 
-    df = df.sort_values(["tourney_date", "match_num"]).copy()
+    #pre tourny fatigue
+    def compute_pre_fatigue(player_matches):
+        dates = player_matches["tourney_date"].tolist()
+        minutes = player_matches["minutes"].tolist()
+        tourneys = player_matches["tourney_signature"].tolist()
 
-    #fatigue calc for 1 player
-    def compute_fatigue(player_id_col):
-        fatigue_values = []
-        for player_id, player_matches in df.groupby(player_id_col):
-            dates = player_matches["tourney_date"].tolist()
-            minutes = player_matches["minutes"].tolist()
+        fatigue_vals = []
 
-            player_fatigue = []
-            #number of matches
-            for current_match in range(len(player_matches)):
-                cumulative_fatigue = 0
-                for previous_match in range(current_match):
-                    # how many days since last match
-                    days_rest = (dates[current_match] - dates[previous_match]).days
-                    # if rest is high decay = 0
-                    # if rest is low decay = 1
-                    # effective decay of fatigue based on rest
-                    decay = np.exp(-days_rest / tau) # tau controls how quickly fatigue fades with rest.
+        for current in range(len(player_matches)):
+            cumulative = 0
 
-                    # effective fatigue contribution
-                    match_fatigue = minutes[previous_match] * decay
+            for prev in range(current):
 
-                    #break when the effect get so insignificant
-                    if match_fatigue < min_effect:
-                        break
+                # only count matches from previous tournaments
+                if tourneys[current] == tourneys[prev]:
+                    continue
 
-                    cumulative_fatigue += match_fatigue
-                player_fatigue.append(cumulative_fatigue)
+                days_rest = (dates[current] - dates[prev]).days
+                half_weeks_rest = days_rest / 3.5
 
-            fatigue_values.extend(player_fatigue)
+                decay = np.exp(-half_weeks_rest / tau)
+                contrib = minutes[prev] * decay
 
-        return pd.Series(fatigue_values, index=df.index)
+                if contrib < min_effect:
+                    break
 
-    # compute raw fatigue
-    df["p1_fatigue_raw"] = compute_fatigue("p1_id")
-    df["p2_fatigue_raw"] = compute_fatigue("p2_id")
+                cumulative += contrib
 
-    # matches with no history fill fatigue with 0
-    df["p1_fatigue_raw"] = df["p1_fatigue_raw"].fillna(0)
-    df["p2_fatigue_raw"] = df["p2_fatigue_raw"].fillna(0)
+            fatigue_vals.append(cumulative)
 
-    # normalise 0–1
-    # find the maximum fatigue value if all lower than one set to 1
-    max_val = max(df["p1_fatigue_raw"].max(),
-                  df["p2_fatigue_raw"].max(), 1)
+        return fatigue_vals
 
-    df["p1_fatigue_index"] = df["p1_fatigue_raw"] / max_val
-    df["p2_fatigue_index"] = df["p2_fatigue_raw"] / max_val
+    #in tourny fatigue
+    def compute_in_fatigue(player_matches):
+        rounds = player_matches["round_encoded"].tolist()
+        minutes = player_matches["minutes"].tolist()
+        tourneys = player_matches["tourney_signature"].tolist()
 
-    #drop columns after
-    df.drop(columns=["p1_fatigue_raw", "p2_fatigue_raw"], inplace=True)
+        fatigue_vals = []
 
+        for current in range(len(player_matches)):
+            cumulative = 0
+
+            for prev in range(current):
+
+                # Only count matches in the SAME tournament
+                if tourneys[current] != tourneys[prev]:
+                    continue
+
+                round_gap = rounds[current] - rounds[prev]
+
+                decay = np.exp(-round_gap / tau)
+                contrib = minutes[prev] * decay
+
+                if contrib < min_effect:
+                    break
+
+                cumulative += contrib
+
+            fatigue_vals.append(cumulative)
+
+        return fatigue_vals
+
+    # apply to each player
+    def compute_for_player(df, player_id_col):
+        pre = pd.Series(0.0, index=df.index)
+        intra = pd.Series(0.0, index=df.index)
+
+        for _, pm in df.groupby(player_id_col):
+            pm = pm.sort_values(["tourney_date", "round_encoded"])
+
+            pre_vals = compute_pre_fatigue(pm)
+            in_vals = compute_in_fatigue(pm)
+
+            pre.loc[pm.index] = pre_vals
+            intra.loc[pm.index] = in_vals
+
+        return pre, intra
+
+    # compute raw values
+    df["p1_fatigue_pre_raw"], df["p1_fatigue_in_raw"] = compute_for_player(df, "p1_id")
+    df["p2_fatigue_pre_raw"], df["p2_fatigue_in_raw"] = compute_for_player(df, "p2_id")
+
+    # normalise 0-1
+    def normalise(a, b):
+        max_val = max(df[a].max(), df[b].max(), 1)
+        return df[a] / max_val, df[b] / max_val
+
+    df["p1_fatigue_pre"], df["p2_fatigue_pre"] = normalise(
+        "p1_fatigue_pre_raw", "p2_fatigue_pre_raw"
+    )
+
+    df["p1_fatigue_in"], df["p2_fatigue_in"] = normalise(
+        "p1_fatigue_in_raw", "p2_fatigue_in_raw"
+    )
+
+    df.drop(columns=[
+        "p1_fatigue_pre_raw", "p1_fatigue_in_raw",
+        "p2_fatigue_pre_raw", "p2_fatigue_in_raw"
+    ], inplace=True)
 
     return df
