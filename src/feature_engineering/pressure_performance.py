@@ -19,23 +19,6 @@ def add_pressure_performance_features(df):
         - combined pressure index
     """
 
-    # break point performance
-    # saved is more significant than converted due to expectation to hold serve
-    df["p1_bp_save_pct"] = df.apply(
-        lambda r: safe_div(r["p1_bpsaved"], r["p1_bpfaced"]), axis=1
-    )
-    df["p2_bp_save_pct"] = df.apply(
-        lambda r: safe_div(r["p2_bpsaved"], r["p2_bpfaced"]), axis=1
-    )
-
-    # break points converted
-    df["p1_bp_conv_pct"] = df.apply(
-        lambda r: safe_div(r["p2_bpsaved"], r["p2_bpfaced"]), axis=1
-    )
-    df["p2_bp_conv_pct"] = df.apply(
-        lambda r: safe_div(r["p1_bpsaved"], r["p1_bpfaced"]), axis=1
-    )
-
     # tiebreak performance
     df["p1_tiebreak_win_pct"] = df.apply(
         lambda r: safe_div(r["p1_tiebreaks_won"], r["p1_tiebreaks_won"] + r["p2_tiebreaks_won"]),
@@ -95,14 +78,14 @@ def add_pressure_performance_features(df):
     # the combined pressure performance index, how well the player handled pressure
     df["p1_pressure_index"] = (
             0.4 * df["p1_bp_save_pct"] +
-            0.3 * df["p1_bp_conv_pct"] +
+            0.3 * df["p1_bp_conversion_pct"] +
             0.2 * df["p1_tiebreak_win_pct"] +
             0.1 * df["p1_close_sets_won"]
     )
 
     df["p2_pressure_index"] = (
             0.4 * df["p2_bp_save_pct"] +
-            0.3 * df["p2_bp_conv_pct"] +
+            0.3 * df["p2_bp_conversion_pct"] +
             0.2 * df["p2_tiebreak_win_pct"] +
             0.1 * df["p2_close_sets_won"]
     )

@@ -36,13 +36,22 @@ helper functions
 def _form_keys():
     """List of all form metric suffixes."""
     return [
+        # match results
         "winrate", "sets_pct", "games_pct", "tiebreak_win_pct",
         "deciding_set_win", "straight_sets_win",
+
+        # serve
         "first_serve_pct", "first_serve_won_pct", "second_serve_won_pct",
         "double_fault_rate", "aces_per_game", "serve_pts_won_pct",
         "estimated_hold_pct", "serve_efficiency",
-        "return_pts_won_pct", "bp_conversion_pct", "estimated_break_pct",
-        "pressure_index", "close_sets_won"
+
+        # return
+        "return_pts_won_pct", "estimated_break_pct",
+        
+        # pressure form
+        "pressure_index", "close_sets_won",
+        "bp_save_pct", "bp_conversion_pct"
+
     ]
 
 def _extract_stats(matches):
@@ -57,8 +66,12 @@ def _extract_stats(matches):
         "tiebreaks_lost": matches["p2_tiebreaks_won"],
         "deciding_set_win": matches["p1_deciding_set_win"],
         "straight_sets_win": matches["p1_straight_sets_win"],
+
         "pressure_index": matches["p1_pressure_index"],
         "close_sets_won": matches["p1_close_sets_won"],
+        "bp_save_pct": matches["p1_bp_save_pct"],
+        "bp_conversion_pct": matches["p1_bp_conversion_pct"],
+
 
         # serve
         "first_serve_pct": matches["p1_first_serve_pct"],
@@ -72,7 +85,6 @@ def _extract_stats(matches):
 
         # return
         "return_pts_won_pct": matches["p1_return_points_won_pct"],
-        "bp_conversion_pct": matches["p1_bp_conversion_pct"],
         "estimated_break_pct": matches["p1_estimated_break_pct"],
     }
 
@@ -152,9 +164,20 @@ def _compute_player_form(df, player_id_col, prefix, windows, surface_mode, match
             form_records.append((df_index, form_values))
 
     # merge back
-    for df_index, form_values in form_records:
-        for feature_name, feature_value in form_values.items():
-            df.loc[df_index, feature_name] = feature_value
+    """
+    instead of writing each form feature into the DataFrame one cell at a time
+    which caused fragmentation and slow performance
+    the updated version collects all computed form values into a temporary table
+    and merges them back into the main DataFrame in a single concat operation
+    making the process dramatically faster without changing any outputs.”
+    """
+
+    if form_records:
+        form_df = pd.DataFrame(
+            {idx: vals for idx, vals in form_records}).T
+        form_df.index = form_df.index.astype(df.index.dtype)
+
+        df = pd.concat([df, form_df], axis=1)
 
     # fill missing
     form_cols = [c for c in df.columns if c.startswith(prefix + "form_")]
@@ -223,6 +246,8 @@ def _rolling_form_block(past_matches, stats, window_size, prefix, prefix_tag):
     # pressure form
     out[f"{prefix}form_{tag}{window_size}_pressure_index"] = stats["pressure_index"].loc[recent_indices].mean()
     out[f"{prefix}form_{tag}{window_size}_close_sets_won"] = stats["close_sets_won"].loc[recent_indices].mean()
+    out[f"{prefix}form_{tag}{window_size}_bp_save_pct"] = stats["bp_save_pct"].loc[recent_indices].mean()
+    out[f"{prefix}form_{tag}{window_size}_bp_conversion_pct"] = stats["bp_conversion_pct"].loc[recent_indices].mean()
 
     return out
 

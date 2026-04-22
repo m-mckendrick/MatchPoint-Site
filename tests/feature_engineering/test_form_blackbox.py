@@ -40,7 +40,11 @@ def make_base_df():
         # return
         "p1_return_points_won_pct": [0.38, 0.40, 0.42, 0.35],
         "p1_bp_conversion_pct": [0.30, 0.25, 0.35, 0.20],
+        "p1_bp_save_pct": [0.40, 0.20, 0.50, 0.10],
         "p1_estimated_break_pct": [0.20, 0.18, 0.22, 0.15],
+
+
+
     }
     return pd.DataFrame(data)
 
@@ -115,7 +119,9 @@ def test_blackbox_mirrored_df_not_double_counted():
         # return
         "p1_return_points_won_pct": [0.38, 0.35],
         "p1_bp_conversion_pct": [0.30, 0.20],
+        "p1_bp_save_pct": [0.40, 0.10],
         "p1_estimated_break_pct": [0.20, 0.15],
+
     })
 
     out = add_form_features(df, windows=[1], surface_mode="all", match_selector=None , prefix_tag="all")

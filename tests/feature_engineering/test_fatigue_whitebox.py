@@ -13,7 +13,7 @@ def test_fatigue_whitebox_basic_decay():
         "tourney_signature": ["Adelaide_A_Hard"] * 2
     })
 
-    out = add_fatigue_features(df, tau=3, min_effect=0.0001)
+    out = add_fatigue_features(df,tau_pre=3, tau_in=3, min_effect=0.0001)
 
     # first match has no history so fatigue = 0
     assert out.loc[0, "p1_fatigue_in"] == 0

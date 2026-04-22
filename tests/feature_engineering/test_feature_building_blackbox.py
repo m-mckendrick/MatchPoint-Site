@@ -83,7 +83,6 @@ EXPECTED_NON_FORM_COLS = [
     "p1_fatigue_in", "p2_fatigue_in","p1_fatigue_pre", "p2_fatigue_pre",
 
     # pressure performance
-    "p1_bp_conv_pct", "p2_bp_conv_pct",
     "p1_tiebreak_win_pct", "p2_tiebreak_win_pct",
     "p1_deciding_set_win", "p2_deciding_set_win",
     "p1_close_sets_won", "p2_close_sets_won",

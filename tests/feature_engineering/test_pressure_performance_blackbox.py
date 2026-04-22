@@ -9,8 +9,10 @@ def test_pressure_performance_blackbox_range():
             # atp 250 3rd round
             "score": "6-2 6-2",
             "best_of": 3,
-            "p1_bpsaved": 1, "p1_bpfaced": 3,
-            "p2_bpsaved": 0, "p2_bpfaced": 1,
+            "p1_bp_save_pct": 1/3,
+            "p1_bp_conversion_pct": 1.0,
+            "p2_bp_save_pct": 0.0,
+            "p2_bp_conversion_pct": 0.0,
             "p1_tiebreaks_won": 0, "p2_tiebreaks_won": 0,
             "tourney_prestige": 1,        # ATP 250
             "round_points": 20,           # R32
@@ -19,8 +21,10 @@ def test_pressure_performance_blackbox_range():
             # grand slam sf
             "score": "7-6(4) 6-7(8) 6-4",
             "best_of": 3,
-            "p1_bpsaved": 5, "p1_bpfaced": 6,
-            "p2_bpsaved": 3, "p2_bpfaced": 5,
+            "p1_bp_save_pct": 5/6,
+            "p1_bp_conversion_pct": 2/5,
+            "p2_bp_save_pct": 3/5,
+            "p2_bp_conversion_pct": 1/6,
             "p1_tiebreaks_won": 1, "p2_tiebreaks_won": 1,
             "tourney_prestige": 4,        # Grand Slam
             "round_points": 1200,         # SF

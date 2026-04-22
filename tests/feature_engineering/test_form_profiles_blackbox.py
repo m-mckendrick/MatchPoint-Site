@@ -53,6 +53,7 @@ def make_df():
         # return
         "p1_return_points_won_pct": [0.38] * 6,
         "p1_bp_conversion_pct": [0.30] * 6,
+        "p1_bp_save_pct": [0.20] * 6,
         "p1_estimated_break_pct": [0.20] * 6,
 
         # tournament metadata

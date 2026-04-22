@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-def add_fatigue_features(df, tau=3, min_effect=0.5):
+def add_fatigue_features(df, tau_pre=5, tau_in=2, min_effect=0.1):
 
     df = df.sort_values(["tourney_date", "round_encoded"]).copy()
 
@@ -26,7 +26,7 @@ def add_fatigue_features(df, tau=3, min_effect=0.5):
                 days_rest = (dates[current] - dates[prev]).days
                 half_weeks_rest = days_rest / 3.5
 
-                decay = np.exp(-half_weeks_rest / tau)
+                decay = np.exp(-half_weeks_rest / tau_pre)
                 contrib = minutes[prev] * decay
 
                 if contrib < min_effect:
@@ -57,7 +57,7 @@ def add_fatigue_features(df, tau=3, min_effect=0.5):
 
                 round_gap = rounds[current] - rounds[prev]
 
-                decay = np.exp(-round_gap / tau)
+                decay = np.exp(-round_gap / tau_in)
                 contrib = minutes[prev] * decay
 
                 if contrib < min_effect:

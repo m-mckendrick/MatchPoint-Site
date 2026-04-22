@@ -32,6 +32,7 @@ def test_extract_stats_whitebox():
         "p1_return_points_won_pct": [0.38, 0.40],
         "p1_bp_conversion_pct": [0.30, 0.25],
         "p1_estimated_break_pct": [0.20, 0.18],
+        "p1_bp_save_pct": [0.40, 0.10],
     })
 
     stats = _extract_stats(df)
@@ -65,6 +66,7 @@ def test_rolling_form_block_whitebox():
         "p1_return_points_won_pct": [0.38, 0.40, 0.42],
         "p1_bp_conversion_pct": [0.30, 0.25, 0.35],
         "p1_estimated_break_pct": [0.20, 0.18, 0.22],
+        "p1_bp_save_pct": [0.40, 0.10, 0.35],
     })
 
     stats = _extract_stats(df)
@@ -102,6 +104,7 @@ def test_rolling_form_block_empty_history_whitebox():
         "p1_return_points_won_pct": [],
         "p1_bp_conversion_pct": [],
         "p1_estimated_break_pct": [],
+        "p1_bp_save_pct": [],
     })
 
     stats = _extract_stats(df)
@@ -139,6 +142,7 @@ def test_compute_player_form_p2_uses_wrong_stats_whitebox():
         "p1_serve_efficiency": [0.68],
         "p1_return_points_won_pct": [0.38],
         "p1_bp_conversion_pct": [0.30],
+        "p1_bp_save_pct": [0.10],
         "p1_estimated_break_pct": [0.20],
     })
 

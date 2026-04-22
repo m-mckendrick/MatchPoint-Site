@@ -19,7 +19,7 @@ def test_fatigue_blackbox_end_to_end():
         "minutes": [120, 90, 60, 30]
     })
 
-    out = add_fatigue_features(df, tau=3, min_effect=0.01)
+    out = add_fatigue_features(df, tau_pre=3, tau_in=3, min_effect=0.01)
 
     # columns exist
     assert "p1_fatigue_pre" in out.columns
