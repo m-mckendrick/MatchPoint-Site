@@ -35,7 +35,7 @@ def train_logistical_regression(x_train, y_train):
     x_train_scaled = scaler.fit_transform(x_train)
 
     #because my features vary in scale alot a the optimiser need more steps than normal(100) to find the best solution
-    model = LogisticRegression(max_iter=2000,solver="lbfgs",n_jobs=-1)
+    model = LogisticRegression(max_iter=2000,solver="lbfgs")
     model.fit(x_train_scaled, y_train)
     return model, scaler
 
@@ -49,7 +49,7 @@ def evaluate_logistical_regression(model, scaler, x_test, y_test):
         "roc_auc": roc_auc_score(y_test, y_probs),
     }
 
-def save_logistical_regression(model, scaler, path="models/logreg_baseline.pkl"):
+def save_logistical_regression(model, scaler, feature_list, path="models/logreg_baseline.pkl"):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     joblib.dump({"model": model, "scaler": scaler}, path)
 
@@ -66,6 +66,7 @@ def main():
 
     print("Preparing dataset...")
     x, y = prepare_dataset(df)
+    feature_list = list(x.columns)
 
     print("Splitting train/test...")
     x_train, x_temp, y_train, y_temp = train_test_split(
@@ -97,7 +98,7 @@ def main():
 
 
     print("Saving model...")
-    save_logistical_regression(model, scaler, list(x.columns))
+    save_logistical_regression(model, scaler, feature_list)
 
     print("Done!")
 

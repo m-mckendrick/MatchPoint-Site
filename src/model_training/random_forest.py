@@ -4,7 +4,8 @@ from src.model_training.dataset_preparation import prepare_dataset
 from data.loader import (
     load_model,
     load_rankings,
-    load_matches
+    load_matches,
+    load_features
 )
 
 from src.feature_engineering.feature_builder import build_features
@@ -24,14 +25,14 @@ which forces the trees to learn different patterns rather than all memorising th
 """
 
 def train_random_forest(x_train, y_train):
+
     model = RandomForestClassifier(
         n_estimators=300,       #number of trees
         max_depth=None,         # allow full depth
         min_samples_split=2,
         min_samples_leaf=1,
         max_features="sqrt",    # good default for classification
-        random_state=42,
-        n_jobs=-1               # use all CPU cores
+        random_state=42,              # use all CPU cores
     )
     model.fit(x_train, y_train)
     return model
@@ -44,18 +45,18 @@ def evaluate_random_forest(model, x_test, y_test):
         "roc_auc": roc_auc_score(y_test, y_probs),
     }
 
-def save_random_forest(model, path="models/random_forest.pkl"):
+def save_random_forest(model, feature_names, path="models/random_forest.pkl"):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
-    joblib.dump({"model": model}, path)
+    joblib.dump({"model": model, "features": feature_names}, path)
 
 
 def main():
     print("Loading and building features...")
-    df = load_matches()
-    df = build_features(df)
+    df=load_features()
 
     print("Preparing dataset...")
     x, y = prepare_dataset(df)
+    feature_names = list(x.columns)
 
     print("Splitting train/test...")
     x_train, x_test, y_train, y_test = train_test_split(
@@ -72,7 +73,7 @@ def main():
     print("ROC AUC:", metrics["roc_auc"])
 
     print("Saving model...")
-    save_random_forest(model)
+    save_random_forest(model,feature_names)
 
     print("Done!")
 
