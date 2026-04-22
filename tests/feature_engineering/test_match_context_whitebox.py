@@ -58,10 +58,12 @@ def test_prestige_unknown_level():
 #testing all the combination of the lefty matchup indicators
 def test_lefty_logic_all_combinations():
     df = pd.DataFrame([
-        {"p1_hand": "L", "p2_hand": "L"},
-        {"p1_hand": "L", "p2_hand": "R"},
-        {"p1_hand": "R", "p2_hand": "L"},
-        {"p1_hand": "R", "p2_hand": "R"},
+        {"p1_hand": "Left", "p2_hand": "Left"},
+        {"p1_hand": "Left", "p2_hand": "R"},
+        {"p1_hand": "Right", "p2_hand": "Left"},
+        {"p1_hand": "Right", "p2_hand": "Right"},
+        {"p1_hand": "unknown", "p2_hand": "Right"},
+        {"p1_hand": "unknown", "p2_hand": "Left"},
     ])
 
     df["p1_rank"] = 1
@@ -86,7 +88,7 @@ def test_lefty_logic_all_combinations():
 
     out = add_pre_match_context_features(df)
 
-    assert list(out["lefty_diff"]) == [0, 1, -1, 0]
+    assert list(out["lefty_diff"]) == [0, 1, -1, 0, 0, -1]
 
 def test_assign_tour_finals_country_branches():
     # houston era

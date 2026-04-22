@@ -7,7 +7,7 @@ MODEL_PATH = Path("models/logreg_baseline.pkl")
 RAW_MATCHES_PATH = Path("data/raw")
 MATCHES_PATH = Path("data/processed/matches")
 PROCESSED_PATH = Path("data/processed")
-FEATURES_PATH = Path("data/matches/features.csv")
+FEATURES_PATH = Path(PROCESSED_PATH / f"features.csv")
 RANKINGS_PATH = Path("data/processed/atp_rankings_2000-2020.csv")
 
 def load_model():
