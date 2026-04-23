@@ -25,7 +25,7 @@ def inspect_dataset(df):
     #percentage of 0 values
     print("\n=== ZERO VALUES (%) ===")
     zero_pct = (df == 0).mean().sort_values(ascending=False) * 100
-    print(zero_pct[zero_pct > 50])
+    print(zero_pct[zero_pct > 20])
 
     #constant columns
     print("\n=== CONSTANT COLUMNS (all values identical) ===")
@@ -67,7 +67,7 @@ def inspect_dataset(df):
 
 if __name__ == "__main__":
     print("works")
-    output_path = PROCESSED_PATH / f"features.csv"
+    output_path = PROCESSED_PATH / f"2000-2023_features.csv"
     df = pd.read_csv(output_path)
     #df = pd.read_csv(MATCHES_PATH)
     inspect_dataset(df)

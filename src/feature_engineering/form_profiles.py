@@ -43,7 +43,7 @@ def add_form_all(df):
 
     return add_form_features(
         df,
-        windows=[3],
+        windows=[5],
         surface_mode="all",
         match_selector=select_career,
         prefix_tag="all"
@@ -52,7 +52,7 @@ def add_form_all(df):
 def add_form_same(df):
     return add_form_features(
         df,
-        windows=[3],
+        windows=[5],
         surface_mode="same",
         match_selector=select_career,
         prefix_tag="same"

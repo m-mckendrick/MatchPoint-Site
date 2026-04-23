@@ -19,8 +19,8 @@ def prepare_dataset(df: pd.DataFrame):
     "tourney_date",
     "tourney_country",
     "match_num",
-    "match_year"
-    "draw_size"
+    "match_year",
+    "draw_size",
     "minutes",
     "tiebreak_scores",
     "score",
