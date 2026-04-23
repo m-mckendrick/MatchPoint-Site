@@ -90,12 +90,12 @@ def prepare_dataset(df: pd.DataFrame):
         "close_sets_won",
         "tiebreak_win_pct",
     ]
-
+    
     RAW_PRESSURE = [
         "stage_pressure",
         "match_importance",
     ]
-
+    
     cols_to_drop = set(NON_PREDICTIVE + POST_MATCH + RAW_PRESSURE)
 
     for col in df.columns:

@@ -8,18 +8,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 import joblib
-import time
-import json
 
 from data.loader import (
-    load_matches,
-    load_rankings,
-    load_matches,
     load_features
 )
-
-from src.feature_engineering.feature_builder import build_features
-
 
 '''
 logical regression
@@ -49,12 +41,10 @@ def evaluate_logistical_regression(model, scaler, x_test, y_test):
         "roc_auc": roc_auc_score(y_test, y_probs),
     }
 
-def save_logistical_regression(model, scaler, feature_list, path="models/logreg_baseline.pkl"):
+def save_logistical_regression(model, scaler, path="models/logreg_3.pkl"):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     joblib.dump({"model": model, "scaler": scaler}, path)
 
-    with open("models/feature_list.json", "w") as f:
-        json.dump(feature_list, f)
 
 def main():
     print("Loading and building features...")
@@ -62,11 +52,9 @@ def main():
 
 
     print ("Training Columns...")
-    print(df.columns)
 
     print("Preparing dataset...")
     x, y = prepare_dataset(df)
-    feature_list = list(x.columns)
 
     print("Splitting train/test...")
     x_train, x_temp, y_train, y_temp = train_test_split(
@@ -77,28 +65,33 @@ def main():
         x_temp, y_temp, test_size=0.5, stratify=y_temp, random_state=42
     )
 
+    print(f" Train size:      {len(x_train)}")
+    print(f" Validation size: {len(x_val)}")
+    print(f" Test size:       {len(x_test)}")
+
+
     print("Training logistic regression...")
 
     model, scaler = train_logistical_regression(x_train, y_train)
 
     print("Evaluating model...")
     print("Validation set:")
-    vn_metrics = evaluate_logistical_regression(model, scaler, x_val, y_val)
+    val_metrics = evaluate_logistical_regression(model, scaler, x_val, y_val)
 
-    print("Accuracy:", vn_metrics["accuracy"])
+    print("Accuracy:", val_metrics["accuracy"])
 
-    print("ROC AUC:", vn_metrics["roc_auc"])
+    print("ROC AUC:", val_metrics["roc_auc"])
 
     print("Test set:")
-    vn_metrics = evaluate_logistical_regression(model, scaler, x_test, y_test)
+    test_metrics = evaluate_logistical_regression(model, scaler, x_test, y_test)
 
-    print("Accuracy:", vn_metrics["accuracy"])
+    print("Accuracy:", test_metrics["accuracy"])
 
-    print("ROC AUC:", vn_metrics["roc_auc"])
+    print("ROC AUC:", test_metrics["roc_auc"])
 
 
     print("Saving model...")
-    save_logistical_regression(model, scaler, feature_list)
+    save_logistical_regression(model, scaler)
 
     print("Done!")
 

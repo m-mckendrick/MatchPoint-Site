@@ -34,7 +34,7 @@ def evaluate_xgboost(model, x_test, y_test):
     }
 
 
-def save_xgboost(model, feature_names, path="models/xgboost.pkl"):
+def save_xgboost(model, feature_names, path="models/xgboost_3.pkl"):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     joblib.dump({"model": model, "features": feature_names}, path)
 
@@ -55,6 +55,9 @@ def main():
 
     print("Training XGBoost...")
     model = train_xgboost(x_train, y_train)
+
+    print(f" Train size: {len(x_train)}")
+    print(f" Test size:  {len(x_test)}")
 
     print("Evaluating model...")
     metrics = evaluate_xgboost(model, x_test, y_test)

@@ -27,6 +27,8 @@ data/raw/*
 data/interim/*
 data/temp/*
 
+
+data/processed/*
 # Keep processed data
 !data/processed/
 

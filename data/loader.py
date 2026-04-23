@@ -3,14 +3,13 @@ import pandas as pd
 from pathlib import Path
 
 #change based on what model you wish to use
-MODEL_PATH = Path("models/logreg_baseline.pkl")
 RAW_MATCHES_PATH = Path("data/raw")
 MATCHES_PATH = Path("data/processed/matches")
 PROCESSED_PATH = Path("data/processed")
-FEATURES_PATH = Path(PROCESSED_PATH / f"features.csv")
+FEATURES_PATH = Path(PROCESSED_PATH / f"2000-2023_features.csv")
 RANKINGS_PATH = Path("data/processed/atp_rankings_2000-2020.csv")
 
-def load_model():
+def load_model(MODEL_PATH):
     bundle = joblib.load(MODEL_PATH)
     return bundle["model"], bundle.get("scaler", None)
 
