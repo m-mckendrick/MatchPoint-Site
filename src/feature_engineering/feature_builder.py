@@ -7,6 +7,7 @@ from .serve_return import add_serve_return_features
 from .pressure_performance import add_pressure_performance_features
 from .fatigue import add_fatigue_features
 from .form import add_form_features
+from .elo import add_elo_features
 
 from src.feature_engineering.form_profiles import (
     add_form_all,
@@ -38,6 +39,7 @@ FEATURE_CONFIG = {
     "match_result": True,
     "fatigue": True,
     "pressure": True,
+    "elo": True,
 
     "form": True,
     "surface_form": True,
@@ -76,6 +78,9 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
 
     if FEATURE_CONFIG["pressure"]:
         df = timed_step("Pressure performance", add_pressure_performance_features, df)
+
+    if FEATURE_CONFIG["elo"]:
+        df = timed_step("Elo", add_elo_features, df)
 
     # form features the heavy ones
 
@@ -116,7 +121,7 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
 
-    output_path = PROCESSED_PATH / f"features.csv"
+    output_path = PROCESSED_PATH / f"2000-2023_features.csv"
 
     df=load_matches()
 

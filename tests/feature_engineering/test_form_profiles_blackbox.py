@@ -69,8 +69,8 @@ def test_form_all_blackbox():
 
     # Player 1's second match should use exactly 1 past match
     p1_second = out[out["p1_id"] == 1].iloc[1]
-    assert "p1_form_all_3_winrate" in p1_second
-    assert p1_second["p1_form_all_3_winrate"] >= 0
+    assert "p1_form_all_5_winrate" in p1_second
+    assert p1_second["p1_form_all_5_winrate"] >= 0
 
 def test_form_same_blackbox():
     df = make_df()
@@ -78,7 +78,7 @@ def test_form_same_blackbox():
 
     # match 3 is clay and p1 ahs no past clay matches
     p1_third = out[out["p1_id"] == 1].iloc[2]
-    assert p1_third["p1_form_same_3_winrate"] == 0
+    assert p1_third["p1_form_same_5_winrate"] == 0
 
 
 

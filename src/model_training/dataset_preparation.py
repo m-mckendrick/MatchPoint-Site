@@ -12,13 +12,15 @@ def prepare_dataset(df: pd.DataFrame):
 
     y = df["label"]
 
-    NON_PREDICTIVE_FEATURES = [
+    NON_PREDICTIVE = [
     "label",
     "tourney_id",
     "tourney_name",
     "tourney_date",
     "tourney_country",
-    "match_num"
+    "match_num",
+    "match_year"
+    "draw_size"
     "minutes",
     "tiebreak_scores",
     "score",
@@ -80,10 +82,37 @@ def prepare_dataset(df: pd.DataFrame):
         "p1_pressure_index","p2_pressure_index",
     ]
 
+    OUTCOME_TERMS = [
+        "sets_pct",
+        "games_pct",
+        "deciding_set_win",
+        "straight_sets_win",
+        "close_sets_won",
+        "tiebreak_win_pct",
+    ]
 
-    DROP_COLS = NON_PREDICTIVE_FEATURES + POST_MATCH
+    RAW_PRESSURE = [
+        "stage_pressure",
+        "match_importance",
+    ]
 
-    df = df.drop(columns=[c for c in DROP_COLS if c in df.columns])
+    cols_to_drop = set(NON_PREDICTIVE + POST_MATCH + RAW_PRESSURE)
+
+    for col in df.columns:
+        # drop outcome‑based rolling stats
+        if any(term in col for term in OUTCOME_TERMS):
+            cols_to_drop.add(col)
+
+        # drop H2H except winrate
+        if "h2h" in col and "winrate" not in col:
+            cols_to_drop.add(col)
+
+        # drop tournament_3 except winrate
+        if "tournament_3" in col and "winrate" not in col:
+            cols_to_drop.add(col)
+
+
+    df = df.drop(columns=[c for c in cols_to_drop if c in df.columns])
 
     # only numeric columns
     numeric_df = df.select_dtypes(include=["int64", "float64", "bool"]).copy()
