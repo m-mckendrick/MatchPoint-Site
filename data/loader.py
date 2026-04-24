@@ -11,7 +11,7 @@ RANKINGS_PATH = Path("data/processed/atp_rankings_2000-2020.csv")
 
 def load_model(MODEL_PATH):
     bundle = joblib.load(MODEL_PATH)
-    return bundle["model"], bundle.get("scaler", None)
+    return bundle["model"], bundle.get("scaler", None), bundle.get("features", None)
 
 def load_raw_matches():
     files = list(Path(MATCHES_PATH).glob("*.csv"))

@@ -1,5 +1,6 @@
 import pandas as pd
-from data.loader import load_model, load_matches ,load_rankings, load_matches_features
+import joblib
+from data.loader import load_model ,load_rankings, load_features
 from src.prediction.match_builder import build_match
 from src.prediction.predictor import predict
 from src.model_training.logistical_regression import prepare_dataset
@@ -7,16 +8,16 @@ from src.model_training.logistical_regression import prepare_dataset
 #testing inputs to output
 def test_predict_match_blackbox():
     # load model and data
-    model, scaler = load_model()
-    df = load_matches()
+    model, scaler, model_features = load_model("models/xgboost_3.pkl")
+
+    df = load_features()
     ranking_df = load_rankings()
 
     # get model features
     x, y = prepare_dataset(df)
-    model_features = x.columns.tolist()
 
     # build a synthetic match
-    row = build_match(
+    row_model, row_full = build_match(
         df=df,
         rankings_df = ranking_df,
         p1_name="Novak Djokovic",
@@ -24,15 +25,23 @@ def test_predict_match_blackbox():
         tournament="US Open",
         year=2018,
         round_label="F",
-        model_features=model_features
+        model_features=model_features,
+        debug=False
     )
 
     # ensure row is a DataFrame with correct columns
-    assert isinstance(row, pd.DataFrame)
-    assert list(row.columns) == model_features
+    assert isinstance(row_model, pd.DataFrame)
+    assert list(row_model.columns) == model_features
+
+    #ensure full row correct
+    assert isinstance(row_full, pd.DataFrame)
+    assert row_full.shape[0] == 1
+    assert "p1_name" in row_full.columns
+    assert "p2_name" in row_full.columns
+    assert "tourney_name" in row_full.columns
 
     # Scale + predict
-    prob = predict(model, scaler, row)
+    prob = predict(model, scaler, row_model)
 
     # Probability must be between 0 and 1
     assert 0 <= prob <= 1

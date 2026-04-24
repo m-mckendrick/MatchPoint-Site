@@ -104,11 +104,11 @@ def prepare_dataset(df: pd.DataFrame):
             cols_to_drop.add(col)
 
         # drop H2H except winrate
-        if "h2h" in col and "winrate" not in col:
+        if "h2h" in col:
             cols_to_drop.add(col)
 
         # drop tournament_3 except winrate
-        if "tournament_3" in col and "winrate" not in col:
+        if "tournament_3" in col:
             cols_to_drop.add(col)
 
 
