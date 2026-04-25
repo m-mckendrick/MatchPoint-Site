@@ -42,28 +42,37 @@ def compute_global_shap(explainer, X):
 
 def get_feature_groups(X):
 
+    # --- Serve & Return (all serve/return stats from both ALL_5 and SAME_5) ---
     serve_return = [
         c for c in X
-        if (
-                "serve" in c
-                or "return" in c
-                or "hold" in c
-                or "aces_per_game" in c
-                or "double_fault" in c
-        )
+        if any(key in c for key in [
+            "first_serve_pct",
+            "first_serve_won_pct",
+            "second_serve_won_pct",
+            "double_fault_rate",
+            "aces_per_game",
+            "serve_pts_won_pct",
+            "estimated_hold_pct",
+            "serve_efficiency",
+            "return_pts_won_pct",
+            "estimated_break_pct",
+        ])
     ]
 
+    # --- Pressure stats ---
     pressure = [
         c for c in X
-        if (
-                "pressure" in c
-                or "bp_save" in c
-                or "bp_conversion" in c
-        )
+        if any(key in c for key in [
+            "pressure_index",
+            "bp_save_pct",
+            "bp_conversion_pct",
+
+        ])
     ]
 
     return {
 
+        # --- Player Profile ---
         "Player Profile & Ranking": [
             "p1_rank", "p2_rank", "rank_diff",
             "p1_rank_points", "p2_rank_points", "rank_points_diff",
@@ -72,32 +81,22 @@ def get_feature_groups(X):
             "p1_lefty", "p2_lefty", "lefty_diff",
         ],
 
+        # --- Elo + Winrate + Break % ---
         "Elo Ratings": [
             "p1_elo_global", "p2_elo_global", "elo_global_diff",
             "p1_elo_surface", "p2_elo_surface", "elo_surface_diff",
+
+            # moved from Form groups:
+            "p1_form_all_5_winrate", "p2_form_all_5_winrate",
+            "p1_form_same_5_winrate", "p2_form_same_5_winrate",
         ],
 
         "Serve & Return": serve_return,
 
+
         "Pressure Performance": pressure,
 
-        "Form – All Surfaces": [
-            c for c in X
-            if (
-                    "form_all_5" in c
-                    and c not in serve_return
-                    and c not in pressure
-            )
-        ],
-
-        "Form – Same Surface": [
-            c for c in X
-            if (
-                    "form_same_5" in c
-                    and c not in serve_return
-                    and c not in pressure
-            )
-        ],
+        # Form groups removed (no longer meaningful)
 
         "Fatigue": [
             "p1_fatigue_pre", "p2_fatigue_pre",
@@ -114,6 +113,8 @@ def get_feature_groups(X):
             ] or c.startswith("surface_")
         ],
     }
+
+
 
 
 def compute_group_importance(groups, X, shap_values):
