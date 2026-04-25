@@ -64,14 +64,9 @@ def get_feature_groups(X):
 
     return {
 
-        "Ranking": [
-            "p1_rank", "p2_rank",
-            "rank_diff",
-            "p1_rank_points", "p2_rank_points",
-            "rank_points_diff",
-        ],
-
-        "Profile": [
+        "Player Profile & Ranking": [
+            "p1_rank", "p2_rank", "rank_diff",
+            "p1_rank_points", "p2_rank_points", "rank_points_diff",
             "p1_age", "p2_age", "age_diff",
             "p1_ht", "p2_ht", "height_diff",
             "p1_lefty", "p2_lefty", "lefty_diff",
