@@ -7,11 +7,6 @@ def build_player_profiles(row_df):
         except:
             return None
 
-    def num(x):
-        try:
-            return float(x)
-        except:
-            return None
 
 
     p1 = {

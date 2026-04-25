@@ -18,17 +18,11 @@ def extract_tournament_meta(row_df):
 
         "country": row.get("tourney_country", None),
 
-        "level": row.get("tourney_level", None),
         "draw_size": to_int(row.get("draw_size", None)),
         "best_of": to_int(row.get("best_of", None)),
         "is_indoor": bool(row.get("is_indoor", False)) if not pd.isna(row.get("is_indoor", None)) else None,
 
-        "prestige": to_float(row.get("tourney_prestige", None)),
-        "signature": row.get("tourney_signature", None),
-
-
         "is_grand_slam": bool(row.get("is_grand_slam", False)),
         "is_masters": bool(row.get("is_masters", False)),
         "stage_pressure": to_float(row.get("stage_pressure", None)),
-        "match_importance": to_float(row.get("match_importance", None)),
     }
