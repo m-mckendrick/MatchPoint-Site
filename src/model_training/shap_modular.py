@@ -41,28 +41,82 @@ def compute_global_shap(explainer, X):
 
 
 def get_feature_groups(X):
+
+    serve_return = [
+        c for c in X
+        if (
+                "serve" in c
+                or "return" in c
+                or "hold" in c
+                or "aces_per_game" in c
+                or "double_fault" in c
+        )
+    ]
+
+    pressure = [
+        c for c in X
+        if (
+                "pressure" in c
+                or "bp_save" in c
+                or "bp_conversion" in c
+        )
+    ]
+
     return {
-        "Ranking & Profile": [
-            "rank_diff","rank_points_diff",
-            "p1_rank","p2_rank","p1_age","p2_age","p1_ht","p2_ht",
-            "age_diff","height_diff"
+
+        "Ranking": [
+            "p1_rank", "p2_rank",
+            "rank_diff",
+            "p1_rank_points", "p2_rank_points",
+            "rank_points_diff",
         ],
+
+        "Profile": [
+            "p1_age", "p2_age", "age_diff",
+            "p1_ht", "p2_ht", "height_diff",
+            "p1_lefty", "p2_lefty", "lefty_diff",
+        ],
+
         "Elo Ratings": [
-            "elo_global_diff","p1_elo_global","p2_elo_global",
-            "elo_surface_diff","p1_elo_surface","p2_elo_surface"
+            "p1_elo_global", "p2_elo_global", "elo_global_diff",
+            "p1_elo_surface", "p2_elo_surface", "elo_surface_diff",
         ],
-        "Form – All Surfaces (5)": [c for c in X.columns if "form_all_5" in c],
-        "Form – Same Surface (5)": [c for c in X.columns if "form_same_5" in c],
+
+        "Serve & Return": serve_return,
+
+        "Pressure Performance": pressure,
+
+        "Form – All Surfaces": [
+            c for c in X
+            if (
+                    "form_all_5" in c
+                    and c not in serve_return
+                    and c not in pressure
+            )
+        ],
+
+        "Form – Same Surface": [
+            c for c in X
+            if (
+                    "form_same_5" in c
+                    and c not in serve_return
+                    and c not in pressure
+            )
+        ],
+
         "Fatigue": [
-            "p1_fatigue_pre","p2_fatigue_pre",
-            "p1_fatigue_in","p2_fatigue_in"
+            "p1_fatigue_pre", "p2_fatigue_pre",
+            "p1_fatigue_in", "p2_fatigue_in",
         ],
+
         "Context": [
-            c for c in X.columns
-            if c.startswith("surface_")
-               or c in ["is_grand_slam","is_masters","is_best_of_five",
-                        "is_indoor","home_advantage_diff",
-                        "round_encoded","tourney_prestige","round_points"]
+            c for c in X
+            if c in [
+                "is_grand_slam", "is_masters", "is_best_of_five",
+                "is_indoor", "round_encoded",
+                "tourney_prestige", "round_points",
+                "p1_home", "p2_home", "home_advantage_diff",
+            ] or c.startswith("surface_")
         ],
     }
 
@@ -153,4 +207,4 @@ def main(save_graphs=False, compute_global=False):
 
 
 if __name__ == "__main__":
-    main()
+    main(save_graphs=True, compute_global=True)
