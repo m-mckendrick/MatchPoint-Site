@@ -1,7 +1,7 @@
 import pandas as pd
 import joblib
 from data.loader import load_model ,load_rankings, load_features
-from src.prediction.match_builder import build_match
+from src.prediction.match_builder_modular import build_match
 from src.prediction.predictor import predict
 from src.model_training.logistical_regression import prepare_dataset
 
@@ -13,8 +13,6 @@ def test_predict_match_blackbox():
     df = load_features()
     ranking_df = load_rankings()
 
-    # get model features
-    x, y = prepare_dataset(df)
 
     # build a synthetic match
     row_model, row_full = build_match(

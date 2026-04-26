@@ -1,6 +1,6 @@
 import pandas as pd
 from src.feature_engineering.elo import (
-    build_elo_features,
+    add_elo_features,
     _expected_score,
     _update_elo,
     BASE_ELO,
@@ -41,7 +41,7 @@ def test_elo_whitebox_chronological_ordering():
         "round_encoded": [2, 1],
     })
 
-    out = build_elo_features(df)
+    out = add_elo_features(df)
 
     # first processed match should have base Elo
     assert out.loc[0, "p1_elo_global"] == BASE_ELO
@@ -61,7 +61,7 @@ def test_elo_whitebox_surface_isolation():
         "round_encoded": [1, 2, 3],
     })
 
-    out = build_elo_features(df)
+    out = add_elo_features(df)
 
     # hard elo should not equal clay elo
     assert out.loc[0, "p1_elo_surface"] != out.loc[1, "p1_elo_surface"]

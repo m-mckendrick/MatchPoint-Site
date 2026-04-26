@@ -181,3 +181,11 @@ def synthetic_row(model_features):
 
     return pd.DataFrame([data])
 
+@pytest.fixture
+def small_df():
+    """
+    Loads a small slice of the match dataset.
+    This keeps tests fast and VM-friendly.
+    """
+    df = load_matches()
+    return df.head(200).copy()   # safe size for black-box tests

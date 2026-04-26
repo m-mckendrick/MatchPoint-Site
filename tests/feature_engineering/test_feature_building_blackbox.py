@@ -3,17 +3,7 @@ import pytest
 
 from src.feature_engineering.feature_builder import build_features, FEATURE_CONFIG
 from data.loader import load_matches
-
-
-#small sample fixture for tests to be done
-@pytest.fixture
-def small_df():
-    """
-    Loads a small slice of the match dataset.
-    This keeps tests fast and VM-friendly.
-    """
-    df = load_matches()
-    return df.head(200).copy()   # safe size for black-box tests
+from tests.conftest import small_df
 
 
 # returns df

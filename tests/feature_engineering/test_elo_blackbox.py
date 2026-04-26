@@ -1,5 +1,5 @@
 import pandas as pd
-from src.feature_engineering.elo import build_elo_features
+from src.feature_engineering.elo import add_elo_features
 
 def test_elo_blackbox_basic_columns():
     df = pd.DataFrame({
@@ -11,7 +11,7 @@ def test_elo_blackbox_basic_columns():
         "round_encoded": [1, 2],
     })
 
-    out = build_elo_features(df)
+    out = add_elo_features(df)
 
     assert "p1_elo_global" in out.columns
     assert "p2_elo_global" in out.columns
@@ -32,7 +32,7 @@ def test_elo_blackbox_ratings_change_over_time():
         "round_encoded": [1, 2],
     })
 
-    out = build_elo_features(df)
+    out = add_elo_features(df)
 
     #elo changes between matches
     assert out.loc[0, "p1_elo_global"] != out.loc[1, "p1_elo_global"]
@@ -49,7 +49,7 @@ def test_elo_blackbox_surface_specific():
         "round_encoded": [1, 2, 3],
     })
 
-    out = build_elo_features(df)
+    out = add_elo_features(df)
 
     # surface elo should differ across surfaces
     assert out.loc[0, "p1_elo_surface"] != out.loc[1, "p1_elo_surface"]
@@ -66,7 +66,7 @@ def test_elo_blackbox_diff_sign():
         "round_encoded": [1],
     })
 
-    out = build_elo_features(df)
+    out = add_elo_features(df)
 
     # elo diff sign should match relative strength
     assert out.loc[0, "elo_global_diff"] == out.loc[0, "p1_elo_global"] - out.loc[0, "p2_elo_global"]
