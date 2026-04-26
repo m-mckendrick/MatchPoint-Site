@@ -29,11 +29,11 @@ def build_player_profiles(row_df):
         "age": to_int(row.get("p2_age", None)),
         "height": to_int(row.get("p2_ht", None)),
         "hand": row.get("p2_hand", None),
-        "ioc": row.get("p1_ioc",None),
+        "ioc": row.get("p2_ioc",None),
 
         # Elo
-        "elo_global": to_int(row.get("p1_elo_global",None)),
-        "elo_surface": to_int(row.get("p1_elo_surface",None)),
+        "elo_global": to_int(row.get("p2_elo_global",None)),
+        "elo_surface": to_int(row.get("p2_elo_surface",None)),
     }
 
     return {"p1": p1, "p2": p2}

@@ -41,8 +41,8 @@ def build_widgets(row_model, row_full, shap_group):
             "data": {
                 "label_p1": p1_name,
                 "label_p2": p2_name,
-                "p1": p1_index,
-                "p2": p2_index,
+                "p1_pressure_index": p1_index,
+                "p2_pressure_index": p2_index,
                 "diff": p1_index - p2_index
             }
         },

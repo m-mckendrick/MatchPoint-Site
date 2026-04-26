@@ -1,0 +1,154 @@
+/* prediction summary */
+
+.progress-container {
+    margin-top: 15px;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 18px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+}
+
+.progress-bar.left-win {
+    transform: scaleX(1);
+}
+
+.progress-bar.right-win {
+    transform: scaleX(-1);
+}
+
+.progress-fill {
+    height: 100%;
+    background: #4a90e2;
+    transition: width 0.5s ease;
+}
+
+
+/* player cards */
+
+.player-card-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
+    width: 100%;
+}
+
+.player-card {
+    flex: 1;
+    min-width: 0;
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.player-card h3 {
+    margin-bottom: 10px;
+}
+
+
+.player1-card {
+    background: #c3d5ba;
+    border-left: 4px solid #62bd4a;
+}
+
+.player2-card {
+    background: #d6b1b1;
+    border-left: 4px solid #b84747;
+}
+
+
+/* tournament metadata */
+
+.tournament-box {
+    background: #eef6ff;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #1e88e5;
+}
+
+
+/* narrative */
+
+.narrative-box {
+    background: #fff8e1;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #ffb300;
+}
+
+
+/* widget zone */
+
+.widget-zone {
+    margin-top: 20px;
+    padding: 15px;
+    background: #d3c1e1;
+    border-radius: 8px;
+    border-left: 4px solid #ad21e1;
+}
+
+
+/* comparison table */
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    background: white;
+    border-radius: 8px;
+}
+
+.comparison-row td {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.metric-label {
+    text-align: center;
+    color: #444;
+    font-weight: 600;
+}
+
+.p1-value, .p2-value {
+    width: 25%;
+    text-align: center;
+}
+
+
+/* stat card */
+
+.stat-card-widget ul {
+    list-style: none;
+    padding: 0;
+}
+
+.stat-card-widget li {
+    padding: 6px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+
+/* SHAP Card*/
+
+.shap-bar-widget canvas {
+    width: 100% !important;
+    height: 300px !important;
+}

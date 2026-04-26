@@ -35,10 +35,10 @@ def build_widgets(row_model, row_full, shap_group):
             "data": {
                 "label_p1": p1_name,
                 "label_p2": p2_name,
-                "p1_pre": p1_pre,
-                "p2_pre": p2_pre,
-                "p1_in": p1_in,
-                "p2_in": p2_in
+                "p1_pre-tourny": p1_pre,
+                "p2_pre-tourny": p2_pre,
+                "p1_in-tourny": p1_in,
+                "p2_in-tourny": p2_in
             }
         },
 

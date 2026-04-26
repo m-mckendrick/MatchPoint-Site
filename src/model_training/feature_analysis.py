@@ -1,6 +1,6 @@
 import joblib
 import pandas as pd
-import xgboost as xgb
+import xgboost_model as xgb
 import matplotlib.pyplot as plt
 
 from data.loader import load_features

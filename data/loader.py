@@ -8,10 +8,15 @@ MATCHES_PATH = Path("data/processed/matches")
 PROCESSED_PATH = Path("data/processed")
 FEATURES_PATH = Path(PROCESSED_PATH / f"2000-2023_features.csv")
 RANKINGS_PATH = Path("data/processed/atp_rankings_2000-2020.csv")
+SHAP_PATH = Path("models/shap_explainer_xgboost_3.pkl")
 
 def load_model(MODEL_PATH):
     bundle = joblib.load(MODEL_PATH)
     return bundle["model"], bundle.get("scaler", None), bundle.get("features", None)
+
+def load_model_shap():
+    shap = joblib.load(SHAP_PATH)
+    return shap
 
 def load_raw_matches():
     files = list(Path(MATCHES_PATH).glob("*.csv"))

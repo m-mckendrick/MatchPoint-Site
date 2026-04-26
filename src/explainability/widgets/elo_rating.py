@@ -38,14 +38,14 @@ def build_widgets(row_model, row_full, shap_group):
 
         {
             "type": "comparison",
-            "title": f"Global Elo Strength ({p1_name} vs {p2_name})",
+            "title": f"Elo Strength ({p1_name} vs {p2_name})",
             "icon": "🌍",
             "group": "Elo Ratings",
             "data": {
                 "label_p1": p1_name,
                 "label_p2": p2_name,
-                "p1": p1_global,
-                "p2": p2_global,
+                "p1_Elo": p1_global,
+                "p2_Elo": p2_global,
                 "diff": diff_global
             }
         },
@@ -58,8 +58,8 @@ def build_widgets(row_model, row_full, shap_group):
             "data": {
                 "label_p1": p1_name,
                 "label_p2": p2_name,
-                "p1": p1_surface,
-                "p2": p2_surface,
+                f"p1_{surface}_Elo": p1_surface,
+                f"p2_{surface}_Elo": p2_surface,
                 "diff": diff_surface
             }
         },

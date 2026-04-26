@@ -30,14 +30,6 @@ def build_widgets(row_model, row_full, shap_group):
     p2_home = row_model["p2_home"]
     home_diff = row_model["home_advantage_diff"]
 
-    # Surface one-hot flags
-    surface_flags = {
-        "Carpet": row_model["surface_Carpet"],
-        "Clay": row_model["surface_Clay"],
-        "Grass": row_model["surface_Grass"],
-        "Hard": row_model["surface_Hard"],
-    }
-
     # Determine surface profile
     surface_profile = {
         "Clay": {"speed": "Slow", "bounce": "High", "style": "Topspin, long rallies"},
@@ -61,15 +53,15 @@ def build_widgets(row_model, row_full, shap_group):
             "icon": "🏆",
             "group": "Match Context",
             "data": {
-                "surface": surface,
-                "round": round_label,
-                "round_encoded": round_encoded,
-                "round_points": round_points,
-                "prestige": prestige,
-                "is_grand_slam": bool(is_gs),
-                "is_masters": bool(is_masters),
-                "best_of_five": bool(is_best_of_five),
-                "indoor": bool(is_indoor)
+                "Surface": surface,
+                "Round": round_label,
+                "Round (Encoded)": round_encoded,
+                "Round Points": round_points,
+                "Prestige Level": prestige,
+                "Grand Slam": bool(is_gs),
+                "Masters 1000": bool(is_masters),
+                "Best of Five": bool(is_best_of_five),
+                "Indoor Match": bool(is_indoor)
             }
         },
 
@@ -79,10 +71,9 @@ def build_widgets(row_model, row_full, shap_group):
             "icon": "🌍",
             "group": "Match Context",
             "data": {
-                "speed": surface_profile["speed"],
-                "bounce": surface_profile["bounce"],
-                "favoured_style": surface_profile["style"],
-                "flags": surface_flags
+                "Court Speed": surface_profile["speed"],
+                "Ball Bounce": surface_profile["bounce"],
+                "Favoured Style": surface_profile["style"],
             }
         },
 
@@ -94,9 +85,9 @@ def build_widgets(row_model, row_full, shap_group):
             "data": {
                 "label_p1": p1_name,
                 "label_p2": p2_name,
-                "p1": p1_home,
-                "p2": p2_home,
-                "diff": home_diff
+                "p1_home_advantage": p1_home,
+                "p2_home_advantage": p2_home,
+                "Difference": home_diff
             }
         },
 
@@ -108,3 +99,4 @@ def build_widgets(row_model, row_full, shap_group):
             "data": shap_group
         }
     ]
+

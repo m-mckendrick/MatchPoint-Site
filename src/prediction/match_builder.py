@@ -5,7 +5,6 @@ from sklearn.preprocessing import StandardScaler
 from src.feature_engineering.match_context import encode_round, add_pre_match_context_features
 
 from data.loader import (
-    load_matches,
     load_rankings,
     load_features,
     load_model

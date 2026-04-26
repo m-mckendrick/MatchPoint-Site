@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Match Result</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/results.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -11,17 +13,12 @@
 
     <h1>Match Prediction Result</h1>
 
-    <section id="prediction-summary" class="prediction-summary"></section>
+    <section id="tournament-meta" class="tournament-meta"></section>
 
     <hr>
 
     <section id="player-cards" class="player-card-container"></section>
-
-    <hr>
-
-    <section id="tournament-meta" class="tournament-meta"></section>
-
-    <hr>
+    <section id="prediction-summary" class="prediction-summary"></section>
 
     <hr>
 
@@ -29,24 +26,15 @@
 
     <hr>
 
-    <!-- Widget selector (placeholders for now)  -->
-    <section class="widget-controls">
-        <h2>Match Insights</h2>
-        <div class="widget-buttons">
-            <button data-widget="placeholder">_</button>
-            <button data-widget="placeholder">_</button>
-            <button data-widget="placeholder">_</button>
-        </div>
-    </section>
+    <h2>Match Insights</h2>
+    <div class="widget-toggle-row" id="widget-buttons"></div>
 
-    <!-- Widget display zone -->
-    <section id="widget-zone" class="widget-zone">
-        <p>Select a widget to view insights.</p>
-    </section>
+    <div id="widget-zone" class="widget-zone-container"></div>
 
 </div>
 
-<script src="/static/js/results.js"></script>
+<script type="module" src="/static/js/results.js"></script>
+<script type="module" src="/static/js/widgets.js"></script>
 
 </body>
 </html>
