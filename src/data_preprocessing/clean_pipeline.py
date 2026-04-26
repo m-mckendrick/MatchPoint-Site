@@ -11,11 +11,9 @@ pd.set_option("display.width", 120)
 from data.loader import RAW_MATCHES_PATH, MATCHES_PATH
 
 
-#%%
 """
-step 1 : Normalise Headers and Missing Values
+step 1 : Normalise Headers, Values and Missing Values
 """
-
 def normalise_headers(df):
     df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace("-", "_")
     return df
@@ -26,12 +24,31 @@ def normalise_missing_values(df):
     df = df.replace(missing_markers, pd.NA)
     return df
 
-#%%
+def clean_categories(df):
+    df["surface"] = df["surface"].str.title()
+    df["round"] = df["round"].str.upper()
+    return df
+
+def normalize_tourney_names(df):
+    # strip whitespace
+    df["tourney_name"] = df["tourney_name"].str.strip()
+
+    # fix specific known inconsistencies
+    df["tourney_name"] = df["tourney_name"].replace({
+        "Belgrade ": "Belgrade",
+        "belgrade ": "Belgrade",   # safety
+        "Rio De Janeiro": "Rio de Janeiro",
+        "St. Petersburg": "St Petersburg",
+        "Us Open": "US Open",
+    })
+
+    return df
+
+
 """
 step 2 : Type Conversion
 turn pandas types to usable types
 """
-
 # tourney date int -> datetime
 def parse_dates(df):
     df["tourney_date"] = pd.to_datetime( df["tourney_date"], format="%Y%m%d", errors="coerce" )
@@ -55,8 +72,6 @@ def clean_ranks_and_seeds(df):
     return df
 
 
-
-#%%
 """
 step 3 : Value Mapping (help model)
 """
@@ -67,37 +82,9 @@ def map_hands(df):
     df["loser_hand"] = df["loser_hand"].map(hand_map)
     return df
 
-#%%
+
 """
-step 4 : category normalisation
-surfaces -> Hard ect 
-round -> GF,F ect
-"""
-
-def clean_categories(df):
-    df["surface"] = df["surface"].str.title()
-    df["round"] = df["round"].str.upper()
-    return df
-
-def normalize_tourney_names(df):
-    # strip whitespace
-    df["tourney_name"] = df["tourney_name"].str.strip()
-
-    # fix specific known inconsistencies
-    df["tourney_name"] = df["tourney_name"].replace({
-        "Belgrade ": "Belgrade",
-        "belgrade ": "Belgrade",   # safety
-        "Rio De Janeiro": "Rio de Janeiro",
-        "St. Petersburg": "St Petersburg",
-        "Us Open": "US Open",
-    })
-
-    return df
-
-
-#%%
-"""
-step 5 : remove non-matches
+step 4 : remove non-matches, and incorrect rows
 includes removing match that were retirement before 1 game was completed 
 """
 
@@ -125,12 +112,19 @@ def drop_scoreless_retirements(df):
 
     return df[~mask].copy()
 
+# drop if doesn't have synthetic row essential columns
+def drop_incomplete_rows(df):
+    essential = ["winner_name", "loser_name", "tourney_date", "surface", "round"]
+    return df.dropna(subset=essential)
+
+def remove_duplicates(df):
+    return df.drop_duplicates(subset=["tourney_id", "match_num"])
 
 
 
 #%%
 """
-step 6 : score validation
+step 5 : data validation
 """
 
 def validate_score_format(df):
@@ -146,31 +140,12 @@ def validate_winner_loser(df):
         print("Warning: identical winner/loser names found.")
     return df
 
-# drop if doesn't have synthetic row essential columns
-def drop_incomplete_rows(df):
-    essential = ["winner_name", "loser_name", "tourney_date", "surface", "round"]
-    return df.dropna(subset=essential)
-
-def remove_duplicates(df):
-    return df.drop_duplicates(subset=["tourney_id", "match_num"])
-
-
-#%%
-"""
-step 7 : serve stats validation
-"""
-
 # just in case of crazy value
 def validate_serve_stats(df):
     bad = df[df["w_ace"] > df["w_svpt"]]
     if len(bad) > 0:
         print("Warning: impossible serve stats detected (aces > serve points).")
     return df
-
-#%%
-"""
-step 8 : physical value validation (no crazy values)
-"""
 
 def validate_physical_stats(df):
     df = df[df["winner_ht"].between(140, 220) | df["winner_ht"].isna()]
@@ -214,11 +189,9 @@ def validate_minutes(df):
 
 
 
-#%%
 """
-step 9 : remove all matches that are not atp events
+step 6 : remove all matches that are not atp events
 also remove matches that are early round (qualifying) and bronze medal matches
-also remove match that are w/o as they essentially are matchs that didnt happen
 """
 
 def filter_atp_events(df):
@@ -253,7 +226,7 @@ def filter_rr_events(df):
 
 #%%
 """
-step 10 : add tiebreak scores to data
+step 7 : add tiebreak scores to data
 includes test for type of tiebreak logic 
 also removes RET from score string to make score parsing simpler
 """
@@ -368,7 +341,7 @@ def extract_tiebreak_score_string(df):
 
 #%%
 """
-step 11 : quick cleaning test to get quick overview if anything should be flagged
+step 8 : quick cleaning test to get quick overview if anything should be flagged
 mass checks for unexpected values in all columns 
 """
 
@@ -430,7 +403,7 @@ def data_health_check(df):
 
 #%%
 """
-step 12 : clean and save
+step 7 : clean and save
 """
 
 def clean_matches(df):
@@ -460,7 +433,7 @@ def clean_matches(df):
 
 #%%
 """
-step 13 : run df through the mirror row and convert to p1 p2 
+step 8 : run df through the mirror row and convert to p1 p2 
 makes the df model suitable and prevent bias
 """
 
@@ -476,8 +449,8 @@ def convert_for_model(df):
 
 #%%
 """
-step 14 : handel the na's
-
+step 9 : handel the na's
+in order for feature calculation 
 """
 from .na_handling import handle_na
 
