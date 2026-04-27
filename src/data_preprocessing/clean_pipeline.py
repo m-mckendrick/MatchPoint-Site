@@ -450,7 +450,7 @@ def convert_for_model(df):
 step 9 : handel the na's
 in order for feature calculation 
 """
-from .na_handling import handle_na
+from src.data_preprocessing.na_handling import handle_na
 
 def handle_missing_values(df):
     return df.pipe(handle_na)
@@ -494,7 +494,7 @@ def process_year(year):
 allows years to be cleaned quickly 
 """
 if __name__ == "__main__":
-    for i in range(2000,2001):
+    for i in range(2000,2024):
         process_year(i)
 
 
