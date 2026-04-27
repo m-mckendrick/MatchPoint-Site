@@ -1,0 +1,452 @@
+First Models (just predictive and post match features removed)
+
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'match_importance', 'stage_pressure', 'p1_form_all_3_winrate', 'p1_form_all_3_sets_pct', 'p1_form_all_3_games_pct', 'p1_form_all_3_tiebreak_win_pct', 'p1_form_all_3_deciding_set_win', 'p1_form_all_3_straight_sets_win', 'p1_form_all_3_first_serve_pct', 'p1_form_all_3_first_serve_won_pct', 'p1_form_all_3_second_serve_won_pct', 'p1_form_all_3_double_fault_rate', 'p1_form_all_3_aces_per_game', 'p1_form_all_3_serve_pts_won_pct', 'p1_form_all_3_estimated_hold_pct', 'p1_form_all_3_serve_efficiency', 'p1_form_all_3_return_pts_won_pct', 'p1_form_all_3_estimated_break_pct', 'p1_form_all_3_pressure_index', 'p1_form_all_3_close_sets_won', 'p1_form_all_3_bp_save_pct', 'p1_form_all_3_bp_conversion_pct', 'p2_form_all_3_winrate', 'p2_form_all_3_sets_pct', 'p2_form_all_3_games_pct', 'p2_form_all_3_tiebreak_win_pct', 'p2_form_all_3_deciding_set_win', 'p2_form_all_3_straight_sets_win', 'p2_form_all_3_first_serve_pct', 'p2_form_all_3_first_serve_won_pct', 'p2_form_all_3_second_serve_won_pct', 'p2_form_all_3_double_fault_rate', 'p2_form_all_3_aces_per_game', 'p2_form_all_3_serve_pts_won_pct', 'p2_form_all_3_estimated_hold_pct', 'p2_form_all_3_serve_efficiency', 'p2_form_all_3_return_pts_won_pct', 'p2_form_all_3_estimated_break_pct', 'p2_form_all_3_pressure_index', 'p2_form_all_3_close_sets_won', 'p2_form_all_3_bp_save_pct', 'p2_form_all_3_bp_conversion_pct', 'p1_form_same_3_winrate', 'p1_form_same_3_sets_pct', 'p1_form_same_3_games_pct', 'p1_form_same_3_tiebreak_win_pct', 'p1_form_same_3_deciding_set_win', 'p1_form_same_3_straight_sets_win', 'p1_form_same_3_first_serve_pct', 'p1_form_same_3_first_serve_won_pct', 'p1_form_same_3_second_serve_won_pct', 'p1_form_same_3_double_fault_rate', 'p1_form_same_3_aces_per_game', 'p1_form_same_3_serve_pts_won_pct', 'p1_form_same_3_estimated_hold_pct', 'p1_form_same_3_serve_efficiency', 'p1_form_same_3_return_pts_won_pct', 'p1_form_same_3_estimated_break_pct', 'p1_form_same_3_pressure_index', 'p1_form_same_3_close_sets_won', 'p1_form_same_3_bp_save_pct', 'p1_form_same_3_bp_conversion_pct', 'p2_form_same_3_winrate', 'p2_form_same_3_sets_pct', 'p2_form_same_3_games_pct', 'p2_form_same_3_tiebreak_win_pct', 'p2_form_same_3_deciding_set_win', 'p2_form_same_3_straight_sets_win', 'p2_form_same_3_first_serve_pct', 'p2_form_same_3_first_serve_won_pct', 'p2_form_same_3_second_serve_won_pct', 'p2_form_same_3_double_fault_rate', 'p2_form_same_3_aces_per_game', 'p2_form_same_3_serve_pts_won_pct', 'p2_form_same_3_estimated_hold_pct', 'p2_form_same_3_serve_efficiency', 'p2_form_same_3_return_pts_won_pct', 'p2_form_same_3_estimated_break_pct', 'p2_form_same_3_pressure_index', 'p2_form_same_3_close_sets_won', 'p2_form_same_3_bp_save_pct', 'p2_form_same_3_bp_conversion_pct', 'p1_form_h2h_all_3_winrate', 'p1_form_h2h_all_3_sets_pct', 'p1_form_h2h_all_3_games_pct', 'p1_form_h2h_all_3_tiebreak_win_pct', 'p1_form_h2h_all_3_deciding_set_win', 'p1_form_h2h_all_3_straight_sets_win', 'p1_form_h2h_all_3_first_serve_pct', 'p1_form_h2h_all_3_first_serve_won_pct', 'p1_form_h2h_all_3_second_serve_won_pct', 'p1_form_h2h_all_3_double_fault_rate', 'p1_form_h2h_all_3_aces_per_game', 'p1_form_h2h_all_3_serve_pts_won_pct', 'p1_form_h2h_all_3_estimated_hold_pct', 'p1_form_h2h_all_3_serve_efficiency', 'p1_form_h2h_all_3_return_pts_won_pct', 'p1_form_h2h_all_3_estimated_break_pct', 'p1_form_h2h_all_3_pressure_index', 'p1_form_h2h_all_3_close_sets_won', 'p1_form_h2h_all_3_bp_save_pct', 'p1_form_h2h_all_3_bp_conversion_pct', 'p2_form_h2h_all_3_winrate', 'p2_form_h2h_all_3_sets_pct', 'p2_form_h2h_all_3_games_pct', 'p2_form_h2h_all_3_tiebreak_win_pct', 'p2_form_h2h_all_3_deciding_set_win', 'p2_form_h2h_all_3_straight_sets_win', 'p2_form_h2h_all_3_first_serve_pct', 'p2_form_h2h_all_3_first_serve_won_pct', 'p2_form_h2h_all_3_second_serve_won_pct', 'p2_form_h2h_all_3_double_fault_rate', 'p2_form_h2h_all_3_aces_per_game', 'p2_form_h2h_all_3_serve_pts_won_pct', 'p2_form_h2h_all_3_estimated_hold_pct', 'p2_form_h2h_all_3_serve_efficiency', 'p2_form_h2h_all_3_return_pts_won_pct', 'p2_form_h2h_all_3_estimated_break_pct', 'p2_form_h2h_all_3_pressure_index', 'p2_form_h2h_all_3_close_sets_won', 'p2_form_h2h_all_3_bp_save_pct', 'p2_form_h2h_all_3_bp_conversion_pct', 'p1_form_h2h_same_3_winrate', 'p1_form_h2h_same_3_sets_pct', 'p1_form_h2h_same_3_games_pct', 'p1_form_h2h_same_3_tiebreak_win_pct', 'p1_form_h2h_same_3_deciding_set_win', 'p1_form_h2h_same_3_straight_sets_win', 'p1_form_h2h_same_3_first_serve_pct', 'p1_form_h2h_same_3_first_serve_won_pct', 'p1_form_h2h_same_3_second_serve_won_pct', 'p1_form_h2h_same_3_double_fault_rate', 'p1_form_h2h_same_3_aces_per_game', 'p1_form_h2h_same_3_serve_pts_won_pct', 'p1_form_h2h_same_3_estimated_hold_pct', 'p1_form_h2h_same_3_serve_efficiency', 'p1_form_h2h_same_3_return_pts_won_pct', 'p1_form_h2h_same_3_estimated_break_pct', 'p1_form_h2h_same_3_pressure_index', 'p1_form_h2h_same_3_close_sets_won', 'p1_form_h2h_same_3_bp_save_pct', 'p1_form_h2h_same_3_bp_conversion_pct', 'p2_form_h2h_same_3_winrate', 'p2_form_h2h_same_3_sets_pct', 'p2_form_h2h_same_3_games_pct', 'p2_form_h2h_same_3_tiebreak_win_pct', 'p2_form_h2h_same_3_deciding_set_win', 'p2_form_h2h_same_3_straight_sets_win', 'p2_form_h2h_same_3_first_serve_pct', 'p2_form_h2h_same_3_first_serve_won_pct', 'p2_form_h2h_same_3_second_serve_won_pct', 'p2_form_h2h_same_3_double_fault_rate', 'p2_form_h2h_same_3_aces_per_game', 'p2_form_h2h_same_3_serve_pts_won_pct', 'p2_form_h2h_same_3_estimated_hold_pct', 'p2_form_h2h_same_3_serve_efficiency', 'p2_form_h2h_same_3_return_pts_won_pct', 'p2_form_h2h_same_3_estimated_break_pct', 'p2_form_h2h_same_3_pressure_index', 'p2_form_h2h_same_3_close_sets_won', 'p2_form_h2h_same_3_bp_save_pct', 'p2_form_h2h_same_3_bp_conversion_pct', 'p1_form_tournament_3_winrate', 'p1_form_tournament_3_sets_pct', 'p1_form_tournament_3_games_pct', 'p1_form_tournament_3_tiebreak_win_pct', 'p1_form_tournament_3_deciding_set_win', 'p1_form_tournament_3_straight_sets_win', 'p1_form_tournament_3_first_serve_pct', 'p1_form_tournament_3_first_serve_won_pct', 'p1_form_tournament_3_second_serve_won_pct', 'p1_form_tournament_3_double_fault_rate', 'p1_form_tournament_3_aces_per_game', 'p1_form_tournament_3_serve_pts_won_pct', 'p1_form_tournament_3_estimated_hold_pct', 'p1_form_tournament_3_serve_efficiency', 'p1_form_tournament_3_return_pts_won_pct', 'p1_form_tournament_3_estimated_break_pct', 'p1_form_tournament_3_pressure_index', 'p1_form_tournament_3_close_sets_won', 'p1_form_tournament_3_bp_save_pct', 'p1_form_tournament_3_bp_conversion_pct', 'p2_form_tournament_3_winrate', 'p2_form_tournament_3_sets_pct', 'p2_form_tournament_3_games_pct', 'p2_form_tournament_3_tiebreak_win_pct', 'p2_form_tournament_3_deciding_set_win', 'p2_form_tournament_3_straight_sets_win', 'p2_form_tournament_3_first_serve_pct', 'p2_form_tournament_3_first_serve_won_pct', 'p2_form_tournament_3_second_serve_won_pct', 'p2_form_tournament_3_double_fault_rate', 'p2_form_tournament_3_aces_per_game', 'p2_form_tournament_3_serve_pts_won_pct', 'p2_form_tournament_3_estimated_hold_pct', 'p2_form_tournament_3_serve_efficiency', 'p2_form_tournament_3_return_pts_won_pct', 'p2_form_tournament_3_estimated_break_pct', 'p2_form_tournament_3_pressure_index', 'p2_form_tournament_3_close_sets_won', 'p2_form_tournament_3_bp_save_pct', 'p2_form_tournament_3_bp_conversion_pct']
+Splitting train/test...
+ Train size:      101720
+ Validation size: 12715
+ Test size:       12715
+Training logistic regression...
+Evaluating model...
+Validation set:
+Accuracy: 0.6632324026740071
+ROC AUC: 0.7282084039890735
+Test set:
+Accuracy: 0.6626818718049547
+ROC AUC: 0.7295118888937218
+
+
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'match_importance', 'stage_pressure', 'p1_form_all_3_winrate', 'p1_form_all_3_sets_pct', 'p1_form_all_3_games_pct', 'p1_form_all_3_tiebreak_win_pct', 'p1_form_all_3_deciding_set_win', 'p1_form_all_3_straight_sets_win', 'p1_form_all_3_first_serve_pct', 'p1_form_all_3_first_serve_won_pct', 'p1_form_all_3_second_serve_won_pct', 'p1_form_all_3_double_fault_rate', 'p1_form_all_3_aces_per_game', 'p1_form_all_3_serve_pts_won_pct', 'p1_form_all_3_estimated_hold_pct', 'p1_form_all_3_serve_efficiency', 'p1_form_all_3_return_pts_won_pct', 'p1_form_all_3_estimated_break_pct', 'p1_form_all_3_pressure_index', 'p1_form_all_3_close_sets_won', 'p1_form_all_3_bp_save_pct', 'p1_form_all_3_bp_conversion_pct', 'p2_form_all_3_winrate', 'p2_form_all_3_sets_pct', 'p2_form_all_3_games_pct', 'p2_form_all_3_tiebreak_win_pct', 'p2_form_all_3_deciding_set_win', 'p2_form_all_3_straight_sets_win', 'p2_form_all_3_first_serve_pct', 'p2_form_all_3_first_serve_won_pct', 'p2_form_all_3_second_serve_won_pct', 'p2_form_all_3_double_fault_rate', 'p2_form_all_3_aces_per_game', 'p2_form_all_3_serve_pts_won_pct', 'p2_form_all_3_estimated_hold_pct', 'p2_form_all_3_serve_efficiency', 'p2_form_all_3_return_pts_won_pct', 'p2_form_all_3_estimated_break_pct', 'p2_form_all_3_pressure_index', 'p2_form_all_3_close_sets_won', 'p2_form_all_3_bp_save_pct', 'p2_form_all_3_bp_conversion_pct', 'p1_form_same_3_winrate', 'p1_form_same_3_sets_pct', 'p1_form_same_3_games_pct', 'p1_form_same_3_tiebreak_win_pct', 'p1_form_same_3_deciding_set_win', 'p1_form_same_3_straight_sets_win', 'p1_form_same_3_first_serve_pct', 'p1_form_same_3_first_serve_won_pct', 'p1_form_same_3_second_serve_won_pct', 'p1_form_same_3_double_fault_rate', 'p1_form_same_3_aces_per_game', 'p1_form_same_3_serve_pts_won_pct', 'p1_form_same_3_estimated_hold_pct', 'p1_form_same_3_serve_efficiency', 'p1_form_same_3_return_pts_won_pct', 'p1_form_same_3_estimated_break_pct', 'p1_form_same_3_pressure_index', 'p1_form_same_3_close_sets_won', 'p1_form_same_3_bp_save_pct', 'p1_form_same_3_bp_conversion_pct', 'p2_form_same_3_winrate', 'p2_form_same_3_sets_pct', 'p2_form_same_3_games_pct', 'p2_form_same_3_tiebreak_win_pct', 'p2_form_same_3_deciding_set_win', 'p2_form_same_3_straight_sets_win', 'p2_form_same_3_first_serve_pct', 'p2_form_same_3_first_serve_won_pct', 'p2_form_same_3_second_serve_won_pct', 'p2_form_same_3_double_fault_rate', 'p2_form_same_3_aces_per_game', 'p2_form_same_3_serve_pts_won_pct', 'p2_form_same_3_estimated_hold_pct', 'p2_form_same_3_serve_efficiency', 'p2_form_same_3_return_pts_won_pct', 'p2_form_same_3_estimated_break_pct', 'p2_form_same_3_pressure_index', 'p2_form_same_3_close_sets_won', 'p2_form_same_3_bp_save_pct', 'p2_form_same_3_bp_conversion_pct', 'p1_form_h2h_all_3_winrate', 'p1_form_h2h_all_3_sets_pct', 'p1_form_h2h_all_3_games_pct', 'p1_form_h2h_all_3_tiebreak_win_pct', 'p1_form_h2h_all_3_deciding_set_win', 'p1_form_h2h_all_3_straight_sets_win', 'p1_form_h2h_all_3_first_serve_pct', 'p1_form_h2h_all_3_first_serve_won_pct', 'p1_form_h2h_all_3_second_serve_won_pct', 'p1_form_h2h_all_3_double_fault_rate', 'p1_form_h2h_all_3_aces_per_game', 'p1_form_h2h_all_3_serve_pts_won_pct', 'p1_form_h2h_all_3_estimated_hold_pct', 'p1_form_h2h_all_3_serve_efficiency', 'p1_form_h2h_all_3_return_pts_won_pct', 'p1_form_h2h_all_3_estimated_break_pct', 'p1_form_h2h_all_3_pressure_index', 'p1_form_h2h_all_3_close_sets_won', 'p1_form_h2h_all_3_bp_save_pct', 'p1_form_h2h_all_3_bp_conversion_pct', 'p2_form_h2h_all_3_winrate', 'p2_form_h2h_all_3_sets_pct', 'p2_form_h2h_all_3_games_pct', 'p2_form_h2h_all_3_tiebreak_win_pct', 'p2_form_h2h_all_3_deciding_set_win', 'p2_form_h2h_all_3_straight_sets_win', 'p2_form_h2h_all_3_first_serve_pct', 'p2_form_h2h_all_3_first_serve_won_pct', 'p2_form_h2h_all_3_second_serve_won_pct', 'p2_form_h2h_all_3_double_fault_rate', 'p2_form_h2h_all_3_aces_per_game', 'p2_form_h2h_all_3_serve_pts_won_pct', 'p2_form_h2h_all_3_estimated_hold_pct', 'p2_form_h2h_all_3_serve_efficiency', 'p2_form_h2h_all_3_return_pts_won_pct', 'p2_form_h2h_all_3_estimated_break_pct', 'p2_form_h2h_all_3_pressure_index', 'p2_form_h2h_all_3_close_sets_won', 'p2_form_h2h_all_3_bp_save_pct', 'p2_form_h2h_all_3_bp_conversion_pct', 'p1_form_h2h_same_3_winrate', 'p1_form_h2h_same_3_sets_pct', 'p1_form_h2h_same_3_games_pct', 'p1_form_h2h_same_3_tiebreak_win_pct', 'p1_form_h2h_same_3_deciding_set_win', 'p1_form_h2h_same_3_straight_sets_win', 'p1_form_h2h_same_3_first_serve_pct', 'p1_form_h2h_same_3_first_serve_won_pct', 'p1_form_h2h_same_3_second_serve_won_pct', 'p1_form_h2h_same_3_double_fault_rate', 'p1_form_h2h_same_3_aces_per_game', 'p1_form_h2h_same_3_serve_pts_won_pct', 'p1_form_h2h_same_3_estimated_hold_pct', 'p1_form_h2h_same_3_serve_efficiency', 'p1_form_h2h_same_3_return_pts_won_pct', 'p1_form_h2h_same_3_estimated_break_pct', 'p1_form_h2h_same_3_pressure_index', 'p1_form_h2h_same_3_close_sets_won', 'p1_form_h2h_same_3_bp_save_pct', 'p1_form_h2h_same_3_bp_conversion_pct', 'p2_form_h2h_same_3_winrate', 'p2_form_h2h_same_3_sets_pct', 'p2_form_h2h_same_3_games_pct', 'p2_form_h2h_same_3_tiebreak_win_pct', 'p2_form_h2h_same_3_deciding_set_win', 'p2_form_h2h_same_3_straight_sets_win', 'p2_form_h2h_same_3_first_serve_pct', 'p2_form_h2h_same_3_first_serve_won_pct', 'p2_form_h2h_same_3_second_serve_won_pct', 'p2_form_h2h_same_3_double_fault_rate', 'p2_form_h2h_same_3_aces_per_game', 'p2_form_h2h_same_3_serve_pts_won_pct', 'p2_form_h2h_same_3_estimated_hold_pct', 'p2_form_h2h_same_3_serve_efficiency', 'p2_form_h2h_same_3_return_pts_won_pct', 'p2_form_h2h_same_3_estimated_break_pct', 'p2_form_h2h_same_3_pressure_index', 'p2_form_h2h_same_3_close_sets_won', 'p2_form_h2h_same_3_bp_save_pct', 'p2_form_h2h_same_3_bp_conversion_pct', 'p1_form_tournament_3_winrate', 'p1_form_tournament_3_sets_pct', 'p1_form_tournament_3_games_pct', 'p1_form_tournament_3_tiebreak_win_pct', 'p1_form_tournament_3_deciding_set_win', 'p1_form_tournament_3_straight_sets_win', 'p1_form_tournament_3_first_serve_pct', 'p1_form_tournament_3_first_serve_won_pct', 'p1_form_tournament_3_second_serve_won_pct', 'p1_form_tournament_3_double_fault_rate', 'p1_form_tournament_3_aces_per_game', 'p1_form_tournament_3_serve_pts_won_pct', 'p1_form_tournament_3_estimated_hold_pct', 'p1_form_tournament_3_serve_efficiency', 'p1_form_tournament_3_return_pts_won_pct', 'p1_form_tournament_3_estimated_break_pct', 'p1_form_tournament_3_pressure_index', 'p1_form_tournament_3_close_sets_won', 'p1_form_tournament_3_bp_save_pct', 'p1_form_tournament_3_bp_conversion_pct', 'p2_form_tournament_3_winrate', 'p2_form_tournament_3_sets_pct', 'p2_form_tournament_3_games_pct', 'p2_form_tournament_3_tiebreak_win_pct', 'p2_form_tournament_3_deciding_set_win', 'p2_form_tournament_3_straight_sets_win', 'p2_form_tournament_3_first_serve_pct', 'p2_form_tournament_3_first_serve_won_pct', 'p2_form_tournament_3_second_serve_won_pct', 'p2_form_tournament_3_double_fault_rate', 'p2_form_tournament_3_aces_per_game', 'p2_form_tournament_3_serve_pts_won_pct', 'p2_form_tournament_3_estimated_hold_pct', 'p2_form_tournament_3_serve_efficiency', 'p2_form_tournament_3_return_pts_won_pct', 'p2_form_tournament_3_estimated_break_pct', 'p2_form_tournament_3_pressure_index', 'p2_form_tournament_3_close_sets_won', 'p2_form_tournament_3_bp_save_pct', 'p2_form_tournament_3_bp_conversion_pct']
+Splitting train/test...
+ Train size: 101720
+ Test size:  25430
+Training Random Forest...
+Evaluating model...
+Accuracy: 0.6618560755013764
+ROC AUC: 0.7236773179642821
+
+
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'match_importance', 'stage_pressure', 'p1_form_all_3_winrate', 'p1_form_all_3_sets_pct', 'p1_form_all_3_games_pct', 'p1_form_all_3_tiebreak_win_pct', 'p1_form_all_3_deciding_set_win', 'p1_form_all_3_straight_sets_win', 'p1_form_all_3_first_serve_pct', 'p1_form_all_3_first_serve_won_pct', 'p1_form_all_3_second_serve_won_pct', 'p1_form_all_3_double_fault_rate', 'p1_form_all_3_aces_per_game', 'p1_form_all_3_serve_pts_won_pct', 'p1_form_all_3_estimated_hold_pct', 'p1_form_all_3_serve_efficiency', 'p1_form_all_3_return_pts_won_pct', 'p1_form_all_3_estimated_break_pct', 'p1_form_all_3_pressure_index', 'p1_form_all_3_close_sets_won', 'p1_form_all_3_bp_save_pct', 'p1_form_all_3_bp_conversion_pct', 'p2_form_all_3_winrate', 'p2_form_all_3_sets_pct', 'p2_form_all_3_games_pct', 'p2_form_all_3_tiebreak_win_pct', 'p2_form_all_3_deciding_set_win', 'p2_form_all_3_straight_sets_win', 'p2_form_all_3_first_serve_pct', 'p2_form_all_3_first_serve_won_pct', 'p2_form_all_3_second_serve_won_pct', 'p2_form_all_3_double_fault_rate', 'p2_form_all_3_aces_per_game', 'p2_form_all_3_serve_pts_won_pct', 'p2_form_all_3_estimated_hold_pct', 'p2_form_all_3_serve_efficiency', 'p2_form_all_3_return_pts_won_pct', 'p2_form_all_3_estimated_break_pct', 'p2_form_all_3_pressure_index', 'p2_form_all_3_close_sets_won', 'p2_form_all_3_bp_save_pct', 'p2_form_all_3_bp_conversion_pct', 'p1_form_same_3_winrate', 'p1_form_same_3_sets_pct', 'p1_form_same_3_games_pct', 'p1_form_same_3_tiebreak_win_pct', 'p1_form_same_3_deciding_set_win', 'p1_form_same_3_straight_sets_win', 'p1_form_same_3_first_serve_pct', 'p1_form_same_3_first_serve_won_pct', 'p1_form_same_3_second_serve_won_pct', 'p1_form_same_3_double_fault_rate', 'p1_form_same_3_aces_per_game', 'p1_form_same_3_serve_pts_won_pct', 'p1_form_same_3_estimated_hold_pct', 'p1_form_same_3_serve_efficiency', 'p1_form_same_3_return_pts_won_pct', 'p1_form_same_3_estimated_break_pct', 'p1_form_same_3_pressure_index', 'p1_form_same_3_close_sets_won', 'p1_form_same_3_bp_save_pct', 'p1_form_same_3_bp_conversion_pct', 'p2_form_same_3_winrate', 'p2_form_same_3_sets_pct', 'p2_form_same_3_games_pct', 'p2_form_same_3_tiebreak_win_pct', 'p2_form_same_3_deciding_set_win', 'p2_form_same_3_straight_sets_win', 'p2_form_same_3_first_serve_pct', 'p2_form_same_3_first_serve_won_pct', 'p2_form_same_3_second_serve_won_pct', 'p2_form_same_3_double_fault_rate', 'p2_form_same_3_aces_per_game', 'p2_form_same_3_serve_pts_won_pct', 'p2_form_same_3_estimated_hold_pct', 'p2_form_same_3_serve_efficiency', 'p2_form_same_3_return_pts_won_pct', 'p2_form_same_3_estimated_break_pct', 'p2_form_same_3_pressure_index', 'p2_form_same_3_close_sets_won', 'p2_form_same_3_bp_save_pct', 'p2_form_same_3_bp_conversion_pct', 'p1_form_h2h_all_3_winrate', 'p1_form_h2h_all_3_sets_pct', 'p1_form_h2h_all_3_games_pct', 'p1_form_h2h_all_3_tiebreak_win_pct', 'p1_form_h2h_all_3_deciding_set_win', 'p1_form_h2h_all_3_straight_sets_win', 'p1_form_h2h_all_3_first_serve_pct', 'p1_form_h2h_all_3_first_serve_won_pct', 'p1_form_h2h_all_3_second_serve_won_pct', 'p1_form_h2h_all_3_double_fault_rate', 'p1_form_h2h_all_3_aces_per_game', 'p1_form_h2h_all_3_serve_pts_won_pct', 'p1_form_h2h_all_3_estimated_hold_pct', 'p1_form_h2h_all_3_serve_efficiency', 'p1_form_h2h_all_3_return_pts_won_pct', 'p1_form_h2h_all_3_estimated_break_pct', 'p1_form_h2h_all_3_pressure_index', 'p1_form_h2h_all_3_close_sets_won', 'p1_form_h2h_all_3_bp_save_pct', 'p1_form_h2h_all_3_bp_conversion_pct', 'p2_form_h2h_all_3_winrate', 'p2_form_h2h_all_3_sets_pct', 'p2_form_h2h_all_3_games_pct', 'p2_form_h2h_all_3_tiebreak_win_pct', 'p2_form_h2h_all_3_deciding_set_win', 'p2_form_h2h_all_3_straight_sets_win', 'p2_form_h2h_all_3_first_serve_pct', 'p2_form_h2h_all_3_first_serve_won_pct', 'p2_form_h2h_all_3_second_serve_won_pct', 'p2_form_h2h_all_3_double_fault_rate', 'p2_form_h2h_all_3_aces_per_game', 'p2_form_h2h_all_3_serve_pts_won_pct', 'p2_form_h2h_all_3_estimated_hold_pct', 'p2_form_h2h_all_3_serve_efficiency', 'p2_form_h2h_all_3_return_pts_won_pct', 'p2_form_h2h_all_3_estimated_break_pct', 'p2_form_h2h_all_3_pressure_index', 'p2_form_h2h_all_3_close_sets_won', 'p2_form_h2h_all_3_bp_save_pct', 'p2_form_h2h_all_3_bp_conversion_pct', 'p1_form_h2h_same_3_winrate', 'p1_form_h2h_same_3_sets_pct', 'p1_form_h2h_same_3_games_pct', 'p1_form_h2h_same_3_tiebreak_win_pct', 'p1_form_h2h_same_3_deciding_set_win', 'p1_form_h2h_same_3_straight_sets_win', 'p1_form_h2h_same_3_first_serve_pct', 'p1_form_h2h_same_3_first_serve_won_pct', 'p1_form_h2h_same_3_second_serve_won_pct', 'p1_form_h2h_same_3_double_fault_rate', 'p1_form_h2h_same_3_aces_per_game', 'p1_form_h2h_same_3_serve_pts_won_pct', 'p1_form_h2h_same_3_estimated_hold_pct', 'p1_form_h2h_same_3_serve_efficiency', 'p1_form_h2h_same_3_return_pts_won_pct', 'p1_form_h2h_same_3_estimated_break_pct', 'p1_form_h2h_same_3_pressure_index', 'p1_form_h2h_same_3_close_sets_won', 'p1_form_h2h_same_3_bp_save_pct', 'p1_form_h2h_same_3_bp_conversion_pct', 'p2_form_h2h_same_3_winrate', 'p2_form_h2h_same_3_sets_pct', 'p2_form_h2h_same_3_games_pct', 'p2_form_h2h_same_3_tiebreak_win_pct', 'p2_form_h2h_same_3_deciding_set_win', 'p2_form_h2h_same_3_straight_sets_win', 'p2_form_h2h_same_3_first_serve_pct', 'p2_form_h2h_same_3_first_serve_won_pct', 'p2_form_h2h_same_3_second_serve_won_pct', 'p2_form_h2h_same_3_double_fault_rate', 'p2_form_h2h_same_3_aces_per_game', 'p2_form_h2h_same_3_serve_pts_won_pct', 'p2_form_h2h_same_3_estimated_hold_pct', 'p2_form_h2h_same_3_serve_efficiency', 'p2_form_h2h_same_3_return_pts_won_pct', 'p2_form_h2h_same_3_estimated_break_pct', 'p2_form_h2h_same_3_pressure_index', 'p2_form_h2h_same_3_close_sets_won', 'p2_form_h2h_same_3_bp_save_pct', 'p2_form_h2h_same_3_bp_conversion_pct', 'p1_form_tournament_3_winrate', 'p1_form_tournament_3_sets_pct', 'p1_form_tournament_3_games_pct', 'p1_form_tournament_3_tiebreak_win_pct', 'p1_form_tournament_3_deciding_set_win', 'p1_form_tournament_3_straight_sets_win', 'p1_form_tournament_3_first_serve_pct', 'p1_form_tournament_3_first_serve_won_pct', 'p1_form_tournament_3_second_serve_won_pct', 'p1_form_tournament_3_double_fault_rate', 'p1_form_tournament_3_aces_per_game', 'p1_form_tournament_3_serve_pts_won_pct', 'p1_form_tournament_3_estimated_hold_pct', 'p1_form_tournament_3_serve_efficiency', 'p1_form_tournament_3_return_pts_won_pct', 'p1_form_tournament_3_estimated_break_pct', 'p1_form_tournament_3_pressure_index', 'p1_form_tournament_3_close_sets_won', 'p1_form_tournament_3_bp_save_pct', 'p1_form_tournament_3_bp_conversion_pct', 'p2_form_tournament_3_winrate', 'p2_form_tournament_3_sets_pct', 'p2_form_tournament_3_games_pct', 'p2_form_tournament_3_tiebreak_win_pct', 'p2_form_tournament_3_deciding_set_win', 'p2_form_tournament_3_straight_sets_win', 'p2_form_tournament_3_first_serve_pct', 'p2_form_tournament_3_first_serve_won_pct', 'p2_form_tournament_3_second_serve_won_pct', 'p2_form_tournament_3_double_fault_rate', 'p2_form_tournament_3_aces_per_game', 'p2_form_tournament_3_serve_pts_won_pct', 'p2_form_tournament_3_estimated_hold_pct', 'p2_form_tournament_3_serve_efficiency', 'p2_form_tournament_3_return_pts_won_pct', 'p2_form_tournament_3_estimated_break_pct', 'p2_form_tournament_3_pressure_index', 'p2_form_tournament_3_close_sets_won', 'p2_form_tournament_3_bp_save_pct', 'p2_form_tournament_3_bp_conversion_pct']
+Splitting train/test...
+Training XGBoost...
+ Train size: 101720
+ Test size:  25430
+Evaluating model...
+Accuracy: 0.6646480534801416
+ROC AUC: 0.7293976525507244
+
+pick xg boost
+now feature analysis produces this:
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'match_importance', 'stage_pressure', 'p1_form_all_3_winrate', 'p1_form_all_3_sets_pct', 'p1_form_all_3_games_pct', 'p1_form_all_3_tiebreak_win_pct', 'p1_form_all_3_deciding_set_win', 'p1_form_all_3_straight_sets_win', 'p1_form_all_3_first_serve_pct', 'p1_form_all_3_first_serve_won_pct', 'p1_form_all_3_second_serve_won_pct', 'p1_form_all_3_double_fault_rate', 'p1_form_all_3_aces_per_game', 'p1_form_all_3_serve_pts_won_pct', 'p1_form_all_3_estimated_hold_pct', 'p1_form_all_3_serve_efficiency', 'p1_form_all_3_return_pts_won_pct', 'p1_form_all_3_estimated_break_pct', 'p1_form_all_3_pressure_index', 'p1_form_all_3_close_sets_won', 'p1_form_all_3_bp_save_pct', 'p1_form_all_3_bp_conversion_pct', 'p2_form_all_3_winrate', 'p2_form_all_3_sets_pct', 'p2_form_all_3_games_pct', 'p2_form_all_3_tiebreak_win_pct', 'p2_form_all_3_deciding_set_win', 'p2_form_all_3_straight_sets_win', 'p2_form_all_3_first_serve_pct', 'p2_form_all_3_first_serve_won_pct', 'p2_form_all_3_second_serve_won_pct', 'p2_form_all_3_double_fault_rate', 'p2_form_all_3_aces_per_game', 'p2_form_all_3_serve_pts_won_pct', 'p2_form_all_3_estimated_hold_pct', 'p2_form_all_3_serve_efficiency', 'p2_form_all_3_return_pts_won_pct', 'p2_form_all_3_estimated_break_pct', 'p2_form_all_3_pressure_index', 'p2_form_all_3_close_sets_won', 'p2_form_all_3_bp_save_pct', 'p2_form_all_3_bp_conversion_pct', 'p1_form_same_3_winrate', 'p1_form_same_3_sets_pct', 'p1_form_same_3_games_pct', 'p1_form_same_3_tiebreak_win_pct', 'p1_form_same_3_deciding_set_win', 'p1_form_same_3_straight_sets_win', 'p1_form_same_3_first_serve_pct', 'p1_form_same_3_first_serve_won_pct', 'p1_form_same_3_second_serve_won_pct', 'p1_form_same_3_double_fault_rate', 'p1_form_same_3_aces_per_game', 'p1_form_same_3_serve_pts_won_pct', 'p1_form_same_3_estimated_hold_pct', 'p1_form_same_3_serve_efficiency', 'p1_form_same_3_return_pts_won_pct', 'p1_form_same_3_estimated_break_pct', 'p1_form_same_3_pressure_index', 'p1_form_same_3_close_sets_won', 'p1_form_same_3_bp_save_pct', 'p1_form_same_3_bp_conversion_pct', 'p2_form_same_3_winrate', 'p2_form_same_3_sets_pct', 'p2_form_same_3_games_pct', 'p2_form_same_3_tiebreak_win_pct', 'p2_form_same_3_deciding_set_win', 'p2_form_same_3_straight_sets_win', 'p2_form_same_3_first_serve_pct', 'p2_form_same_3_first_serve_won_pct', 'p2_form_same_3_second_serve_won_pct', 'p2_form_same_3_double_fault_rate', 'p2_form_same_3_aces_per_game', 'p2_form_same_3_serve_pts_won_pct', 'p2_form_same_3_estimated_hold_pct', 'p2_form_same_3_serve_efficiency', 'p2_form_same_3_return_pts_won_pct', 'p2_form_same_3_estimated_break_pct', 'p2_form_same_3_pressure_index', 'p2_form_same_3_close_sets_won', 'p2_form_same_3_bp_save_pct', 'p2_form_same_3_bp_conversion_pct', 'p1_form_h2h_all_3_winrate', 'p1_form_h2h_all_3_sets_pct', 'p1_form_h2h_all_3_games_pct', 'p1_form_h2h_all_3_tiebreak_win_pct', 'p1_form_h2h_all_3_deciding_set_win', 'p1_form_h2h_all_3_straight_sets_win', 'p1_form_h2h_all_3_first_serve_pct', 'p1_form_h2h_all_3_first_serve_won_pct', 'p1_form_h2h_all_3_second_serve_won_pct', 'p1_form_h2h_all_3_double_fault_rate', 'p1_form_h2h_all_3_aces_per_game', 'p1_form_h2h_all_3_serve_pts_won_pct', 'p1_form_h2h_all_3_estimated_hold_pct', 'p1_form_h2h_all_3_serve_efficiency', 'p1_form_h2h_all_3_return_pts_won_pct', 'p1_form_h2h_all_3_estimated_break_pct', 'p1_form_h2h_all_3_pressure_index', 'p1_form_h2h_all_3_close_sets_won', 'p1_form_h2h_all_3_bp_save_pct', 'p1_form_h2h_all_3_bp_conversion_pct', 'p2_form_h2h_all_3_winrate', 'p2_form_h2h_all_3_sets_pct', 'p2_form_h2h_all_3_games_pct', 'p2_form_h2h_all_3_tiebreak_win_pct', 'p2_form_h2h_all_3_deciding_set_win', 'p2_form_h2h_all_3_straight_sets_win', 'p2_form_h2h_all_3_first_serve_pct', 'p2_form_h2h_all_3_first_serve_won_pct', 'p2_form_h2h_all_3_second_serve_won_pct', 'p2_form_h2h_all_3_double_fault_rate', 'p2_form_h2h_all_3_aces_per_game', 'p2_form_h2h_all_3_serve_pts_won_pct', 'p2_form_h2h_all_3_estimated_hold_pct', 'p2_form_h2h_all_3_serve_efficiency', 'p2_form_h2h_all_3_return_pts_won_pct', 'p2_form_h2h_all_3_estimated_break_pct', 'p2_form_h2h_all_3_pressure_index', 'p2_form_h2h_all_3_close_sets_won', 'p2_form_h2h_all_3_bp_save_pct', 'p2_form_h2h_all_3_bp_conversion_pct', 'p1_form_h2h_same_3_winrate', 'p1_form_h2h_same_3_sets_pct', 'p1_form_h2h_same_3_games_pct', 'p1_form_h2h_same_3_tiebreak_win_pct', 'p1_form_h2h_same_3_deciding_set_win', 'p1_form_h2h_same_3_straight_sets_win', 'p1_form_h2h_same_3_first_serve_pct', 'p1_form_h2h_same_3_first_serve_won_pct', 'p1_form_h2h_same_3_second_serve_won_pct', 'p1_form_h2h_same_3_double_fault_rate', 'p1_form_h2h_same_3_aces_per_game', 'p1_form_h2h_same_3_serve_pts_won_pct', 'p1_form_h2h_same_3_estimated_hold_pct', 'p1_form_h2h_same_3_serve_efficiency', 'p1_form_h2h_same_3_return_pts_won_pct', 'p1_form_h2h_same_3_estimated_break_pct', 'p1_form_h2h_same_3_pressure_index', 'p1_form_h2h_same_3_close_sets_won', 'p1_form_h2h_same_3_bp_save_pct', 'p1_form_h2h_same_3_bp_conversion_pct', 'p2_form_h2h_same_3_winrate', 'p2_form_h2h_same_3_sets_pct', 'p2_form_h2h_same_3_games_pct', 'p2_form_h2h_same_3_tiebreak_win_pct', 'p2_form_h2h_same_3_deciding_set_win', 'p2_form_h2h_same_3_straight_sets_win', 'p2_form_h2h_same_3_first_serve_pct', 'p2_form_h2h_same_3_first_serve_won_pct', 'p2_form_h2h_same_3_second_serve_won_pct', 'p2_form_h2h_same_3_double_fault_rate', 'p2_form_h2h_same_3_aces_per_game', 'p2_form_h2h_same_3_serve_pts_won_pct', 'p2_form_h2h_same_3_estimated_hold_pct', 'p2_form_h2h_same_3_serve_efficiency', 'p2_form_h2h_same_3_return_pts_won_pct', 'p2_form_h2h_same_3_estimated_break_pct', 'p2_form_h2h_same_3_pressure_index', 'p2_form_h2h_same_3_close_sets_won', 'p2_form_h2h_same_3_bp_save_pct', 'p2_form_h2h_same_3_bp_conversion_pct', 'p1_form_tournament_3_winrate', 'p1_form_tournament_3_sets_pct', 'p1_form_tournament_3_games_pct', 'p1_form_tournament_3_tiebreak_win_pct', 'p1_form_tournament_3_deciding_set_win', 'p1_form_tournament_3_straight_sets_win', 'p1_form_tournament_3_first_serve_pct', 'p1_form_tournament_3_first_serve_won_pct', 'p1_form_tournament_3_second_serve_won_pct', 'p1_form_tournament_3_double_fault_rate', 'p1_form_tournament_3_aces_per_game', 'p1_form_tournament_3_serve_pts_won_pct', 'p1_form_tournament_3_estimated_hold_pct', 'p1_form_tournament_3_serve_efficiency', 'p1_form_tournament_3_return_pts_won_pct', 'p1_form_tournament_3_estimated_break_pct', 'p1_form_tournament_3_pressure_index', 'p1_form_tournament_3_close_sets_won', 'p1_form_tournament_3_bp_save_pct', 'p1_form_tournament_3_bp_conversion_pct', 'p2_form_tournament_3_winrate', 'p2_form_tournament_3_sets_pct', 'p2_form_tournament_3_games_pct', 'p2_form_tournament_3_tiebreak_win_pct', 'p2_form_tournament_3_deciding_set_win', 'p2_form_tournament_3_straight_sets_win', 'p2_form_tournament_3_first_serve_pct', 'p2_form_tournament_3_first_serve_won_pct', 'p2_form_tournament_3_second_serve_won_pct', 'p2_form_tournament_3_double_fault_rate', 'p2_form_tournament_3_aces_per_game', 'p2_form_tournament_3_serve_pts_won_pct', 'p2_form_tournament_3_estimated_hold_pct', 'p2_form_tournament_3_serve_efficiency', 'p2_form_tournament_3_return_pts_won_pct', 'p2_form_tournament_3_estimated_break_pct', 'p2_form_tournament_3_pressure_index', 'p2_form_tournament_3_close_sets_won', 'p2_form_tournament_3_bp_save_pct', 'p2_form_tournament_3_bp_conversion_pct']
+Computing fast feature importance (gain)...
+
+=== FULL FEATURE IMPORTANCE LIST (sorted) ===
+                                  feature  importance
+                         rank_points_diff  209.244095
+                                rank_diff   38.400463
+                p2_form_h2h_all_3_winrate   29.183382
+                          is_best_of_five   25.780045
+         p2_form_h2h_all_3_close_sets_won   21.587498
+                            is_grand_slam   21.259659
+             p1_form_tournament_3_winrate   18.820614
+                            p2_fatigue_in   18.227068
+                p1_form_h2h_all_3_winrate   17.230177
+                            p1_fatigue_in   16.983332
+      p2_form_h2h_all_3_straight_sets_win   16.922863
+    p2_form_h2h_same_3_estimated_hold_pct   16.757439
+                                  best_of   16.560087
+                   p2_form_same_3_winrate   14.161608
+                                  p1_home   13.829532
+                                 age_diff   13.828105
+         p1_form_h2h_all_3_close_sets_won   13.817255
+        p2_form_all_3_estimated_break_pct   13.794809
+     p2_form_h2h_all_3_estimated_hold_pct   13.685222
+         p1_form_all_3_estimated_hold_pct   13.680725
+                   p1_form_same_3_winrate   13.123183
+         p2_form_all_3_return_pts_won_pct   12.889249
+             p2_form_tournament_3_winrate   12.681462
+         p1_form_same_3_straight_sets_win   12.456680
+        p1_form_same_3_estimated_hold_pct   12.346264
+          p1_form_all_3_serve_pts_won_pct   11.876791
+                         match_importance   11.537951
+           p1_form_all_3_serve_efficiency   11.178141
+               p1_form_h2h_same_3_winrate   11.171405
+                           p2_rank_points   10.849925
+       p2_form_same_3_estimated_break_pct   10.756008
+        p1_form_same_3_return_pts_won_pct   10.728022
+         p2_form_same_3_serve_pts_won_pct   10.477774
+       p1_form_same_3_estimated_break_pct   10.434832
+    p1_form_h2h_same_3_estimated_hold_pct   10.404382
+          p1_form_same_3_serve_efficiency   10.314103
+    p1_form_h2h_all_3_estimated_break_pct   10.192375
+              p2_form_h2h_all_3_games_pct   10.141510
+    p2_form_h2h_same_3_return_pts_won_pct   10.085061
+   p1_form_tournament_3_straight_sets_win   10.082433
+         p2_form_h2h_same_3_aces_per_game   10.057977
+      p1_form_h2h_same_3_serve_efficiency   10.044310
+                  p2_form_same_3_sets_pct   10.039433
+                                   p1_age   10.018141
+        p1_form_h2h_same_3_close_sets_won   10.000294
+                               is_masters    9.996763
+     p2_form_h2h_same_3_serve_pts_won_pct    9.974322
+       p2_form_h2h_all_3_serve_efficiency    9.834980
+        p2_form_same_3_estimated_hold_pct    9.771537
+   p2_form_h2h_same_3_estimated_break_pct    9.688990
+           p2_form_h2h_same_3_bp_save_pct    9.636191
+          p2_form_all_3_serve_pts_won_pct    9.594949
+                                   p2_age    9.583301
+                           p1_rank_points    9.529890
+  p1_form_tournament_3_estimated_hold_pct    9.398183
+    p1_form_tournament_3_serve_efficiency    9.340331
+       p2_form_same_3_first_serve_won_pct    9.331244
+         p1_form_same_3_serve_pts_won_pct    9.272877
+       p1_form_h2h_all_3_serve_efficiency    9.270350
+                      home_advantage_diff    9.257594
+        p1_form_all_3_first_serve_won_pct    9.247828
+        p2_form_same_3_return_pts_won_pct    9.217051
+        p1_form_all_3_estimated_break_pct    9.180163
+                                  p2_rank    9.175739
+      p1_form_h2h_all_3_serve_pts_won_pct    9.142714
+     p1_form_h2h_all_3_return_pts_won_pct    9.128528
+   p1_form_h2h_same_3_estimated_break_pct    9.096917
+              p2_form_h2h_same_3_sets_pct    9.072073
+     p2_form_h2h_all_3_return_pts_won_pct    9.006733
+       p1_form_h2h_all_3_tiebreak_win_pct    8.988499
+  p1_form_tournament_3_return_pts_won_pct    8.951167
+         p2_form_h2h_all_3_pressure_index    8.934597
+         p1_form_all_3_return_pts_won_pct    8.890545
+     p1_form_h2h_all_3_estimated_hold_pct    8.884509
+   p1_form_tournament_3_serve_pts_won_pct    8.879202
+              p1_form_all_3_aces_per_game    8.869907
+        p2_form_h2h_same_3_close_sets_won    8.862167
+      p2_form_tournament_3_pressure_index    8.853084
+      p1_form_h2h_same_3_deciding_set_win    8.783975
+                                  p2_home    8.746574
+    p1_form_h2h_same_3_return_pts_won_pct    8.744504
+      p1_form_h2h_same_3_tiebreak_win_pct    8.730936
+     p1_form_h2h_same_3_serve_pts_won_pct    8.723626
+      p1_form_h2h_all_3_straight_sets_win    8.720528
+         p2_form_all_3_estimated_hold_pct    8.709249
+     p2_form_h2h_same_3_bp_conversion_pct    8.708755
+ p1_form_tournament_3_estimated_break_pct    8.671254
+             p1_form_h2h_same_3_games_pct    8.641922
+          p2_form_h2h_all_3_aces_per_game    8.613839
+             p1_form_same_3_aces_per_game    8.577696
+      p2_form_h2h_same_3_deciding_set_win    8.557379
+         p2_form_same_3_straight_sets_win    8.552682
+   p2_form_tournament_3_straight_sets_win    8.491729
+      p2_form_h2h_all_3_double_fault_rate    8.457608
+                                  p1_rank    8.422888
+ p1_form_tournament_3_first_serve_won_pct    8.414185
+            p1_form_h2h_all_3_bp_save_pct    8.409459
+         p2_form_tournament_3_bp_save_pct    8.404697
+          p2_form_same_3_serve_efficiency    8.403047
+       p1_form_same_3_first_serve_won_pct    8.374928
+   p2_form_tournament_3_serve_pts_won_pct    8.363081
+           p2_form_tournament_3_games_pct    8.328318
+              p1_form_h2h_all_3_games_pct    8.323156
+                 p2_form_same_3_games_pct    8.314397
+                    p2_form_all_3_winrate    8.312802
+   p1_form_h2h_all_3_second_serve_won_pct    8.296001
+      p2_form_same_3_second_serve_won_pct    8.293743
+      p1_form_same_3_second_serve_won_pct    8.288199
+               p2_form_h2h_all_3_sets_pct    8.277060
+                           surface_Carpet    8.260026
+                             surface_Clay    8.243972
+                            surface_Grass    8.240776
+   p2_form_h2h_all_3_second_serve_won_pct    8.231157
+ p2_form_tournament_3_estimated_break_pct    8.223641
+                             round_points    8.193962
+                              height_diff    8.177403
+                                    p1_ht    8.174783
+  p1_form_h2h_same_3_second_serve_won_pct    8.165401
+                                is_indoor    8.161163
+          p1_form_h2h_all_3_aces_per_game    8.153471
+     p1_form_tournament_3_first_serve_pct    8.149601
+     p1_form_h2h_same_3_double_fault_rate    8.148751
+      p2_form_h2h_same_3_tiebreak_win_pct    8.133888
+       p2_form_h2h_all_3_tiebreak_win_pct    8.052435
+           p1_form_all_3_deciding_set_win    8.051860
+ p2_form_tournament_3_first_serve_won_pct    8.049478
+            p2_form_all_3_first_serve_pct    8.046065
+      p2_form_h2h_same_3_serve_efficiency    8.031706
+                                    p2_ht    8.004906
+         p2_form_same_3_double_fault_rate    7.987348
+                   p2_form_all_3_sets_pct    7.958573
+          p2_form_all_3_straight_sets_win    7.939882
+           p2_form_all_3_serve_efficiency    7.918788
+         p1_form_h2h_same_3_aces_per_game    7.905277
+           p2_form_same_3_first_serve_pct    7.902617
+    p2_form_tournament_3_serve_efficiency    7.899786
+               p2_form_same_3_bp_save_pct    7.899722
+           p1_form_h2h_same_3_bp_save_pct    7.898949
+         p1_form_tournament_3_bp_save_pct    7.873374
+          p1_form_same_3_tiebreak_win_pct    7.854692
+         p1_form_same_3_double_fault_rate    7.833009
+   p2_form_tournament_3_double_fault_rate    7.832072
+         p1_form_h2h_all_3_pressure_index    7.828694
+       p2_form_all_3_second_serve_won_pct    7.821976
+       p1_form_tournament_3_aces_per_game    7.817700
+  p2_form_tournament_3_estimated_hold_pct    7.815346
+                           stage_pressure    7.790115
+    p1_form_h2h_all_3_first_serve_won_pct    7.774108
+          p1_form_all_3_straight_sets_win    7.765857
+         p1_form_same_3_bp_conversion_pct    7.762108
+        p1_form_h2h_same_3_pressure_index    7.734936
+                 p1_form_same_3_games_pct    7.717809
+   p1_form_tournament_3_bp_conversion_pct    7.687962
+           p1_form_tournament_3_games_pct    7.684144
+            p2_form_same_3_pressure_index    7.671012
+             p2_form_same_3_aces_per_game    7.666345
+                  p2_form_all_3_games_pct    7.665997
+      p2_form_h2h_all_3_serve_pts_won_pct    7.665110
+             p2_form_all_3_pressure_index    7.664071
+   p2_form_tournament_3_bp_conversion_pct    7.662834
+          p1_form_all_3_bp_conversion_pct    7.640615
+              p1_form_h2h_same_3_sets_pct    7.639832
+     p2_form_h2h_same_3_double_fault_rate    7.637068
+          p2_form_same_3_deciding_set_win    7.628628
+           p1_form_same_3_first_serve_pct    7.614512
+            p2_form_same_3_close_sets_won    7.607968
+            p1_form_all_3_first_serve_pct    7.605628
+                   p1_form_all_3_sets_pct    7.600818
+        p2_form_all_3_first_serve_won_pct    7.594619
+      p1_form_tournament_3_pressure_index    7.578456
+       p2_form_tournament_3_aces_per_game    7.577644
+     p1_form_h2h_same_3_bp_conversion_pct    7.565695
+              p2_form_all_3_aces_per_game    7.562774
+             p2_form_all_3_close_sets_won    7.556647
+       p1_form_all_3_second_serve_won_pct    7.543974
+             p2_form_h2h_same_3_games_pct    7.543025
+    p2_form_tournament_3_deciding_set_win    7.536786
+             p1_form_all_3_pressure_index    7.533989
+                p2_form_all_3_bp_save_pct    7.523319
+     p2_form_tournament_3_first_serve_pct    7.523273
+               p1_form_h2h_all_3_sets_pct    7.513844
+  p2_form_tournament_3_return_pts_won_pct    7.503915
+p1_form_tournament_3_second_serve_won_pct    7.489366
+                  p1_form_same_3_sets_pct    7.485994
+                  p1_form_all_3_games_pct    7.479815
+             p1_form_all_3_close_sets_won    7.475993
+            p1_form_same_3_pressure_index    7.472836
+                p1_form_all_3_bp_save_pct    7.470000
+      p1_form_h2h_all_3_double_fault_rate    7.455531
+   p1_form_tournament_3_double_fault_rate    7.435565
+p2_form_tournament_3_second_serve_won_pct    7.374188
+          p1_form_all_3_double_fault_rate    7.361571
+   p1_form_h2h_same_3_first_serve_won_pct    7.351920
+               p1_form_same_3_bp_save_pct    7.340767
+          p2_form_same_3_tiebreak_win_pct    7.331466
+          p2_form_all_3_bp_conversion_pct    7.324951
+        p2_form_h2h_all_3_first_serve_pct    7.317759
+        p1_form_h2h_all_3_first_serve_pct    7.297852
+    p2_form_h2h_all_3_estimated_break_pct    7.291032
+            p2_form_h2h_all_3_bp_save_pct    7.279656
+          p2_form_all_3_double_fault_rate    7.267229
+           p2_form_all_3_deciding_set_win    7.255105
+      p2_form_h2h_all_3_bp_conversion_pct    7.232671
+           p1_form_all_3_tiebreak_win_pct    7.231670
+       p1_form_h2h_same_3_first_serve_pct    7.222983
+            p1_form_same_3_close_sets_won    7.217560
+    p1_form_tournament_3_deciding_set_win    7.211619
+    p2_form_h2h_all_3_first_serve_won_pct    7.200047
+            p1_form_tournament_3_sets_pct    7.194271
+           p2_form_all_3_tiebreak_win_pct    7.169488
+                            round_encoded    7.124177
+       p1_form_h2h_all_3_deciding_set_win    7.093730
+                                 p1_lefty    7.084792
+         p2_form_same_3_bp_conversion_pct    7.069073
+    p1_form_tournament_3_tiebreak_win_pct    7.062758
+            p2_form_tournament_3_sets_pct    7.049879
+      p1_form_h2h_all_3_bp_conversion_pct    7.028728
+    p2_form_tournament_3_tiebreak_win_pct    6.945125
+      p1_form_tournament_3_close_sets_won    6.912574
+      p2_form_tournament_3_close_sets_won    6.850597
+          p1_form_same_3_deciding_set_win    6.834904
+   p2_form_h2h_same_3_first_serve_won_pct    6.790975
+                         tourney_prestige    6.638219
+                             surface_Hard    6.604982
+                    p1_form_all_3_winrate    6.593060
+                               lefty_diff    6.518347
+     p1_form_h2h_same_3_straight_sets_win    6.478456
+                           p2_fatigue_pre    6.308028
+  p2_form_h2h_same_3_second_serve_won_pct    6.253532
+       p2_form_h2h_same_3_first_serve_pct    6.248639
+        p2_form_h2h_same_3_pressure_index    6.232247
+                           p1_fatigue_pre    5.975059
+                                 p2_lefty    5.963516
+       p2_form_h2h_all_3_deciding_set_win    5.597832
+     p2_form_h2h_same_3_straight_sets_win    4.166543
+
+
+second models (less impactful and derived features)
+
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'p1_form_all_3_winrate', 'p1_form_all_3_first_serve_pct', 'p1_form_all_3_first_serve_won_pct', 'p1_form_all_3_second_serve_won_pct', 'p1_form_all_3_double_fault_rate', 'p1_form_all_3_aces_per_game', 'p1_form_all_3_serve_pts_won_pct', 'p1_form_all_3_estimated_hold_pct', 'p1_form_all_3_serve_efficiency', 'p1_form_all_3_return_pts_won_pct', 'p1_form_all_3_estimated_break_pct', 'p1_form_all_3_pressure_index', 'p1_form_all_3_bp_save_pct', 'p1_form_all_3_bp_conversion_pct', 'p2_form_all_3_winrate', 'p2_form_all_3_first_serve_pct', 'p2_form_all_3_first_serve_won_pct', 'p2_form_all_3_second_serve_won_pct', 'p2_form_all_3_double_fault_rate', 'p2_form_all_3_aces_per_game', 'p2_form_all_3_serve_pts_won_pct', 'p2_form_all_3_estimated_hold_pct', 'p2_form_all_3_serve_efficiency', 'p2_form_all_3_return_pts_won_pct', 'p2_form_all_3_estimated_break_pct', 'p2_form_all_3_pressure_index', 'p2_form_all_3_bp_save_pct', 'p2_form_all_3_bp_conversion_pct', 'p1_form_same_3_winrate', 'p1_form_same_3_first_serve_pct', 'p1_form_same_3_first_serve_won_pct', 'p1_form_same_3_second_serve_won_pct', 'p1_form_same_3_double_fault_rate', 'p1_form_same_3_aces_per_game', 'p1_form_same_3_serve_pts_won_pct', 'p1_form_same_3_estimated_hold_pct', 'p1_form_same_3_serve_efficiency', 'p1_form_same_3_return_pts_won_pct', 'p1_form_same_3_estimated_break_pct', 'p1_form_same_3_pressure_index', 'p1_form_same_3_bp_save_pct', 'p1_form_same_3_bp_conversion_pct', 'p2_form_same_3_winrate', 'p2_form_same_3_first_serve_pct', 'p2_form_same_3_first_serve_won_pct', 'p2_form_same_3_second_serve_won_pct', 'p2_form_same_3_double_fault_rate', 'p2_form_same_3_aces_per_game', 'p2_form_same_3_serve_pts_won_pct', 'p2_form_same_3_estimated_hold_pct', 'p2_form_same_3_serve_efficiency', 'p2_form_same_3_return_pts_won_pct', 'p2_form_same_3_estimated_break_pct', 'p2_form_same_3_pressure_index', 'p2_form_same_3_bp_save_pct', 'p2_form_same_3_bp_conversion_pct', 'p1_form_h2h_all_3_winrate', 'p2_form_h2h_all_3_winrate', 'p1_form_h2h_same_3_winrate', 'p2_form_h2h_same_3_winrate', 'p1_form_tournament_3_winrate', 'p2_form_tournament_3_winrate']
+Splitting train/test...
+ Train size:      101720
+ Validation size: 12715
+ Test size:       12715
+Training logistic regression...
+Evaluating model...
+Validation set:
+Accuracy: 0.6636256390090445
+ROC AUC: 0.7266514664353627
+Test set:
+Accuracy: 0.66189539913488
+ROC AUC: 0.7273965588335003
+
+
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'p1_form_all_3_winrate', 'p1_form_all_3_first_serve_pct', 'p1_form_all_3_first_serve_won_pct', 'p1_form_all_3_second_serve_won_pct', 'p1_form_all_3_double_fault_rate', 'p1_form_all_3_aces_per_game', 'p1_form_all_3_serve_pts_won_pct', 'p1_form_all_3_estimated_hold_pct', 'p1_form_all_3_serve_efficiency', 'p1_form_all_3_return_pts_won_pct', 'p1_form_all_3_estimated_break_pct', 'p1_form_all_3_pressure_index', 'p1_form_all_3_bp_save_pct', 'p1_form_all_3_bp_conversion_pct', 'p2_form_all_3_winrate', 'p2_form_all_3_first_serve_pct', 'p2_form_all_3_first_serve_won_pct', 'p2_form_all_3_second_serve_won_pct', 'p2_form_all_3_double_fault_rate', 'p2_form_all_3_aces_per_game', 'p2_form_all_3_serve_pts_won_pct', 'p2_form_all_3_estimated_hold_pct', 'p2_form_all_3_serve_efficiency', 'p2_form_all_3_return_pts_won_pct', 'p2_form_all_3_estimated_break_pct', 'p2_form_all_3_pressure_index', 'p2_form_all_3_bp_save_pct', 'p2_form_all_3_bp_conversion_pct', 'p1_form_same_3_winrate', 'p1_form_same_3_first_serve_pct', 'p1_form_same_3_first_serve_won_pct', 'p1_form_same_3_second_serve_won_pct', 'p1_form_same_3_double_fault_rate', 'p1_form_same_3_aces_per_game', 'p1_form_same_3_serve_pts_won_pct', 'p1_form_same_3_estimated_hold_pct', 'p1_form_same_3_serve_efficiency', 'p1_form_same_3_return_pts_won_pct', 'p1_form_same_3_estimated_break_pct', 'p1_form_same_3_pressure_index', 'p1_form_same_3_bp_save_pct', 'p1_form_same_3_bp_conversion_pct', 'p2_form_same_3_winrate', 'p2_form_same_3_first_serve_pct', 'p2_form_same_3_first_serve_won_pct', 'p2_form_same_3_second_serve_won_pct', 'p2_form_same_3_double_fault_rate', 'p2_form_same_3_aces_per_game', 'p2_form_same_3_serve_pts_won_pct', 'p2_form_same_3_estimated_hold_pct', 'p2_form_same_3_serve_efficiency', 'p2_form_same_3_return_pts_won_pct', 'p2_form_same_3_estimated_break_pct', 'p2_form_same_3_pressure_index', 'p2_form_same_3_bp_save_pct', 'p2_form_same_3_bp_conversion_pct', 'p1_form_h2h_all_3_winrate', 'p2_form_h2h_all_3_winrate', 'p1_form_h2h_same_3_winrate', 'p2_form_h2h_same_3_winrate', 'p1_form_tournament_3_winrate', 'p2_form_tournament_3_winrate']
+Splitting train/test...
+ Train size: 101720
+ Test size:  25430
+Training Random Forest...
+Evaluating model...
+Accuracy: 0.662485253637436
+ROC AUC: 0.7250886080686283
+
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'p1_form_all_3_winrate', 'p1_form_all_3_first_serve_pct', 'p1_form_all_3_first_serve_won_pct', 'p1_form_all_3_second_serve_won_pct', 'p1_form_all_3_double_fault_rate', 'p1_form_all_3_aces_per_game', 'p1_form_all_3_serve_pts_won_pct', 'p1_form_all_3_estimated_hold_pct', 'p1_form_all_3_serve_efficiency', 'p1_form_all_3_return_pts_won_pct', 'p1_form_all_3_estimated_break_pct', 'p1_form_all_3_pressure_index', 'p1_form_all_3_bp_save_pct', 'p1_form_all_3_bp_conversion_pct', 'p2_form_all_3_winrate', 'p2_form_all_3_first_serve_pct', 'p2_form_all_3_first_serve_won_pct', 'p2_form_all_3_second_serve_won_pct', 'p2_form_all_3_double_fault_rate', 'p2_form_all_3_aces_per_game', 'p2_form_all_3_serve_pts_won_pct', 'p2_form_all_3_estimated_hold_pct', 'p2_form_all_3_serve_efficiency', 'p2_form_all_3_return_pts_won_pct', 'p2_form_all_3_estimated_break_pct', 'p2_form_all_3_pressure_index', 'p2_form_all_3_bp_save_pct', 'p2_form_all_3_bp_conversion_pct', 'p1_form_same_3_winrate', 'p1_form_same_3_first_serve_pct', 'p1_form_same_3_first_serve_won_pct', 'p1_form_same_3_second_serve_won_pct', 'p1_form_same_3_double_fault_rate', 'p1_form_same_3_aces_per_game', 'p1_form_same_3_serve_pts_won_pct', 'p1_form_same_3_estimated_hold_pct', 'p1_form_same_3_serve_efficiency', 'p1_form_same_3_return_pts_won_pct', 'p1_form_same_3_estimated_break_pct', 'p1_form_same_3_pressure_index', 'p1_form_same_3_bp_save_pct', 'p1_form_same_3_bp_conversion_pct', 'p2_form_same_3_winrate', 'p2_form_same_3_first_serve_pct', 'p2_form_same_3_first_serve_won_pct', 'p2_form_same_3_second_serve_won_pct', 'p2_form_same_3_double_fault_rate', 'p2_form_same_3_aces_per_game', 'p2_form_same_3_serve_pts_won_pct', 'p2_form_same_3_estimated_hold_pct', 'p2_form_same_3_serve_efficiency', 'p2_form_same_3_return_pts_won_pct', 'p2_form_same_3_estimated_break_pct', 'p2_form_same_3_pressure_index', 'p2_form_same_3_bp_save_pct', 'p2_form_same_3_bp_conversion_pct', 'p1_form_h2h_all_3_winrate', 'p2_form_h2h_all_3_winrate', 'p1_form_h2h_same_3_winrate', 'p2_form_h2h_same_3_winrate', 'p1_form_tournament_3_winrate', 'p2_form_tournament_3_winrate']
+Splitting train/test...
+Training XGBoost...
+ Train size: 101720
+ Test size:  25430
+Evaluating model...
+Accuracy: 0.6619347227683838
+ROC AUC: 0.7294588075274372
+
+feature test for xg boost after removing bad columns
+Columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'p1_form_all_3_winrate', 'p1_form_all_3_first_serve_pct', 'p1_form_all_3_first_serve_won_pct', 'p1_form_all_3_second_serve_won_pct', 'p1_form_all_3_double_fault_rate', 'p1_form_all_3_aces_per_game', 'p1_form_all_3_serve_pts_won_pct', 'p1_form_all_3_estimated_hold_pct', 'p1_form_all_3_serve_efficiency', 'p1_form_all_3_return_pts_won_pct', 'p1_form_all_3_estimated_break_pct', 'p1_form_all_3_pressure_index', 'p1_form_all_3_bp_save_pct', 'p1_form_all_3_bp_conversion_pct', 'p2_form_all_3_winrate', 'p2_form_all_3_first_serve_pct', 'p2_form_all_3_first_serve_won_pct', 'p2_form_all_3_second_serve_won_pct', 'p2_form_all_3_double_fault_rate', 'p2_form_all_3_aces_per_game', 'p2_form_all_3_serve_pts_won_pct', 'p2_form_all_3_estimated_hold_pct', 'p2_form_all_3_serve_efficiency', 'p2_form_all_3_return_pts_won_pct', 'p2_form_all_3_estimated_break_pct', 'p2_form_all_3_pressure_index', 'p2_form_all_3_bp_save_pct', 'p2_form_all_3_bp_conversion_pct', 'p1_form_same_3_winrate', 'p1_form_same_3_first_serve_pct', 'p1_form_same_3_first_serve_won_pct', 'p1_form_same_3_second_serve_won_pct', 'p1_form_same_3_double_fault_rate', 'p1_form_same_3_aces_per_game', 'p1_form_same_3_serve_pts_won_pct', 'p1_form_same_3_estimated_hold_pct', 'p1_form_same_3_serve_efficiency', 'p1_form_same_3_return_pts_won_pct', 'p1_form_same_3_estimated_break_pct', 'p1_form_same_3_pressure_index', 'p1_form_same_3_bp_save_pct', 'p1_form_same_3_bp_conversion_pct', 'p2_form_same_3_winrate', 'p2_form_same_3_first_serve_pct', 'p2_form_same_3_first_serve_won_pct', 'p2_form_same_3_second_serve_won_pct', 'p2_form_same_3_double_fault_rate', 'p2_form_same_3_aces_per_game', 'p2_form_same_3_serve_pts_won_pct', 'p2_form_same_3_estimated_hold_pct', 'p2_form_same_3_serve_efficiency', 'p2_form_same_3_return_pts_won_pct', 'p2_form_same_3_estimated_break_pct', 'p2_form_same_3_pressure_index', 'p2_form_same_3_bp_save_pct', 'p2_form_same_3_bp_conversion_pct', 'p1_form_h2h_all_3_winrate', 'p2_form_h2h_all_3_winrate', 'p1_form_h2h_same_3_winrate', 'p2_form_h2h_same_3_winrate', 'p1_form_tournament_3_winrate', 'p2_form_tournament_3_winrate']
+Computing fast feature importance (gain)...
+
+=== FULL FEATURE IMPORTANCE LIST (sorted) ===
+                            feature  importance
+                   rank_points_diff  144.792618
+                          rank_diff   53.693893
+                      is_grand_slam   16.433605
+       p1_form_tournament_3_winrate   15.862638
+          p1_form_h2h_all_3_winrate   15.638284
+                    is_best_of_five   14.996201
+                      p2_fatigue_in   14.669990
+                      p1_fatigue_in   12.994678
+                           age_diff   11.923318
+   p1_form_all_3_estimated_hold_pct   11.777230
+          p2_form_h2h_all_3_winrate   11.642635
+  p2_form_all_3_estimated_break_pct   11.527205
+                            p1_home   11.073902
+         p2_form_h2h_same_3_winrate   10.820891
+             p1_form_same_3_winrate   10.687179
+   p2_form_all_3_return_pts_won_pct   10.683554
+                            p1_rank   10.506757
+                            best_of   10.322865
+             p2_form_same_3_winrate   10.291953
+  p1_form_same_3_estimated_hold_pct   10.160656
+                     p2_rank_points    9.753500
+                            p2_home    9.589663
+  p1_form_same_3_return_pts_won_pct    9.565365
+    p1_form_all_3_serve_pts_won_pct    9.544522
+                            p2_rank    9.405252
+ p1_form_same_3_estimated_break_pct    9.199455
+     p1_form_all_3_serve_efficiency    9.180490
+   p2_form_same_3_serve_pts_won_pct    9.162155
+ p2_form_same_3_estimated_break_pct    9.036674
+         p1_form_h2h_same_3_winrate    9.029650
+    p1_form_same_3_serve_efficiency    8.935365
+   p1_form_same_3_serve_pts_won_pct    8.694620
+                home_advantage_diff    8.653182
+                             p1_age    8.532512
+                     p1_rank_points    8.517861
+  p1_form_all_3_first_serve_won_pct    8.428256
+                             p2_age    8.424749
+  p2_form_same_3_estimated_hold_pct    8.390152
+ p2_form_same_3_first_serve_won_pct    8.355659
+  p2_form_same_3_return_pts_won_pct    8.300203
+    p2_form_all_3_serve_pts_won_pct    7.967116
+              p2_form_all_3_winrate    7.924324
+   p2_form_all_3_estimated_hold_pct    7.886502
+       p2_form_tournament_3_winrate    7.794576
+    p2_form_same_3_serve_efficiency    7.698850
+                      surface_Grass    7.683087
+       p1_form_same_3_aces_per_game    7.676985
+                       surface_Clay    7.625678
+   p1_form_all_3_return_pts_won_pct    7.618412
+      p2_form_same_3_pressure_index    7.618342
+ p1_form_same_3_first_serve_won_pct    7.584221
+                              p1_ht    7.469743
+                              p2_ht    7.466757
+                   tourney_prestige    7.440283
+        p1_form_all_3_aces_per_game    7.394747
+  p1_form_all_3_estimated_break_pct    7.383155
+p1_form_same_3_second_serve_won_pct    7.371284
+       p2_form_same_3_aces_per_game    7.298397
+     p1_form_same_3_first_serve_pct    7.275098
+p2_form_same_3_second_serve_won_pct    7.267271
+                        height_diff    7.260557
+     p2_form_same_3_first_serve_pct    7.222160
+      p1_form_all_3_first_serve_pct    7.179514
+   p1_form_same_3_double_fault_rate    7.166132
+   p2_form_same_3_double_fault_rate    7.157883
+          p2_form_all_3_bp_save_pct    7.137653
+                         is_masters    7.136216
+                     surface_Carpet    7.121991
+      p1_form_same_3_pressure_index    7.115751
+    p1_form_all_3_bp_conversion_pct    7.064603
+  p2_form_all_3_first_serve_won_pct    7.062566
+    p2_form_all_3_double_fault_rate    7.048954
+                       round_points    7.047878
+         p2_form_same_3_bp_save_pct    6.998674
+       p2_form_all_3_pressure_index    6.973566
+ p1_form_all_3_second_serve_won_pct    6.894710
+          p1_form_all_3_bp_save_pct    6.885172
+     p2_form_all_3_serve_efficiency    6.879669
+   p1_form_same_3_bp_conversion_pct    6.860238
+         p1_form_same_3_bp_save_pct    6.859656
+       p1_form_all_3_pressure_index    6.841401
+                      round_encoded    6.770170
+      p2_form_all_3_first_serve_pct    6.767202
+ p2_form_all_3_second_serve_won_pct    6.753213
+    p2_form_all_3_bp_conversion_pct    6.731535
+   p2_form_same_3_bp_conversion_pct    6.691878
+        p2_form_all_3_aces_per_game    6.669565
+    p1_form_all_3_double_fault_rate    6.637141
+                           p1_lefty    6.564476
+              p1_form_all_3_winrate    6.466459
+                     p2_fatigue_pre    6.427174
+                          is_indoor    6.356458
+                           p2_lefty    6.191187
+                         lefty_diff    6.166688
+                       surface_Hard    6.117422
+                     p1_fatigue_pre    5.472773
+
+third models (added elo features, removed all tournament and h2h winrates and changed form windows to 5)
+
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'p1_elo_global', 'p2_elo_global', 'elo_global_diff', 'p1_elo_surface', 'p2_elo_surface', 'elo_surface_diff', 'p1_form_all_5_winrate', 'p1_form_all_5_first_serve_pct', 'p1_form_all_5_first_serve_won_pct', 'p1_form_all_5_second_serve_won_pct', 'p1_form_all_5_double_fault_rate', 'p1_form_all_5_aces_per_game', 'p1_form_all_5_serve_pts_won_pct', 'p1_form_all_5_estimated_hold_pct', 'p1_form_all_5_serve_efficiency', 'p1_form_all_5_return_pts_won_pct', 'p1_form_all_5_estimated_break_pct', 'p1_form_all_5_pressure_index', 'p1_form_all_5_bp_save_pct', 'p1_form_all_5_bp_conversion_pct', 'p2_form_all_5_winrate', 'p2_form_all_5_first_serve_pct', 'p2_form_all_5_first_serve_won_pct', 'p2_form_all_5_second_serve_won_pct', 'p2_form_all_5_double_fault_rate', 'p2_form_all_5_aces_per_game', 'p2_form_all_5_serve_pts_won_pct', 'p2_form_all_5_estimated_hold_pct', 'p2_form_all_5_serve_efficiency', 'p2_form_all_5_return_pts_won_pct', 'p2_form_all_5_estimated_break_pct', 'p2_form_all_5_pressure_index', 'p2_form_all_5_bp_save_pct', 'p2_form_all_5_bp_conversion_pct', 'p1_form_same_5_winrate', 'p1_form_same_5_first_serve_pct', 'p1_form_same_5_first_serve_won_pct', 'p1_form_same_5_second_serve_won_pct', 'p1_form_same_5_double_fault_rate', 'p1_form_same_5_aces_per_game', 'p1_form_same_5_serve_pts_won_pct', 'p1_form_same_5_estimated_hold_pct', 'p1_form_same_5_serve_efficiency', 'p1_form_same_5_return_pts_won_pct', 'p1_form_same_5_estimated_break_pct', 'p1_form_same_5_pressure_index', 'p1_form_same_5_bp_save_pct', 'p1_form_same_5_bp_conversion_pct', 'p2_form_same_5_winrate', 'p2_form_same_5_first_serve_pct', 'p2_form_same_5_first_serve_won_pct', 'p2_form_same_5_second_serve_won_pct', 'p2_form_same_5_double_fault_rate', 'p2_form_same_5_aces_per_game', 'p2_form_same_5_serve_pts_won_pct', 'p2_form_same_5_estimated_hold_pct', 'p2_form_same_5_serve_efficiency', 'p2_form_same_5_return_pts_won_pct', 'p2_form_same_5_estimated_break_pct', 'p2_form_same_5_pressure_index', 'p2_form_same_5_bp_save_pct', 'p2_form_same_5_bp_conversion_pct']
+Splitting train/test...
+ Train size:      101720
+ Validation size: 12715
+ Test size:       12715
+Training logistic regression...
+Evaluating model...
+Validation set:
+Accuracy: 0.7057805741250491
+ROC AUC: 0.7778661959038549
+Test set:
+Accuracy: 0.7060165159260716
+ROC AUC: 0.7758806601229171
+
+
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'p1_elo_global', 'p2_elo_global', 'elo_global_diff', 'p1_elo_surface', 'p2_elo_surface', 'elo_surface_diff', 'p1_form_all_5_winrate', 'p1_form_all_5_first_serve_pct', 'p1_form_all_5_first_serve_won_pct', 'p1_form_all_5_second_serve_won_pct', 'p1_form_all_5_double_fault_rate', 'p1_form_all_5_aces_per_game', 'p1_form_all_5_serve_pts_won_pct', 'p1_form_all_5_estimated_hold_pct', 'p1_form_all_5_serve_efficiency', 'p1_form_all_5_return_pts_won_pct', 'p1_form_all_5_estimated_break_pct', 'p1_form_all_5_pressure_index', 'p1_form_all_5_bp_save_pct', 'p1_form_all_5_bp_conversion_pct', 'p2_form_all_5_winrate', 'p2_form_all_5_first_serve_pct', 'p2_form_all_5_first_serve_won_pct', 'p2_form_all_5_second_serve_won_pct', 'p2_form_all_5_double_fault_rate', 'p2_form_all_5_aces_per_game', 'p2_form_all_5_serve_pts_won_pct', 'p2_form_all_5_estimated_hold_pct', 'p2_form_all_5_serve_efficiency', 'p2_form_all_5_return_pts_won_pct', 'p2_form_all_5_estimated_break_pct', 'p2_form_all_5_pressure_index', 'p2_form_all_5_bp_save_pct', 'p2_form_all_5_bp_conversion_pct', 'p1_form_same_5_winrate', 'p1_form_same_5_first_serve_pct', 'p1_form_same_5_first_serve_won_pct', 'p1_form_same_5_second_serve_won_pct', 'p1_form_same_5_double_fault_rate', 'p1_form_same_5_aces_per_game', 'p1_form_same_5_serve_pts_won_pct', 'p1_form_same_5_estimated_hold_pct', 'p1_form_same_5_serve_efficiency', 'p1_form_same_5_return_pts_won_pct', 'p1_form_same_5_estimated_break_pct', 'p1_form_same_5_pressure_index', 'p1_form_same_5_bp_save_pct', 'p1_form_same_5_bp_conversion_pct', 'p2_form_same_5_winrate', 'p2_form_same_5_first_serve_pct', 'p2_form_same_5_first_serve_won_pct', 'p2_form_same_5_second_serve_won_pct', 'p2_form_same_5_double_fault_rate', 'p2_form_same_5_aces_per_game', 'p2_form_same_5_serve_pts_won_pct', 'p2_form_same_5_estimated_hold_pct', 'p2_form_same_5_serve_efficiency', 'p2_form_same_5_return_pts_won_pct', 'p2_form_same_5_estimated_break_pct', 'p2_form_same_5_pressure_index', 'p2_form_same_5_bp_save_pct', 'p2_form_same_5_bp_conversion_pct', 'p1_form_h2h_all_3_winrate', 'p2_form_h2h_all_3_winrate']
+Splitting train/test...
+ Train size: 101720
+ Test size:  25430
+Training Random Forest...
+Evaluating model...
+Accuracy: 0.7164766024380653
+ROC AUC: 0.788893459550393
+
+columns used: ['best_of', 'p1_rank', 'p1_age', 'p1_ht', 'p1_rank_points', 'p2_rank', 'p2_age', 'p2_ht', 'p2_rank_points', 'rank_diff', 'rank_points_diff', 'is_grand_slam', 'is_masters', 'is_best_of_five', 'p1_lefty', 'p2_lefty', 'lefty_diff', 'surface_Carpet', 'surface_Clay', 'surface_Grass', 'surface_Hard', 'round_encoded', 'age_diff', 'height_diff', 'tourney_prestige', 'round_points', 'p1_home', 'p2_home', 'home_advantage_diff', 'is_indoor', 'p1_fatigue_pre', 'p2_fatigue_pre', 'p1_fatigue_in', 'p2_fatigue_in', 'p1_elo_global', 'p2_elo_global', 'elo_global_diff', 'p1_elo_surface', 'p2_elo_surface', 'elo_surface_diff', 'p1_form_all_5_winrate', 'p1_form_all_5_first_serve_pct', 'p1_form_all_5_first_serve_won_pct', 'p1_form_all_5_second_serve_won_pct', 'p1_form_all_5_double_fault_rate', 'p1_form_all_5_aces_per_game', 'p1_form_all_5_serve_pts_won_pct', 'p1_form_all_5_estimated_hold_pct', 'p1_form_all_5_serve_efficiency', 'p1_form_all_5_return_pts_won_pct', 'p1_form_all_5_estimated_break_pct', 'p1_form_all_5_pressure_index', 'p1_form_all_5_bp_save_pct', 'p1_form_all_5_bp_conversion_pct', 'p2_form_all_5_winrate', 'p2_form_all_5_first_serve_pct', 'p2_form_all_5_first_serve_won_pct', 'p2_form_all_5_second_serve_won_pct', 'p2_form_all_5_double_fault_rate', 'p2_form_all_5_aces_per_game', 'p2_form_all_5_serve_pts_won_pct', 'p2_form_all_5_estimated_hold_pct', 'p2_form_all_5_serve_efficiency', 'p2_form_all_5_return_pts_won_pct', 'p2_form_all_5_estimated_break_pct', 'p2_form_all_5_pressure_index', 'p2_form_all_5_bp_save_pct', 'p2_form_all_5_bp_conversion_pct', 'p1_form_same_5_winrate', 'p1_form_same_5_first_serve_pct', 'p1_form_same_5_first_serve_won_pct', 'p1_form_same_5_second_serve_won_pct', 'p1_form_same_5_double_fault_rate', 'p1_form_same_5_aces_per_game', 'p1_form_same_5_serve_pts_won_pct', 'p1_form_same_5_estimated_hold_pct', 'p1_form_same_5_serve_efficiency', 'p1_form_same_5_return_pts_won_pct', 'p1_form_same_5_estimated_break_pct', 'p1_form_same_5_pressure_index', 'p1_form_same_5_bp_save_pct', 'p1_form_same_5_bp_conversion_pct', 'p2_form_same_5_winrate', 'p2_form_same_5_first_serve_pct', 'p2_form_same_5_first_serve_won_pct', 'p2_form_same_5_second_serve_won_pct', 'p2_form_same_5_double_fault_rate', 'p2_form_same_5_aces_per_game', 'p2_form_same_5_serve_pts_won_pct', 'p2_form_same_5_estimated_hold_pct', 'p2_form_same_5_serve_efficiency', 'p2_form_same_5_return_pts_won_pct', 'p2_form_same_5_estimated_break_pct', 'p2_form_same_5_pressure_index', 'p2_form_same_5_bp_save_pct', 'p2_form_same_5_bp_conversion_pct']
+Splitting train/test...
+Training XGBoost...
+ Train size: 101720
+ Test size:  25430
+Evaluating model...
+Accuracy: 0.7314195831694849
+ROC AUC: 0.8103330199916527

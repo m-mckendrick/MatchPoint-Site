@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Match Result</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/results.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Match Prediction Result</h1>
+
+    <section id="tournament-meta" class="tournament-meta"></section>
+
+    <hr>
+
+    <section id="player-cards" class="player-card-container"></section>
+    <section id="prediction-summary" class="prediction-summary"></section>
+
+    <hr>
+
+    <section id="narrative" class="narrative-section"></section>
+
+    <hr>
+
+    <h2>Match Insights</h2>
+    <div class="widget-toggle-row" id="widget-buttons"></div>
+
+    <div id="widget-zone" class="widget-zone-container"></div>
+
+</div>
+
+<script type="module" src="/static/js/results.js"></script>
+<script type="module" src="/static/js/widgets.js"></script>
+
+</body>
+</html>

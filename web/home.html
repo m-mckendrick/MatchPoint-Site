@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MatchPoint : Tennis Predictor</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+</head>
+<body>
+
+
+
+<div class="site-description">
+    <h1>Tennis Match Predictor</h1>
+    <p>
+        Enter two players and match details to generate a data‑driven prediction.
+        Our model analyses recent form, serve and return performance, contextual factors,
+        and SHAP‑based explainability to give you a breakdown of the reasoning behind the model and why
+        one player is favoured.
+    </p>
+</div>
+
+    <form id="predict-form" class="predict-form">
+        <label>Player 1</label>
+        <input name="p1_name" required>
+
+        <label>Player 2</label>
+        <input name="p2_name" required>
+
+        <label>Tournament</label>
+        <input name="tournament" required>
+
+        <label>Year</label>
+        <input name="year" type="number" required>
+
+        <label>Round</label>
+        <input name="round_label" required>
+
+        <button type="submit">Predict</button>
+    </form>
+
+
+    <div id="result"></div>
+</div>
+
+<script src="/static/js/home.js"></script>
+
+</body>
+</html>
