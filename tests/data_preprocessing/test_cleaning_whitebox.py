@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from src.data_preprocessing.clean_pipeline import (
     validate_physical_stats,
     validate_surface,

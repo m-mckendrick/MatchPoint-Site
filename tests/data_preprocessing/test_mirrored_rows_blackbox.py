@@ -1,4 +1,3 @@
-import pandas as pd
 from src.data_preprocessing.mirror_rows import mirror_rows
 
 def test_mirror_rows_blackbox(cleaned_match_df):

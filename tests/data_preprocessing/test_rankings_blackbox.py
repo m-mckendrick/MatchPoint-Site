@@ -1,7 +1,6 @@
 import pandas as pd
-from pathlib import Path
+
 from src.data_preprocessing.rankings import combine_rankings
-from data.loader import RAW_MATCHES_PATH, PROCESSED_PATH
 
 
 """

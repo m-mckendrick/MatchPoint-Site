@@ -1,18 +1,31 @@
 from src.explainability.explainer import explain_prediction, WIDGET_REGISTRY
 from data.loader import load_features, load_model, load_rankings
 import pandas as pd
+from src.prediction.match_builder_modular import build_match
 
 def test_explainability_basic():
     model, scaler, model_features = load_model("models/xgboost_3.pkl")
 
-    row_model = pd.read_csv("tests/prediction/synthetic_dfs/synthetic_row_model.csv")
-    row_full = pd.read_csv("tests/prediction/synthetic_dfs/synthetic_row_full.csv")
+    df = load_features()
+    rankings = load_rankings()
+    model, scaler, model_features = load_model("models/xgboost_3.pkl")
+
+    row_model, row_full = build_match(
+        df=df,
+        rankings_df=rankings,
+        p1_name="Novak Djokovic",
+        p2_name="Daniil Medvedev",
+        tournament="US Open",
+        year=2018,
+        round_label="F",
+        model_features=model_features,
+    )
+
 
     prob = model.predict_proba(row_model)[0][1]
     winner = "Player A" if prob >= 0.5 else "Player B"
 
     explanation = explain_prediction(
-        model=model,
         row_model=row_model,
         row_full=row_full,
         probability=prob,

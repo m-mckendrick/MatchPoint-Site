@@ -1,4 +1,4 @@
-import pandas as pd
+
 from src.data_preprocessing.convert_to_p1p2 import convert_to_p1p2
 
 def test_convert_basic_mapping(cleaned_match_df):
