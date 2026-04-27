@@ -37,7 +37,7 @@ GROUP_NAME_MAP = {
 
 
 
-def explain_prediction(model, row_model, row_full, probability, winner):
+def explain_prediction(row_model, row_full, probability, winner):
 
 
     shap_info = compute_shap_explanation(row_df=row_model)

@@ -1,7 +1,9 @@
 import pandas as pd
 import pytest
 from datetime import datetime
+from starlette.testclient import TestClient
 
+from src.api.main import app
 from src.data_preprocessing.convert_to_p1p2 import convert_to_p1p2
 
 #raw df example for testing
@@ -188,4 +190,8 @@ def small_df():
     This keeps tests fast and VM-friendly.
     """
     df = load_matches()
-    return df.head(200).copy()   # safe size for black-box tests
+    return df.head(200).copy()  # safe size for black-box tests
+
+@pytest.fixture
+def client():
+    return TestClient(app)

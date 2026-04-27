@@ -53,7 +53,7 @@ def to_py(obj):
 #front end routes
 @app.get("/")
 def home():
-    return FileResponse(WEB_ROOT / "index.html")
+    return FileResponse(WEB_ROOT / "home.html")
 
 
 @app.get("/results")
@@ -102,7 +102,6 @@ def api_predict(payload: PredictRequest):
     winner_prob = round(winner_prob * 100, 2)
 
     explanation = explain_prediction(
-        model=model,
         row_model=row_model,
         row_full=row_full,
         probability=winner_prob / 100,  # convert back to 0–1

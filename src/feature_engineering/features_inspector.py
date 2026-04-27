@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 
 from data.loader import PROCESSED_PATH, MATCHES_PATH
+from src.model_training.dataset_preparation import prepare_dataset
+
 
 def inspect_dataset(df):
 
@@ -70,6 +72,7 @@ if __name__ == "__main__":
     output_path = PROCESSED_PATH / f"2000-2023_features.csv"
     df = pd.read_csv(output_path)
     #df = pd.read_csv(MATCHES_PATH)
+    df = prepare_dataset(df)
     inspect_dataset(df)
 
 

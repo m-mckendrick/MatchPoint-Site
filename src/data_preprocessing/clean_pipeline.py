@@ -107,8 +107,6 @@ def drop_scoreless_retirements(df):
     mask = score_str.apply(is_scoreless_retirement)
 
     #remove rows that has RET and no Digits
-    removed = mask.sum()
-    print(f"Removed {removed} scoreless retirement matches.")
 
     return df[~mask].copy()
 
@@ -358,7 +356,7 @@ def data_health_check(df):
         if count > 0:
             print(f"--- Missing in column: {col} ({count} rows) ---")
             # Show the rows and the actual values in that column
-            print(df[df[col].isna()][[col]].head(10))
+            print(df[df[col].isna()][[col]].head(5))
             print("\n")
 
     print("\n")
@@ -496,7 +494,7 @@ def process_year(year):
 allows years to be cleaned quickly 
 """
 if __name__ == "__main__":
-    for i in range(2000,2024):
+    for i in range(2000,2001):
         process_year(i)
 
 
