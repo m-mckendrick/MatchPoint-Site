@@ -72,6 +72,47 @@ class PredictRequest(BaseModel):
 @app.post("/api/predict")
 def api_predict(payload: PredictRequest):
 
+    #validate values passed through
+    valid_players = set(features_df["p1_name"].unique()) | set(features_df["p2_name"].unique())
+
+    if payload.p1_name not in valid_players:
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"Player '{payload.p1_name}' not found in dataset."}
+        )
+
+    if payload.p2_name not in valid_players:
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"Player '{payload.p2_name}' not found in dataset."}
+        )
+
+    if "tournament" in features_df.columns:
+        valid_tournaments = set(features_df["tournament"].unique())
+        if payload.tournament not in valid_tournaments:
+            return JSONResponse(
+                status_code=400,
+                content={"error": f"Tournament '{payload.tournament}' not found in dataset."}
+            )
+
+    if "year" in features_df.columns:
+        valid_years = set(features_df["year"].unique())
+        if payload.year not in valid_years:
+            return JSONResponse(
+                status_code=400,
+                content={"error": f"Year '{payload.year}' not available in dataset."}
+            )
+
+    if "round_label" in features_df.columns:
+        valid_rounds = set(features_df["round_label"].unique())
+        if payload.round_label not in valid_rounds:
+            return JSONResponse(
+                status_code=400,
+                content={"error": f"Round '{payload.round_label}' is not valid for this dataset."}
+            )
+
+
+
     #build match row
     #has been changed to give the row containing all column and the row the model predicts with
     row_model, row_full = build_match(

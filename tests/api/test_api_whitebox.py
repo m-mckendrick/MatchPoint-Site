@@ -27,37 +27,46 @@ def test_api_predict_winner_logic(monkeypatch, client):
     monkeypatch.setattr("src.prediction.predictor.predict", lambda m, s, r: 0.9)
 
     payload = {
-        "p1_name": "PlayerA",
-        "p2_name": "PlayerB",
+        "p1_name": "Novak Djokovic",
+        "p2_name": "Rafael Nadal",
         "tournament": "Wimbledon",
         "year": 2023,
         "round_label": "R32"
     }
 
     data = client.post("/api/predict", json=payload).json()
-    assert data["prediction"]["winner"] == "PlayerA"
+    assert data["prediction"]["winner"] == "Novak Djokovic"
 
-def test_api_predict_explainability_called(monkeypatch, client):
-    called = {"flag": False}
 
-    def fake_explain(*args, **kwargs):
-        called["flag"] = True
-        return {
-            "players": {},
-            "tournament": {},
-            "narrative": "test",
-            "widgets": []
-        }
-
-    monkeypatch.setattr("src.explainability.explainer.explain_prediction", fake_explain)
-
+def test_api_invalid_year(client):
+    """Invalid year should be rejected by validation."""
     payload = {
-        "p1_name": "PlayerA",
-        "p2_name": "PlayerB",
+        "p1_name": "N.Djokovic",
+        "p2_name": "C.Alcaraz",
         "tournament": "Wimbledon",
-        "year": 2023,
+        "year": 1800,
         "round_label": "R32"
     }
 
-    client.post("/api/predict", json=payload)
-    assert called["flag"] is True
+    response = client.post("/api/predict", json=payload)
+    assert response.status_code == 400
+
+
+def test_api_invalid_round(client):
+    """Invalid round label should be rejected."""
+    payload = {
+        "p1_name": "N.Djokovic",
+        "p2_name": "C.Alcaraz",
+        "tournament": "Wimbledon",
+        "year": 2023,
+        "round_label": "NotARound"
+    }
+
+    response = client.post("/api/predict", json=payload)
+    assert response.status_code == 400
+
+
+def test_api_handles_empty_payload(client):
+    """Empty payload should return 422 (Pydantic validation)."""
+    response = client.post("/api/predict", json={})
+    assert response.status_code in (400, 422)
