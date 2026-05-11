@@ -72,7 +72,7 @@ def get_feature_groups(X):
 
     return {
 
-        # --- Player Profile ---
+        # Player Profile
         "Player Profile & Ranking": [
             "p1_rank", "p2_rank", "rank_diff",
             "p1_rank_points", "p2_rank_points", "rank_points_diff",
@@ -81,7 +81,7 @@ def get_feature_groups(X):
             "p1_lefty", "p2_lefty", "lefty_diff",
         ],
 
-        # --- Elo + Winrate + Break % ---
+        # Elo + Winrate + Break %
         "Elo Ratings": [
             "p1_elo_global", "p2_elo_global", "elo_global_diff",
             "p1_elo_surface", "p2_elo_surface", "elo_surface_diff",
@@ -203,4 +203,4 @@ def main(save_graphs=False, compute_global=False):
 
 
 if __name__ == "__main__":
-    main(save_graphs=True, compute_global=True)
+    main(save_graphs=False, compute_global=False)

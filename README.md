@@ -4,30 +4,34 @@
 
 This repository contains the full development workflow for MatchPoint, a machine‑learning project designed to predict tennis match outcomes using historical player performance data. The project is structured using a clean, industry‑standard Git branching model to keep development organised, traceable, and easy to review.
 
-### Branching Structure
-main – the stable, final version of the project. Only completed and reviewed work is merged here.
 
-dev – the active development branch where all features come together before release.
+## How to run the site
+# the data pipeline
+first - clean all the raw files by navigating to the clean_pipeline script
+        and run it (make sure all files run from the project root) 
 
-feature/data-prep – used for cleaning and preparing raw datasets.
+second - navigate to the feature_builder file and run it this may take several hours 
+        as its adding features to all the atp matches from 2000-2023
 
-feature/feature-engineering – used for creating new predictive features.
+third - once that's done the model can be trained. this time run the xgboost_model file
+        and also make sure to run teh shap_modular file this creates and saves 
+        the shap explainer
+        
 
-feature/model-training – used for training, tuning, and evaluating machine‑learning models.
+# entering the site
+first - activate the virtual environment (python 3.11.9) 
+        in the terminal inside teh project root using  
+        .\.venv\Scripts\activate
 
-feature/api-endpoints – used for building backend API routes.
+second - install all dependancies in the requirements txt file 
+        using pip install -r requirements.txt
 
-feature/frontend-ui – used for developing the dashboard and user interface.
+third - run the app using 
+        uvicorn src.api.main:app --reload
+        then you should see the url of teh site copy it into you browser 
+        and you'll be on teh first page
 
-### Workflow
-Start work by switching to the relevant feature branch.
+ 
 
-Develop and commit changes locally.
-
-Push the feature branch to GitLab.
-
-Merge into dev once the feature is complete and tested.
-
-After all components are integrated, merge dev into main for the final project version.
 
 
