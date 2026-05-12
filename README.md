@@ -14,7 +14,7 @@ second - navigate to the feature_builder file and run it this may take several h
         as its adding features to all the atp matches from 2000-2023
 
 third - once that's done the model can be trained. this time run the xgboost_model file
-        and also make sure to run teh shap_modular file this creates and saves 
+        and also make sure to run the shap_modular file this creates and saves 
         the shap explainer
         
 
@@ -28,8 +28,8 @@ second - install all dependancies in the requirements txt file
 
 third - run the app using 
         uvicorn src.api.main:app --reload
-        then you should see the url of teh site copy it into you browser 
-        and you'll be on teh first page
+        then you should see the url of the site in the project terminal 
+        copy it into you browser and you'll be on the first page
 
  
 
