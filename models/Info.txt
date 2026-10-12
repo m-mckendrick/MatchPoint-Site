@@ -1,0 +1,3 @@
+This is the folder where the models, when trained will be sent into. 
+If the models have been downloaded please save them in this folder
+

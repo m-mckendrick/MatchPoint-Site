@@ -1,0 +1,32 @@
+MatchPoint: Explainable ATP Tennis Match Prediction
+Copyright (c) 2026 Myles McKendrick
+
+This work is licensed under a Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International License
+(CC BY-NC-SA 4.0).
+
+  Licence summary:   https://creativecommons.org/licenses/by-nc-sa/4.0/
+  Full legal code:   https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+You are free to share and adapt this work, provided that you:
+  - Attribution:   give appropriate credit (to Myles McKendrick and to
+                   Jeff Sackmann / Tennis Abstract, see below), link to the
+                   licence, and indicate if changes were made;
+  - NonCommercial: do not use it for commercial purposes;
+  - ShareAlike:    distribute any adaptations under this same licence.
+
+In other words: Attribution is required. Non-commercial use only.
+
+-------------------------------------------------------------------------
+Third-party data
+-------------------------------------------------------------------------
+This project is built on, and contains data derived from:
+
+  Tennis databases, files, and algorithms by Jeff Sackmann / Tennis Abstract
+  (http://www.tennisabstract.com/), licensed under a Creative Commons
+  Attribution-NonCommercial-ShareAlike 4.0 International License.
+  Based on a work at https://github.com/JeffSackmann.
+
+  Original repository: https://github.com/JeffSackmann/tennis_atp
+  Copy used for this project (community fork):
+  https://github.com/Kadantte/tennis_atp
